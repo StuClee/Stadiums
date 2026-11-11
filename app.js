@@ -96,7 +96,7 @@
     <div class="card"><div class="flex-between"><h2>KPI results · ${esc(m.month)}</h2><span class="muted small">Result = mean event score less capped monthly deductions</span></div><div class="tablebox"><table class="t">
       <thead><tr><th>KPI</th><th>Name</th><th class="num">Weight</th><th class="num">Result</th><th>Status</th><th class="num">Event score</th><th class="num">Deductions</th><th class="num">Year avg</th><th class="num">Months below</th><th class="num">Event fails (year)</th></tr></thead>
       <tbody>${kRows}</tbody></table></div></div>
-    <div class="card"><h2>KPI results by month</h2><p class="muted small">Orange below the pass threshold, teal towards 100. Blank = not reported or not assessed. The month shown is outlined.</p><div class="tablebox">${heat}</div></div>
+    <div class="card"><h2>KPI results by month</h2><p class="muted small">Orange below the pass threshold, teal towards 100. Blank = not reported or not assessed. The month shown is in bold.</p><div class="tablebox">${heat}</div></div>
     <div class="grid">
       <div class="card"><h2>Event failures · ${esc(m.month)}</h2>${fails ? `<div class="tablebox"><table class="t"><thead><tr><th>Date</th><th>Event</th><th>Standard</th><th>Note</th></tr></thead><tbody>${fails}</tbody></table></div>` : '<p class="muted small">No failed event standards this month.</p>'}</div>
       <div class="card"><h2>Monthly deductions · ${esc(m.month)}</h2>${deds ? `<div class="tablebox"><table class="t"><thead><tr><th>Standard</th><th class="num">Count</th><th class="num">Points</th><th>Note</th></tr></thead><tbody>${deds}</tbody></table></div>` : '<p class="muted small">No deductions logged this month.</p>'}</div>

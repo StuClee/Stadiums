@@ -134,8 +134,7 @@ dl.info dd { margin: 0; }
 .s-na { background: var(--surface-2); color: var(--muted); font-style: italic; }
 .s-warn { background: var(--warn-soft); color: var(--warn); }
 table.heat td.h { text-align: center; font-variant-numeric: tabular-nums; font-weight: 600; min-width: 52px; }
-table.heat td.h.sel { outline: 2px solid var(--ink); outline-offset: -2px; }
-table.heat th.sel { color: var(--ink); }
+table.heat th.sel { color: var(--ink); font-weight: 800; font-size: .8rem; }
 .pf { display: inline-flex; gap: 4px; }
 .pf button { font: 700 12.5px var(--f-body); border: 1.5px solid var(--line); background: var(--surface); color: var(--muted); border-radius: 6px; padding: 6px 12px; min-height: 34px; cursor: pointer; }
 .pf button[aria-pressed="true"].p { border-color: var(--good); background: var(--good-soft); color: var(--good); }

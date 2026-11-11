@@ -1,0 +1,15 @@
+[build]
+  publish = "."
+  command = "echo 'static site, nothing to build'"
+
+# Password protects the whole site. Set SITE_PASSWORD in Netlify.
+[[edge_functions]]
+  path = "/*"
+  function = "auth"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "same-origin"
+    X-Robots-Tag = "noindex, nofollow"

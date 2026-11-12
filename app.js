@@ -275,6 +275,128 @@
       ${list.map(s => `<tr><td><span class="pill-k">${s.ref}</span>${s.critical ? '<div class="crit">CRITICAL</div>' : ''}</td><td><b>${esc(s.name)}</b><div class="small">${esc(s.target || '')}</div><details><summary>Measurement</summary><dl class="info"><dt>Applies</dt><dd>${esc(s.applies || '')}</dd><dt>Method</dt><dd>${esc(s.measure || '')}</dd><dt>By</dt><dd>${esc(s.by || '')}</dd></dl></details></td><td class="small">${esc(s.link)}</td><td>${s.event ? 'A' + (s.cat ? ' + ' + s.cat : '') : esc(s.cat)}</td><td class="num">${s.event ? c.settings.eventPoints : ''}${s.event && s.cat ? ' / ' : ''}${s.cat ? C.points(c, s.ref) : ''}</td></tr>`).join('')}</tbody></table></div></div>`;
   }
 
+  /* ---------- overview: the model in plain English ---------- */
+  function vOverview() {
+    const c = cfg(), st = c.settings, nStd = M.standards.length, nEv = M.standards.filter(s => s.event).length;
+    const nCrit = M.standards.filter(s => s.critical).length;
+    const W = k => Math.round((c.weights[k] || 0) * 100);
+    const groups = [
+      ['Event day', 'What players, officials and broadcasters see and feel at kick-off', ['KPI-M', 'KPI-P', 'KPI-O', 'KPI-L', 'KPI-R']],
+      ['Surface between events', 'Keeping the surface healthy through the season', ['KPI-I', 'KPI-N', 'KPI-V', 'KPI-C']],
+      ['Support services', 'Treatments, lighting and equipment', ['KPI-T', 'KPI-F', 'KPI-G']],
+      ['Pilot', 'Usage cameras: reported, not yet scored', ['KPI-U']]];
+    const maxW = Math.max(...M.kpis.map(k => W(k.id)), 1);
+    const weightBars = groups.map(([g, sub, ks]) => `
+      <div class="ov-wgroup"><div class="ov-wg-head"><b>${g}</b><span class="muted small">${sub}</span><span class="ov-wg-tot">${ks.reduce((a, k) => a + W(k), 0)}%</span></div>
+      ${ks.map(k => `<div class="ov-wbar"><span class="pill-k">${k}</span><span class="ov-wname">${esc(KPI[k].name)}</span><span class="ov-wtrack"><span style="width:${W(k) / maxW * 100}%"></span></span><span class="num">${W(k)}%</span></div>`).join('')}</div>`).join('');
+
+    // score to fee step chart (SVG): x = score 60..100, y = fee 80..100%
+    const x = s => 40 + (s - 60) / 40 * 520, y = f => 20 + (100 - f) / 20 * 160;
+    const pts = []; for (let s = 60; s <= 100; s += 0.5) { const fee = s >= st.passThreshold ? 100 : Math.max(100 - st.abatementCap * 100, 100 - Math.floor(st.passThreshold - s + 1e-9) * st.abatementPerPoint * 100); pts.push(`${x(s).toFixed(1)},${y(fee).toFixed(1)}`); }
+    const capScore = st.passThreshold - st.abatementCap / st.abatementPerPoint;
+    const feeSvg = `<svg viewBox="0 0 600 230" class="ov-svg" role="img" aria-label="Chart of fee paid against the overall score: 100% at ${st.passThreshold} or above, falling ${pc(st.abatementPerPoint)} per point below, never below ${pc(1 - st.abatementCap)}">
+      ${[80, 85, 90, 95, 100].map(f => `<line x1="40" x2="560" y1="${y(f)}" y2="${y(f)}" stroke="var(--line)"/><text x="32" y="${y(f) + 4}" text-anchor="end" class="ov-t">${f}%</text>`).join('')}
+      ${[60, 70, 75, 80, 90, 95, 100].map(s => `<text x="${x(s)}" y="204" text-anchor="middle" class="ov-t">${s}</text>`).join('')}
+      <text x="300" y="224" text-anchor="middle" class="ov-t">Overall monthly score</text>
+      <rect x="${x(st.passThreshold)}" y="20" width="${x(100) - x(st.passThreshold)}" height="160" fill="var(--good-soft)" opacity=".7"/>
+      <rect x="${x(capScore)}" y="20" width="${x(st.passThreshold) - x(capScore)}" height="160" fill="var(--warn-soft)" opacity=".7"/>
+      <rect x="40" y="20" width="${x(capScore) - 40}" height="160" fill="var(--bad-soft)" opacity=".7"/>
+      <polyline points="${pts.join(' ')}" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linejoin="round"/>
+      <line x1="${x(st.incentiveScore)}" x2="${x(st.incentiveScore)}" y1="20" y2="180" stroke="var(--warn)" stroke-dasharray="5 4" stroke-width="1.5"/>
+      <text x="${x(st.passThreshold) + 6}" y="36" class="ov-t ov-b">Full fee</text>
+      <text x="${x(st.incentiveScore) - 6}" y="56" text-anchor="end" class="ov-t" style="fill:var(--warn)">Incentive ${st.incentiveScore}+</text>
+      <text x="${x(capScore) + 6}" y="36" class="ov-t ov-b">−${pc(st.abatementPerPoint)} per point</text>
+      <text x="46" y="36" class="ov-t ov-b">Capped at −${pc(st.abatementCap)}</text></svg>`;
+
+    // escalation staircase (SVG)
+    const steps = [['Rectification plan', 'Any event failure, critical failure, or ' + st.rectificationMonths + ' months below ' + st.passThreshold + ' in a row'],
+      ['Formal review', '3 months below ' + st.passThreshold + ' in any 6'], ['Notice of default', '6 months below in any 12, or a failed plan'], ['Termination', 'Default not remedied']];
+    const escSvg = `<div class="ov-stairs" role="img" aria-label="Escalation ladder: rectification plan, formal review, notice of default, termination">${steps.map(([t, d], i) => `<div class="ov-stair"><b>${t}</b><span class="small muted">${esc(d)}</span><div class="ov-bar" style="height:${24 + i * 26}px;opacity:${0.35 + i * 0.2}"></div></div>`).join('')}</div>
+      <div class="ov-inc"><b>Incentive.</b> ${st.incentiveMonths} or more months at ${st.incentiveScore}+ with improving condition trends releases the incentive pool and earns an extension year.</div>`;
+
+    // band diagram (SVG)
+    const bandSvg = `<svg viewBox="0 0 600 150" class="ov-svg ov-narrow" role="img" aria-label="Annual band: below the minimum earns TAU a credit, within the band the price is unchanged, above the maximum is paid only for units TAU caused">
+      <rect x="20" y="50" width="160" height="34" rx="6" fill="var(--warn-soft)"/><rect x="180" y="50" width="240" height="34" fill="var(--good-soft)"/><rect x="420" y="50" width="160" height="34" rx="6" fill="var(--soil-soft)"/>
+      <line x1="180" x2="180" y1="40" y2="94" stroke="var(--ink)" stroke-width="2"/><line x1="420" x2="420" y1="40" y2="94" stroke="var(--ink)" stroke-width="2"/>
+      <text x="180" y="32" text-anchor="middle" class="ov-t ov-b">Declared minimum</text><text x="420" y="32" text-anchor="middle" class="ov-t ov-b">Declared maximum</text>
+      <text x="100" y="72" text-anchor="middle" class="ov-t ov-b">Below the band</text><text x="300" y="72" text-anchor="middle" class="ov-t ov-b">Within the band</text><text x="500" y="72" text-anchor="middle" class="ov-t ov-b">Above the band</text>
+      <text x="100" y="112" text-anchor="middle" class="ov-t ov-s">Credit to TAU per unit,</text><text x="100" y="128" text-anchor="middle" class="ov-t ov-s">${pc(st.creditShare)} if every standard was met</text>
+      <text x="300" y="112" text-anchor="middle" class="ov-t ov-s">Lump sum unchanged</text>
+      <text x="500" y="112" text-anchor="middle" class="ov-t ov-s">Paid at the tendered rate only</text><text x="500" y="128" text-anchor="middle" class="ov-t ov-s">for extra units TAU caused</text></svg>`;
+
+    // live example from the current data
+    const Y = C.year(c, yd(), months()), m = Y.months.find(z => z.month === S.ui.month) || Y.months[0];
+    const mK = m.kpi['KPI-M'];
+    const example = m.overall == null ? '' : `
+      <div class="card"><h2>A worked example from ${esc(S.ui.contractor)}, ${esc(m.month)}</h2>
+        <ol class="ov-ex">
+          <li>Mowing (KPI-M) was checked at ${mK.events} event${mK.events === 1 ? '' : 's'} this month, averaging an event score of <b>${f1(mK.mean)}</b>.</li>
+          <li>${mK.ded ? `Confirmed monthly deductions took off <b>${mK.ded}</b> points` : 'There were no confirmed mowing deductions'}, so KPI-M scored <b>${f1(mK.result)}</b>${mK.below ? `, below its pass mark of ${c.pass['KPI-M']}` : ''}.</li>
+          <li>The 13 KPI results, weighted, give an overall score of <b>${f1(m.overall)}</b>.</li>
+          <li>${m.feePct >= 1 ? 'That is at or above ' + st.passThreshold + ', so the full fee is paid' : `That is ${Math.floor(st.passThreshold - m.overall + 1e-9)} full point${Math.floor(st.passThreshold - m.overall + 1e-9) === 1 ? '' : 's'} below ${st.passThreshold}, so <b>${pc(m.feePct)}</b> of the fee is paid (${money(m.abatement)} abatement)`}.</li>
+          <li>${m.rectification ? `A rectification plan is required because ${[m.eventFailure ? 'an event standard failed' : '', m.critical.length ? 'a critical standard failed' : '', m.consecutive >= st.rectificationMonths ? 'the score has been below ' + st.passThreshold + ' for ' + m.consecutive + ' months in a row' : ''].filter(Boolean).join(' and ')}.` : 'No rectification plan is needed this month.'}</li>
+        </ol><p class="muted small">Change the month in the Dashboard to see another month worked through.${S.sample ? ' These are sample results, not a real assessment.' : ''}</p></div>`;
+
+    return `
+    <div class="head"><div><div class="label">Schedule 1 Performance Model, in plain English</div><h1>Model overview</h1></div></div>
+    <div class="card ov-lead"><p>TAU pays the contractor a fixed monthly fee for the condition of the stadium surface and the services around it, not for how many times the field is mown or treated. Each month the contractor's work is checked against the standards in the Technical Specification, turned into a single score out of 100, and that score decides how much of the fee is paid and whether anything needs fixing.</p></div>
+    <div class="ov-cards">
+      <div class="card"><div class="label">Pay for outcomes</div><p>The specification says what a good result looks like. How the contractor gets there is up to them, set out in their Turf Management Plan.</p></div>
+      <div class="card"><div class="label">Event day matters most</div><p>Most points are won or lost at the joint readiness check before each event, and the event-day services carry ${groups[0][2].reduce((a, k) => a + W(k), 0)}% of the weight.</p></div>
+      <div class="card"><div class="label">Fair to both sides</div><p>The contractor is only scored on what they control. Quantities are settled once a year, and safety failures always trigger action.</p></div>
+    </div>
+
+    <div class="card"><h2>How the pieces fit together</h2><p class="muted small">Five steps every month, from the standards in the specification to the fee and any follow-up. Each step has its own tab in this app.</p>
+      <div class="ov-flow">
+        <div class="ov-step"><div class="ov-n">1</div><div class="ov-st">Measure</div><p>${nStd} standards across 13 service areas, each with a set test or check.</p><div class="ov-k">Events tab · Monthly tab</div></div>
+        <div class="ov-arr" aria-hidden="true"></div>
+        <div class="ov-step"><div class="ov-n">2</div><div class="ov-st">Score each service area</div><p>Each of the 13 KPIs starts the month at 100 and loses points for confirmed failures.</p><div class="ov-k">−${st.eventPoints} event failure · −10 incident · −5 late</div></div>
+        <div class="ov-arr" aria-hidden="true"></div>
+        <div class="ov-step"><div class="ov-n">3</div><div class="ov-st">Combine</div><p>The 13 results are weighted into one overall score out of 100.</p><div class="ov-k">Weights total 100%</div></div>
+        <div class="ov-arr" aria-hidden="true"></div>
+        <div class="ov-step ov-dark"><div class="ov-n">4</div><div class="ov-st">Pay</div><p>The overall score sets how much of the ${money(st.monthlyFee)} monthly fee is paid.</p><div class="ov-k">${st.passThreshold}+ pays 100%</div></div>
+        <div class="ov-arr" aria-hidden="true"></div>
+        <div class="ov-step"><div class="ov-n">5</div><div class="ov-st">Act</div><p>Failures trigger a fix, repeated failure escalates, sustained excellence is rewarded.</p><div class="ov-k">Dashboard tab</div></div>
+      </div>
+      <div class="ov-notes">
+        <div class="ov-note n1"><b>Once a year.</b> Cuts, set-outs, passes and repairs are checked against the range declared at tender (Bands tab).</div>
+        <div class="ov-note n2"><b>Always.</b> ${nCrit} critical safety and compliance standards trigger a rectification plan whatever the score.</div>
+        <div class="ov-note n3"><b>Relief.</b> Months or KPIs affected by TAU decisions, closures or declared extreme weather are not assessed.</div>
+      </div></div>
+
+    <div class="card"><h2>How one KPI is scored</h2><p class="muted small">Every service area has one KPI. Two kinds of evidence feed it.</p>
+      <div class="ov-kpi">
+        <div class="ov-src"><div class="label">At every event</div><b>Readiness sign-off</b><p>${nEv} standards are checked jointly before kick-off. Each KPI starts each event at 100 and loses ${st.eventPoints} for every standard that fails. A problem fixed before kick-off still counts.</p>
+          <div class="ov-mini"><span>Event 1: <b>80</b></span><span>Event 2: <b>100</b></span><span>Average: <b>90</b></span></div></div>
+        <div class="ov-op" aria-hidden="true">−</div>
+        <div class="ov-src"><div class="label">During the month</div><b>Confirmed deductions</b><p>Incidents and audit breaches cost ${c.categories.B} points each; late or incomplete items cost ${c.categories.D}. No single standard can cost more than ${st.capPerStandard} points in a month.</p>
+          <div class="ov-mini"><span>Late report: <b>5</b></span></div></div>
+        <div class="ov-op" aria-hidden="true">=</div>
+        <div class="ov-src ov-res"><div class="label">KPI result</div><b class="ov-big">85</b><p>Pass mark ${st.passThreshold}. With no event in the month the KPI starts at ${st.noEventScore}.</p></div>
+      </div></div>
+
+    <div class="card"><h2>Which service areas count most</h2><p class="muted small">The weight of each KPI in the overall score. Weights can be changed in Setup and always total 100%.</p>
+      <div class="ov-weights">${weightBars}</div></div>
+
+    <div class="grid">
+      <div class="card"><h2>How the score sets the fee</h2><p class="muted small">At ${st.passThreshold} or above the full fee is paid. Below ${st.passThreshold} the fee drops ${pc(st.abatementPerPoint)} for each full point, but never by more than ${pc(st.abatementCap)}.</p>${feeSvg}</div>
+      <div class="card"><h2>What happens when performance slips</h2><p class="muted small">Each step up the ladder is more serious. Nine months at ${st.incentiveScore} or above, with improving turf condition, releases an incentive instead.</p>${escSvg}</div>
+    </div>
+
+    <div class="card"><h2>Quantities are settled once a year</h2><p class="muted small">For mowing, line marking, goal post changeovers, peaking programmes, repairs, treatments and event attendance, the contractor declares a minimum and maximum at tender. Cutting more because of growth or weather is the contractor's risk; extra work TAU causes is paid.</p>${bandSvg}</div>
+
+    ${example}
+
+    <div class="card"><h2>The monthly routine</h2>
+      <ol class="ov-cycle">
+        <li><b>Before each event</b><span>Contractor and the Principal's Representative complete the readiness sign-off (Events tab).</span></li>
+        <li><b>During the month</b><span>Incidents, audit breaches and late items are logged and confirmed (Monthly tab).</span></li>
+        <li><b>By the 5th working day</b><span>Contractor submits the monthly report; set the last month reported in Setup.</span></li>
+        <li><b>Within 5 working days</b><span>The Principal's Representative verifies, applies any relief and certifies the fee (Dashboard, Save as PDF).</span></li>
+        <li><b>Once a year</b><span>Bands reconciled, incentive tested, weightings and targets reviewed in time for the 30 September budget reports.</span></li>
+      </ol></div>`;
+  }
+
   /* ---------- setup ---------- */
   function vSetup() {
     const c = cfg(), d = yd(), st = c.settings, y = yearObj();
@@ -406,7 +528,7 @@
   function download(name, text) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type: 'application/json' })); a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000); }
 
   /* ---------- routing & events ---------- */
-  const views = { dashboard: vDashboard, events: vEvents, deductions: vDeductions, bands: vBands, model: vModel, setup: vSetup };
+  const views = { dashboard: vDashboard, events: vEvents, deductions: vDeductions, bands: vBands, model: vModel, overview: vOverview, setup: vSetup };
   function route(keepScroll) {
     const v = (location.hash || '#dashboard').slice(1), name = views[v] ? v : 'dashboard';
     document.querySelectorAll('.tabs a').forEach(a => a.setAttribute('aria-current', a.dataset.view === name ? 'page' : 'false'));

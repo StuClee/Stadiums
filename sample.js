@@ -2,7 +2,7 @@
 window.SAMPLE = (function () {
   const events = [
     ['2026-07-11', 'NRL round (sample)', 'B', false, { 'M1.5': 'Clumps at two turning zones in run-off; cleared before kick-off, result stands.', 'L1.5': 'Marking finished 40 minutes after the agreed final marking time.', 'R1.7': 'Goalmouth repair 6 mm proud of the surrounding surface.', 'O1.4': 'Half-time divoting crew one person short.' }],
-    ['2026-07-25', 'A-League round (sample)', 'B', false, { 'M1.6': 'Edging missed along the southern hard edge.', 'I1.1': 'Root zone moisture below the event band at 4 of 15 grid points.', 'P1.12': 'Two goalmouth test points above the hardness band.' }],
+    ['2026-07-25', 'A-League round (sample)', 'B', false, { 'M1.6': 'Edging missed along the southern hard edge.', 'I1.1': 'Root zone moisture below the event band at 4 of 15 grid points.', 'P1.12': 'Two goalmouth test points above the hardness band.', 'HS1.7': 'Litter build-up at the southern gates at readiness.' }],
     ['2026-08-08', 'NRL round (sample)', 'B', false, {}],
     ['2026-08-15', 'A-League round (sample)', 'B', false, { 'M1.1': 'Grid mean 25.8 mm, above the 25 mm upper limit.' }],
     ['2026-08-29', 'NRL round (sample)', 'B', false, {}],
@@ -18,6 +18,7 @@ window.SAMPLE = (function () {
     ['Jul-2026', 'O1.10', 1, true, 'Monthly report submitted three days late.'],
     ['Aug-2026', 'M1.3', 1, true, 'Non-event height above range at unannounced audit.'],
     ['Sep-2026', 'I1.6', 2, true, 'Two irrigation repairs completed outside the response time.'],
+    ['Sep-2026', 'GD1.5', 1, true, 'Dead shrub in the main entrance garden not removed (sample).'],
     ['Oct-2026', 'T1.10', 1, true, 'Spray records for one application incomplete.'],
     ['Oct-2026', 'N1.8', 1, false, 'Spreader overlap reported; not confirmed at audit.'],
   ];

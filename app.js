@@ -26,6 +26,13 @@
   let S;
   try { S = JSON.parse(localStorage.getItem(KEY)) || fresh(); } catch (e) { S = fresh(); }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { toast('Could not save in this browser'); } }
+  let modelNotice = '';
+  if (S.modelVersion !== M.version) {
+    if (S.modelVersion !== undefined || Object.keys((S.settings || {}).weights || {}).length) {
+      if (Object.keys((S.settings || {}).weights || {}).length) { S.settings.weights = {}; modelNotice = 'The model was updated to 15 KPIs (core sports turf 85%, Gardens and hard surfaces 15%). Saved KPI weightings were reset to the new model weightings; your events and deductions are kept.'; }
+    }
+    S.modelVersion = M.version; try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
+  }
   const cfg = () => C.cfgFrom(S.settings);
   const yearObj = () => S.years.find(y => y.id === S.ui.year) || S.years[0];
   const months = () => yearObj().months;
@@ -279,15 +286,17 @@
   function vOverview() {
     const c = cfg(), st = c.settings, nStd = M.standards.length, nEv = M.standards.filter(s => s.event).length;
     const nCrit = M.standards.filter(s => s.critical).length;
-    const W = k => Math.round((c.weights[k] || 0) * 100);
+    const W = k => Math.round((c.weights[k] || 0) * 1000) / 10;
     const groups = [
       ['Event day', 'What players, officials and broadcasters see and feel at kick-off', ['KPI-M', 'KPI-P', 'KPI-O', 'KPI-L', 'KPI-R']],
       ['Surface between events', 'Keeping the surface healthy through the season', ['KPI-I', 'KPI-N', 'KPI-V', 'KPI-C']],
       ['Support services', 'Treatments, lighting and equipment', ['KPI-T', 'KPI-F', 'KPI-G']],
+      ['Gardens and hard surfaces', 'Precinct presentation, cleanliness and safety', ['KPI-GD', 'KPI-HS']],
       ['Pilot', 'Usage cameras: reported, not yet scored', ['KPI-U']]];
     const maxW = Math.max(...M.kpis.map(k => W(k.id)), 1);
+    const coreW = Math.round((M.coreShare ? M.coreShare.kpis : M.kpis.map(k => k.id)).reduce((a, k) => a + W(k), 0) * 10) / 10;
     const weightBars = groups.map(([g, sub, ks]) => `
-      <div class="ov-wgroup"><div class="ov-wg-head"><b>${g}</b><span class="muted small">${sub}</span><span class="ov-wg-tot">${ks.reduce((a, k) => a + W(k), 0)}%</span></div>
+      <div class="ov-wgroup"><div class="ov-wg-head"><b>${g}</b><span class="muted small">${sub}</span><span class="ov-wg-tot">${Math.round(ks.reduce((a, k) => a + W(k), 0) * 10) / 10}%</span></div>
       ${ks.map(k => `<div class="ov-wbar"><span class="pill-k">${k}</span><span class="ov-wname">${esc(KPI[k].name)}</span><span class="ov-wtrack"><span style="width:${W(k) / maxW * 100}%"></span></span><span class="num">${W(k)}%</span></div>`).join('')}</div>`).join('');
 
     // score to fee step chart (SVG): x = score 60..100, y = fee 80..100%
@@ -332,7 +341,7 @@
         <ol class="ov-ex">
           <li>Mowing (KPI-M) was checked at ${mK.events} event${mK.events === 1 ? '' : 's'} this month, averaging an event score of <b>${f1(mK.mean)}</b>.</li>
           <li>${mK.ded ? `Confirmed monthly deductions took off <b>${mK.ded}</b> points` : 'There were no confirmed mowing deductions'}, so KPI-M scored <b>${f1(mK.result)}</b>${mK.below ? `, below its pass mark of ${c.pass['KPI-M']}` : ''}.</li>
-          <li>The 13 KPI results, weighted, give an overall score of <b>${f1(m.overall)}</b>.</li>
+          <li>The ${M.kpis.length} KPI results, weighted, give an overall score of <b>${f1(m.overall)}</b>.</li>
           <li>${m.feePct >= 1 ? 'That is at or above ' + st.passThreshold + ', so the full fee is paid' : `That is ${Math.floor(st.passThreshold - m.overall + 1e-9)} full point${Math.floor(st.passThreshold - m.overall + 1e-9) === 1 ? '' : 's'} below ${st.passThreshold}, so <b>${pc(m.feePct)}</b> of the fee is paid (${money(m.abatement)} abatement)`}.</li>
           <li>${m.rectification ? `A rectification plan is required because ${[m.eventFailure ? 'an event standard failed' : '', m.critical.length ? 'a critical standard failed' : '', m.consecutive >= st.rectificationMonths ? 'the score has been below ' + st.passThreshold + ' for ' + m.consecutive + ' months in a row' : ''].filter(Boolean).join(' and ')}.` : 'No rectification plan is needed this month.'}</li>
         </ol><p class="muted small">Change the month in the Dashboard to see another month worked through.${S.sample ? ' These are sample results, not a real assessment.' : ''}</p></div>`;
@@ -341,18 +350,18 @@
     <div class="head"><div><div class="label">Schedule 1 Performance Model, in plain English</div><h1>Model overview</h1></div></div>
     <div class="card ov-lead"><p>TAU pays the contractor a fixed monthly fee for the condition of the stadium surface and the services around it, not for how many times the field is mown or treated. Each month the contractor's work is checked against the standards in the Technical Specification, turned into a single score out of 100, and that score decides how much of the fee is paid and whether anything needs fixing.</p></div>
     <div class="ov-cards">
-      <div class="card"><div class="label">Pay for outcomes</div><p>The specification says what a good result looks like. How the contractor gets there is up to them, set out in their Turf Management Plan.</p></div>
-      <div class="card"><div class="label">Event day matters most</div><p>Most points are won or lost at the joint readiness check before each event, and the event-day services carry ${groups[0][2].reduce((a, k) => a + W(k), 0)}% of the weight.</p></div>
+      <div class="card"><div class="label">Pay for outcomes</div><p>The specification says what a good result looks like. How the contractor gets there is up to them, set out in their Maintenance &amp; Operations Plan.</p></div>
+      <div class="card"><div class="label">Event day matters most</div><p>Most points are won or lost at the joint readiness check before each event, and the event-day services carry ${Math.round(groups[0][2].reduce((a, k) => a + W(k), 0) * 10) / 10}% of the weight. The core sports turf services carry ${coreW}% in all.</p></div>
       <div class="card"><div class="label">Fair to both sides</div><p>The contractor is only scored on what they control. Quantities are settled once a year, and safety failures always trigger action.</p></div>
     </div>
 
     <div class="card"><h2>How the pieces fit together</h2><p class="muted small">Five steps every month, from the standards in the specification to the fee and any follow-up. Each step has its own tab in this app.</p>
       <div class="ov-flow">
-        <div class="ov-step"><div class="ov-n">1</div><div class="ov-st">Measure</div><p>${nStd} standards across 13 service areas, each with a set test or check.</p><div class="ov-k">Events tab · Monthly tab</div></div>
+        <div class="ov-step"><div class="ov-n">1</div><div class="ov-st">Measure</div><p>${nStd} standards across ${M.kpis.length} service areas, each with a set test or check.</p><div class="ov-k">Events tab · Monthly tab</div></div>
         <div class="ov-arr" aria-hidden="true"></div>
-        <div class="ov-step"><div class="ov-n">2</div><div class="ov-st">Score each service area</div><p>Each of the 13 KPIs starts the month at 100 and loses points for confirmed failures.</p><div class="ov-k">−${st.eventPoints} event failure · −10 incident · −5 late</div></div>
+        <div class="ov-step"><div class="ov-n">2</div><div class="ov-st">Score each service area</div><p>Each of the ${M.kpis.length} KPIs starts the month at 100 and loses points for confirmed failures.</p><div class="ov-k">−${st.eventPoints} event failure · −10 incident · −5 late</div></div>
         <div class="ov-arr" aria-hidden="true"></div>
-        <div class="ov-step"><div class="ov-n">3</div><div class="ov-st">Combine</div><p>The 13 results are weighted into one overall score out of 100.</p><div class="ov-k">Weights total 100%</div></div>
+        <div class="ov-step"><div class="ov-n">3</div><div class="ov-st">Combine</div><p>The ${M.kpis.length} results are weighted into one overall score out of 100.</p><div class="ov-k">Core sports turf ${coreW}% · Gardens and hard surfaces ${Math.round((100 - coreW) * 10) / 10}%</div></div>
         <div class="ov-arr" aria-hidden="true"></div>
         <div class="ov-step ov-dark"><div class="ov-n">4</div><div class="ov-st">Pay</div><p>The overall score sets how much of the ${money(st.monthlyFee)} monthly fee is paid.</p><div class="ov-k">${st.passThreshold}+ pays 100%</div></div>
         <div class="ov-arr" aria-hidden="true"></div>
@@ -421,7 +430,7 @@
       ${num('eventPoints', 'Points per failed event standard (A)')}${num('capPerStandard', 'Cap per standard per month')}${num('noEventScore', 'Score for a month with no event')}${num('creditShare', 'Band credit share when all standards met (%)', 5, 1)}
       ${Object.entries(M.categories).filter(([k]) => k !== 'A').sort().map(([k, v]) => `<label class="field">Category ${k}: ${esc(v.name)}<input type="number" step="1" data-cat="${k}" value="${c.categories[k]}"></label>`).join('')}</div></div>
     <div class="card"><h2>KPI weightings (Part B)</h2><div class="tablebox"><table class="t"><thead><tr><th>KPI</th><th>Weight (%)</th><th>Pass</th></tr></thead><tbody>
-      ${M.kpis.map(k => `<tr><td><span class="pill-k">${k.id}</span> ${esc(k.name)}</td><td><input type="number" step="1" data-w="${k.id}" value="${+((c.weights[k.id] || 0) * 100).toFixed(2)}"></td><td><input type="number" step="1" data-p="${k.id}" value="${c.pass[k.id]}"></td></tr>`).join('')}
+      ${M.kpis.map(k => `<tr><td><span class="pill-k">${k.id}</span> ${esc(k.name)}</td><td><input type="number" step="0.5" data-w="${k.id}" value="${+((c.weights[k.id] || 0) * 100).toFixed(2)}"></td><td><input type="number" step="1" data-p="${k.id}" value="${c.pass[k.id]}"></td></tr>`).join('')}
       <tr class="sub"><td>Total</td><td>${pc(wTot)} ${Math.abs(wTot - 1) > 1e-6 ? '<span class="warn-note">Weights must total 100%</span>' : ''}</td><td></td></tr></tbody></table></div>
       <div class="row" style="margin-top:10px"><button class="btn" data-act="resetSettings">Restore model settings</button></div></div>
     <div class="card"><h2>Data</h2><p class="muted small">Results are saved in this browser only and are not uploaded to Netlify. Export a backup file to share with a colleague or move to another computer, then import it there.</p>
@@ -451,7 +460,7 @@
       const teal = [28, 106, 100], ink = [23, 36, 34], muted = [90, 104, 102], line = [213, 223, 221], red = [179, 65, 47], green = [46, 125, 79];
       const stamp = new Date().toLocaleDateString('en-NZ', { day: 'numeric', month: 'long', year: 'numeric' });
       doc.setFillColor(...teal); doc.rect(0, 0, W, 4, 'F');
-      doc.setTextColor(...muted); doc.setFontSize(9); doc.text('TATAKI AUCKLAND UNLIMITED · NATURAL TURF MAINTENANCE · STADIUM PERFORMANCE MODEL', mg, 13);
+      doc.setTextColor(...muted); doc.setFontSize(9); doc.text('TATAKI AUCKLAND UNLIMITED · STADIUMS MAINTENANCE · STADIUM PERFORMANCE MODEL', mg, 13);
       doc.setTextColor(...ink); doc.setFont('helvetica', 'bold'); doc.setFontSize(20); doc.text('Monthly Performance Report', mg, 22);
       doc.setFont('helvetica', 'normal'); doc.setFontSize(11); doc.setTextColor(...muted); doc.text(`${S.ui.contractor} · ${yearObj().name} · ${m.month}${S.sample ? ' · SAMPLE DATA' : ''}`, mg, 29);
       const tiles = [['Overall score', m.overall == null ? '–' : f1(m.overall), m.overall == null ? 'Not reported' : m.below ? `Below threshold ${st.passThreshold}` : `Pass (threshold ${st.passThreshold})`, m.below ? red : teal],
@@ -534,7 +543,9 @@
     document.querySelectorAll('.tabs a').forEach(a => a.setAttribute('aria-current', a.dataset.view === name ? 'page' : 'false'));
     $('#monthSel').hidden = !(name === 'dashboard' || name === 'deductions');
     const y = window.scrollY; destroyCharts(); renderCtx();
-    $('#app').innerHTML = `<section class="view">${views[name]()}</section>`;
+    const note = modelNotice ? `<div class="card small" role="status"><div class="label">Model updated</div><p>${esc(modelNotice)}</p></div>` : '';
+    modelNotice = '';
+    $('#app').innerHTML = `<section class="view">${note}${views[name]()}</section>`;
     if (name === 'dashboard') charts = drawCharts();
     if (keepScroll) window.scrollTo(0, y);
   }

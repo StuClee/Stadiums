@@ -34,7 +34,11 @@ a { color: var(--accent); }
 /* top bar */
 .topbar { position: sticky; top: 0; z-index: 20; background: var(--surface); border-bottom: 1px solid var(--line); }
 .topbar-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; gap: 10px 22px; flex-wrap: wrap; padding: 10px 16px; }
-.brand { display: flex; align-items: center; gap: 10px; }
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand-logo { display: flex; align-items: center; padding-right: 12px; border-right: 1px solid var(--line); }
+.brand-logo img { height: 42px; width: auto; display: block; }
+@media (max-width: 640px) { .brand-logo img { height: 34px; } .brand-sub { display: none; } }
+.brand-text { min-width: 0; }
 .brand-mark { width: 26px; height: 26px; border-radius: 6px; background: repeating-linear-gradient(90deg, var(--accent) 0 6px, color-mix(in srgb, var(--accent) 78%, var(--surface)) 6px 12px); }
 .brand-name { font-family: var(--f-display); font-weight: 650; font-size: 1.05rem; line-height: 1.1; }
 .brand-sub { font-size: .75rem; color: var(--muted); }

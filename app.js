@@ -460,7 +460,7 @@
       const teal = [28, 106, 100], ink = [23, 36, 34], muted = [90, 104, 102], line = [213, 223, 221], red = [179, 65, 47], green = [46, 125, 79];
       const stamp = new Date().toLocaleDateString('en-NZ', { day: 'numeric', month: 'long', year: 'numeric' });
       doc.setFillColor(...teal); doc.rect(0, 0, W, 4, 'F');
-      doc.setTextColor(...muted); doc.setFontSize(9); doc.text('TATAKI AUCKLAND UNLIMITED · STADIUMS MAINTENANCE · STADIUM PERFORMANCE MODEL', mg, 13);
+      doc.setTextColor(...muted); doc.setFontSize(9); doc.text('TATAKI AUCKLAND UNLIMITED · STADIUMS MAINTENANCE PERFORMANCE MODEL', mg, 13);
       doc.setTextColor(...ink); doc.setFont('helvetica', 'bold'); doc.setFontSize(20); doc.text('Monthly Performance Report', mg, 22);
       doc.setFont('helvetica', 'normal'); doc.setFontSize(11); doc.setTextColor(...muted); doc.text(`${S.ui.contractor} · ${yearObj().name} · ${m.month}${S.sample ? ' · SAMPLE DATA' : ''}`, mg, 29);
       const tiles = [['Overall score', m.overall == null ? '–' : f1(m.overall), m.overall == null ? 'Not reported' : m.below ? `Below threshold ${st.passThreshold}` : `Pass (threshold ${st.passThreshold})`, m.below ? red : teal],

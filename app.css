@@ -259,3 +259,48 @@ details.howto > p { margin-top: 10px; }
 /* Name and description columns read better left-aligned */
 table.t.kt td:nth-child(2), table.t.kt th:nth-child(2), table.t.tl td:not(.num), table.t.tl th:not(.num) { text-align: left; }
 table.t.kt th:nth-child(2) .th-sub, table.t.tl th .th-sub { margin-left: 0; }
+
+/* KPI result bars */
+.kbars { display: grid; gap: 6px; margin: 12px 0 6px; }
+.kbar { display: grid; grid-template-columns: minmax(150px, 210px) 52px minmax(0, 1fr) 120px; gap: 10px; align-items: center; font-size: .9rem; }
+.kbar-lab { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kbar-w { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
+.kbar-track { position: relative; height: 18px; background: var(--surface-2); border-radius: 4px; }
+.kbar-fill { position: absolute; left: 0; top: 0; bottom: 0; background: var(--accent); border-radius: 0 4px 4px 0; }
+.kbar-fill.below { background: #e08a5a; }
+.kbar-pass { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--ink); border-radius: 1px; }
+.kbar-off { position: absolute; left: 8px; top: 0; line-height: 18px; font-size: .78rem; color: var(--muted); font-style: italic; }
+.kbar-val { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.kbar-axis .kbar-track.axis { background: none; height: 14px; }
+.kbar-axis .kbar-track.axis span { position: absolute; transform: translateX(-50%); font-size: .72rem; color: var(--muted); }
+.kbar:not(.kbar-axis):hover .kbar-track { outline: 2px solid var(--line); }
+details.more { margin-top: 8px; }
+details.more > summary { cursor: pointer; color: var(--accent); font-weight: 600; font-size: .9rem; padding: 4px 0; }
+/* Part F meters */
+.mdots { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.mdot { display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; font-size: .72rem; font-weight: 700; border: 2px solid var(--surface); }
+.mdot-key .mdot { width: 12px; height: 12px; vertical-align: -1px; margin-left: 8px; }
+.mdot.inc { background: var(--good); color: #fff; }
+.mdot.ok { background: var(--accent-soft); color: var(--accent); }
+.mdot.bad { background: #e08a5a; color: #fff; }
+.mdot.na { background: var(--surface-2); color: var(--muted); }
+.inc-meter { height: 14px; background: var(--surface-2); border-radius: 7px; overflow: hidden; margin: 6px 0 4px; }
+.inc-meter span { display: block; height: 100%; background: var(--good); border-radius: 7px; }
+.lights { display: grid; gap: 6px; margin-top: 14px; }
+.light { display: grid; grid-template-columns: 26px 1fr auto; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 8px; background: var(--surface-2); }
+.light.on { background: var(--bad-soft); }
+.light-ic { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: .8rem; background: var(--good); color: #fff; }
+.light.on .light-ic { background: var(--bad); }
+/* Fee waterfall */
+.wf { display: grid; gap: 6px; margin: 12px 0 6px; }
+.wf-row { display: grid; grid-template-columns: 170px minmax(0, 1fr) 110px; gap: 10px; align-items: center; font-size: .9rem; }
+.wf-track { position: relative; height: 18px; }
+.wf-bar { position: absolute; top: 0; bottom: 0; border-radius: 4px; }
+.wf-bar.base { background: var(--accent-soft); border: 1.5px solid var(--accent); }
+.wf-bar.sub, .wf-bar.total { background: var(--accent); }
+.wf-bar.minus { background: #e08a5a; }
+.wf-bar.plus { background: var(--good); }
+.wf-val { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+@media (max-width: 760px) { .kbar { grid-template-columns: 1fr 44px; } .kbar-track { grid-column: 1 / -1; } .kbar-val { grid-column: 1 / -1; } .wf-row { grid-template-columns: 1fr auto; } .wf-track { grid-column: 1 / -1; } }
+@media print { details.more:not([open]) > *:not(summary) { display: block; } }
+.kbar-head { text-transform: uppercase; letter-spacing: .05em; font-size: .7rem; font-weight: 600; }

@@ -106,6 +106,49 @@
     const ymSet = new Set(yms.map(x => x.month));
     const deds = (d.deductions || []).filter(x => ytd ? ymSet.has(x.month) : x.month === m.month).map(x => { const s = C.STD[x.ref] || {}; return `<tr><td><span class="pill-k">${esc(x.ref)}</span> ${esc(s.name || '')}${ytd ? `<div class="small muted">${esc(x.month)}</div>` : ''}</td><td class="num">${esc(x.count)}</td><td class="num">${x.confirmed ? (x.count * C.points(c, x.ref)) : '<span class="muted">not confirmed</span>'}</td><td>${esc(x.note || '')}</td></tr>`; }).join('');
     const yesNo = b => b ? '<span class="status s-below">Yes</span>' : '<span class="status s-pass">No</span>';
+    const bandsTot = M.bands.reduce((a, b) => { const r = C.band(c, (d.bands || {})[b.id] || {}); a.extra += r.extra; a.credit += r.credit; return a; }, { extra: 0, credit: 0 });
+    // KPI result bars: one bar per KPI on a 0 to 100 scale, a tick at its pass mark
+    const kBars = (rows, title) => `<div class="kbars" role="img" aria-label="${esc(title)}"><div class="kbar kbar-head muted small" aria-hidden="true"><span>KPI</span><span class="kbar-w">Weight</span><span>Result, 0 to 100 (tick = pass mark)</span><span>Score</span></div>${rows.map(r => {
+      const off = r.v == null, below = !off && r.v < r.pass;
+      return `<div class="kbar" title="${esc(r.k.id + ' ' + r.k.name)}: ${off ? r.offText : f1(r.v)} (pass mark ${r.pass}, weight ${pc(r.w)})">
+        <span class="kbar-lab"><span class="pill-k">${r.k.id}</span> ${esc(shortName(r.k.id))}</span>
+        <span class="kbar-w">${pc(r.w)}</span>
+        <span class="kbar-track">${off ? `<span class="kbar-off">${r.offText}</span>` : `<span class="kbar-fill ${below ? 'below' : ''}" style="width:${Math.max(1, r.v)}%"></span>`}<span class="kbar-pass" style="left:${r.pass}%"></span></span>
+        <span class="kbar-val">${off ? '–' : `<b>${f1(r.v)}</b>${below ? ' <span class="status s-below">Below</span>' : ''}`}</span></div>`; }).join('')}
+      <div class="kbar kbar-axis" aria-hidden="true"><span></span><span></span><span class="kbar-track axis"><span style="left:0">0</span><span style="left:50%">50</span><span style="left:100%">100</span></span><span></span></div></div>
+      <p class="muted small">Teal = at or above the KPI's pass mark; orange = below. The dark tick on each bar is that KPI's pass mark. Hover over a bar for details.</p>`;
+    const barsMonth = kBars(M.kpis.map(k => { const r = m.kpi[k.id]; return { k, v: r.result, pass: c.pass[k.id], w: m.weights[k.id] || 0,
+      offText: !m.reported ? 'Not reported' : r.offMonth ? 'Not scored this month' : r.notAssessed ? 'Not assessed' : 'No result' }; }), 'KPI results for ' + m.month);
+    const barsYtd = kBars(M.kpis.map(k => { const a = yk(k.id); return { k, v: a.avg, pass: c.pass[k.id], w: a.w || 0, offText: 'Not scored' }; }), 'KPI results year to date');
+    // Part F: a dot per month plus warning lights
+    const dot = x => { const cls = !x.reported || x.overall == null ? 'na' : x.overall >= st.incentiveScore ? 'inc' : x.below ? 'bad' : 'ok';
+      return `<span class="mdot ${cls}" title="${esc(x.month)}: ${x.overall == null ? 'not reported' : f1(x.overall)}"><span>${esc(x.month.split('-')[0])}</span></span>`; };
+    const light = (on, label, detail) => `<div class="light ${on ? 'on' : ''}"><span class="light-ic" aria-hidden="true">${on ? '!' : '✓'}</span><span><b>${label}</b><span class="small muted"> ${detail}</span></span><span class="status ${on ? 's-below' : 's-pass'}">${on ? 'Yes' : 'No'}</span></div>`;
+    const incPct = Math.min(1, Y.atIncentive / st.incentiveMonths);
+    const partF = `
+      <div class="label">Months by score</div><div class="mdots">${Y.months.map(dot).join('')}</div>
+      <div class="mdot-key small muted"><span class="mdot inc"></span> ${st.incentiveScore}+ <span class="mdot ok"></span> ${st.passThreshold} to ${st.incentiveScore} <span class="mdot bad"></span> below ${st.passThreshold} <span class="mdot na"></span> not reported</div>
+      <div class="label" style="margin-top:14px">Incentive progress</div>
+      <div class="inc-meter" title="${Y.atIncentive} of ${st.incentiveMonths} months at ${st.incentiveScore} or above"><span style="width:${incPct * 100}%"></span></div>
+      <div class="small">${Y.atIncentive} of ${st.incentiveMonths} months at ${st.incentiveScore}+ · condition trends ${d.trendsImproving ? 'improving' : 'not confirmed'} · pool ${Y.incentive ? '<b>released</b>' : 'not yet released'}</div>
+      <div class="lights">
+        ${light(Y.threeInSix, 'Three months below in any six', 'formal performance review')}
+        ${light(Y.sixInTwelve, 'Six months below in any twelve', 'notice of default')}
+        ${light(Y.criticalMonths > 0, 'Critical failures', `${Y.criticalMonths} month${Y.criticalMonths === 1 ? '' : 's'}`)}
+        ${light(Y.rectMonths > 0, 'Rectification plans', `${Y.rectMonths} month${Y.rectMonths === 1 ? '' : 's'} needed one`)}
+      </div>`;
+    // Fee waterfall: fee due, less abatement, bands, total paid
+    const wfMax = Math.max(1, Y.feeTotal + bandsTot.extra);
+    const wfRow = (label, from, to, cls, val) => { const lo = Math.min(from, to), w = Math.abs(to - from);
+      return `<div class="wf-row" title="${esc(label)}: ${val}"><span class="wf-lab">${label}</span><span class="wf-track"><span class="wf-bar ${cls}" style="left:${lo / wfMax * 100}%;width:${Math.max(w ? 0.6 : 0, w / wfMax * 100)}%"></span></span><span class="wf-val">${val}</span></div>`; };
+    const totalPaid = Y.feePaid + bandsTot.extra - bandsTot.credit;
+    const waterfall = `<div class="wf" role="img" aria-label="Fee waterfall for the months reported">
+      ${wfRow('Performance fee due', 0, Y.feeTotal, 'base', money(Y.feeTotal))}
+      ${wfRow('Less abatement', Y.feeTotal, Y.feePaid, 'minus', Y.abatement ? '−' + money(Y.abatement) : '$0')}
+      ${wfRow('Fee paid', 0, Y.feePaid, 'sub', money(Y.feePaid))}
+      ${wfRow('Plus band extras', Y.feePaid, Y.feePaid + bandsTot.extra, 'plus', '+' + money(bandsTot.extra))}
+      ${wfRow('Less band credits', Y.feePaid + bandsTot.extra, totalPaid, 'minus', bandsTot.credit ? '−' + money(bandsTot.credit) : '$0')}
+      ${wfRow('<b>Total paid to contractor</b>', 0, totalPaid, 'total', `<b>${money(totalPaid)}</b>`)}</div>`;
     const tilesMonth = `
     <div class="tiles">
       <div class="card tile ${m.below ? 'bad' : ''}"><div class="label">Overall score · ${esc(m.month)}</div><div class="big">${m.overall == null ? '–' : f1(m.overall)}</div>
@@ -132,7 +175,6 @@
         <div class="small">${T.inc} of ${st.incentiveMonths} months at ${st.incentiveScore}+ · trends ${d.trendsImproving ? 'improving' : 'not confirmed'}</div></div>
     </div>
 `;
-    const bandsTot = M.bands.reduce((a, b) => { const r = C.band(c, (d.bands || {})[b.id] || {}); a.extra += r.extra; a.credit += r.credit; return a; }, { extra: 0, credit: 0 });
     return `
     ${S.sample ? `<div class="card small no-print" style="background:var(--warn-soft);border-color:var(--warn-soft)"><b>Showing sample data for ${esc(SAMPLE.contractor)}.</b> These are illustrative results, not real assessments. Clear them in Setup before you start recording.</div>` : ''}
     ${!hasData() ? '<div class="card small no-print">Nothing recorded yet. <a href="#events">Record an event</a>, or <a href="#setup">load sample data</a> in Setup to see how the dashboard works.</div>' : ''}
@@ -149,32 +191,32 @@
       <figure class="card chart-card"><figcaption><h2>Overall score by month</h2><span class="muted small">Dashed lines mark the pass threshold (${st.passThreshold}) and incentive score (${st.incentiveScore})</span></figcaption><div class="chart-box"><canvas id="chScore" role="img" aria-label="Bar chart of the overall performance score by month"></canvas></div></figure>
       <figure class="card chart-card"><figcaption><h2>Fee paid and abatement by month</h2><span class="muted small">Monthly performance fee ${money(st.monthlyFee)}</span></figcaption><div class="chart-box"><canvas id="chFee" role="img" aria-label="Stacked bar chart of fee paid and abatement by month"></canvas></div></figure>
     </div>
-    ${ytd ? `<div class="card"><div class="flex-between"><h2>KPI results · year to date</h2><span class="muted small">${esc(T.span)} · average of each month's result</span></div><div class="tablebox"><table class="t kt">
+    ${ytd ? `<div class="card"><div class="flex-between"><h2>KPI results · year to date</h2><span class="muted small">${esc(T.span)} · average of each month's result</span></div>${barsYtd}<details class="more"><summary>Show the full table</summary><div class="tablebox"><table class="t kt">
       <thead><tr>${th('KPI', 'Code')}${th('Name', 'Key performance indicator')}${th('Avg weight', 'Over the months reported')}${th('YTD result', 'Average of monthly results')}${th('Status', 'Against the KPI pass mark')}${th('Months scored', 'Of months reported')}${th('Events', 'Scored this year')}${th('Deductions', 'Confirmed points, all months')}${th('Months below', 'Below the pass mark')}${th('Event fails', 'Failed standards')}</tr></thead>
-      <tbody>${kRowsYtd}</tbody></table></div></div>` : `<div class="card"><div class="flex-between"><h2>KPI results · ${esc(m.month)}</h2><span class="muted small">Result = mean event score less capped monthly deductions</span></div><div class="tablebox"><table class="t kt">
+      <tbody>${kRowsYtd}</tbody></table></div></details></div>` : `<div class="card"><div class="flex-between"><h2>KPI results · ${esc(m.month)}</h2><span class="muted small">Result = mean event score less capped monthly deductions</span></div>${barsMonth}<details class="more"><summary>Show the full table</summary><div class="tablebox"><table class="t kt">
       <thead><tr>${th('KPI', 'Code')}${th('Name', 'Key performance indicator')}${th('Weight this month', 'Share of the overall score')}${th('Result', 'Out of 100')}${th('Status', 'Against the KPI pass mark')}${th('Event score', 'Average of the month\'s events')}${th('Deductions', 'Confirmed points taken off')}${th('Year avg', 'Months reported so far')}${th('Months below', 'Below the pass mark this year')}${th('Event fails', 'Failed standards this year')}</tr></thead>
-      <tbody>${kRows}</tbody></table></div></div>`}
+      <tbody>${kRows}</tbody></table></div></details></div>`}
     <div class="card"><h2>KPI results by month</h2><p class="muted small">Orange below the pass threshold, teal towards 100. Blank = not reported or not assessed; – = not scored that month (0% weight). The month shown is in bold.</p><div class="tablebox">${heat}</div></div>
     <div class="grid">
       <div class="card"><h2>Event failures · ${ytd ? 'year to date' : esc(m.month)}</h2>${fails ? `<div class="tablebox"><table class="t tl"><thead><tr><th>Date</th><th>Event</th><th>Standard</th><th>Note</th></tr></thead><tbody>${fails}</tbody></table></div>` : `<p class="muted small">No failed event standards ${ytd ? 'this year' : 'this month'}.</p>`}</div>
       <div class="card"><h2>Monthly deductions · ${ytd ? 'year to date' : esc(m.month)}</h2>${deds ? `<div class="tablebox"><table class="t tl"><thead><tr><th>Standard</th><th class="num">Count</th><th class="num">Points</th><th>Note</th></tr></thead><tbody>${deds}</tbody></table></div>` : `<p class="muted small">No deductions logged ${ytd ? 'this year' : 'this month'}.</p>`}</div>
     </div>
     <div class="grid">
-      <div class="card"><h2>Escalation and incentive (Part F)</h2><table class="t"><tbody>
+      <div class="card"><h2>Escalation and incentive (Part F)</h2>${partF}<details class="more"><summary>Show the full table</summary><table class="t"><tbody>
         <tr><td>Months below threshold</td><td class="num"><b>${Y.monthsBelow}</b></td></tr>
         <tr><td>Three months below in any rolling six?</td><td class="num">${yesNo(Y.threeInSix)}</td></tr>
         <tr><td>Six months below in any twelve?</td><td class="num">${yesNo(Y.sixInTwelve)}</td></tr>
         <tr><td>Months with a critical failure</td><td class="num"><b>${Y.criticalMonths}</b></td></tr>
         <tr><td>Months with a rectification plan required</td><td class="num"><b>${Y.rectMonths}</b></td></tr>
         <tr><td>Months at or above ${st.incentiveScore}</td><td class="num"><b>${Y.atIncentive}</b></td></tr>
-        <tr><td>Incentive pool released?</td><td class="num">${Y.incentive ? '<span class="status s-pass">Yes</span>' : '<span class="status s-na">No</span>'}</td></tr></tbody></table></div>
-      <div class="card"><h2>Fee and bands, months reported</h2><table class="t"><tbody>
+        <tr><td>Incentive pool released?</td><td class="num">${Y.incentive ? '<span class="status s-pass">Yes</span>' : '<span class="status s-na">No</span>'}</td></tr></tbody></table></details></div>
+      <div class="card"><h2>Fee and bands, months reported</h2>${waterfall}<details class="more"><summary>Show the full table</summary><table class="t"><tbody>
         <tr><td>Performance fee for months reported</td><td class="num">${money(Y.feeTotal)}</td></tr>
         <tr><td>Fee paid after abatement</td><td class="num">${money(Y.feePaid)}</td></tr>
         <tr><td>Abatements withheld (pool value if released)</td><td class="num">${money(Y.abatement)}</td></tr>
         <tr><td>Band extra payments to contractor</td><td class="num">${money(bandsTot.extra)}</td></tr>
         <tr><td>Band credits to Principal</td><td class="num">${money(bandsTot.credit)}</td></tr>
-        <tr><td><b>Total paid to contractor</b></td><td class="num"><b>${money(Y.feePaid + bandsTot.extra - bandsTot.credit)}</b></td></tr></tbody></table>
+        <tr><td><b>Total paid to contractor</b></td><td class="num"><b>${money(Y.feePaid + bandsTot.extra - bandsTot.credit)}</b></td></tr></tbody></table></details>
         <p class="muted small">Bands are reconciled once a year (<a href="#bands">Bands</a>).</p></div>
     </div>`;
   }

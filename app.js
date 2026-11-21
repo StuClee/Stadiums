@@ -29,7 +29,7 @@
   let modelNotice = '';
   if (S.modelVersion !== M.version) {
     if (S.modelVersion !== undefined || Object.keys((S.settings || {}).weights || {}).length) {
-      if (Object.keys((S.settings || {}).weights || {}).length) { S.settings.weights = {}; modelNotice = 'The model was updated to 15 KPIs (core sports turf 85%, Gardens and hard surfaces 15%). Saved KPI weightings were reset to the new model weightings; your events and deductions are kept.'; }
+      if (Object.keys((S.settings || {}).weights || {}).length || Object.keys((S.settings || {}).mweights || {}).length) { S.settings.weights = {}; S.settings.mweights = {}; modelNotice = 'The model was updated to V4 (21 November 2026): 13 scored KPIs weighted month by month, Sports Lighting removed and Usage Cameras reported only. Saved KPI weightings were reset to the new model weightings; your events and deductions are kept.'; }
     }
     S.modelVersion = M.version; try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
   }
@@ -45,6 +45,7 @@
   const statusOf = (r, pass, k, m) => {
     if (r.result != null) return r.result < pass ? `<span class="status s-below">Below ${pass}</span>` : '<span class="status s-pass">Pass</span>';
     if (!m.reported) return '<span class="status s-na">Not reported</span>';
+    if (r.offMonth) return '<span class="status s-na">Not scored this month</span>';
     if (r.notAssessed) return '<span class="status s-na">Not assessed</span>';
     return '<span class="status s-na">–</span>';
   };
@@ -70,11 +71,11 @@
     const st = c.settings;
     const kRows = M.kpis.map(k => { const r = m.kpi[k.id], a = Y.kpiAvg[k.id], pass = c.pass[k.id];
       return `<tr><td><span class="pill-k">${k.id}</span></td><td>${esc(k.name)}<div class="muted small">TS ${esc(k.ts)} ${esc(k.service)}</div></td>
-        <td class="num">${pc(c.weights[k.id])}</td><td class="num"><b>${f1(r.result)}</b></td><td>${statusOf(r, pass, k, m)}</td>
+        <td class="num">${pc(m.weights[k.id])}</td><td class="num"><b>${f1(r.result)}</b></td><td>${statusOf(r, pass, k, m)}</td>
         <td class="num">${r.events ? f1(r.mean) : '<span class="muted">no event</span>'}</td><td class="num">${r.ded ? '−' + r.ded : '0'}</td>
         <td class="num">${f1(a.avg)}</td><td class="num">${a.below}</td><td class="num">${a.fails}</td></tr>`; }).join('');
-    const heat = `<table class="t heat"><thead><tr><th>KPI</th><th class="num">Weight</th>${Y.months.map(x => `<th class="${x.month === m.month ? 'sel' : ''}" style="text-align:center">${x.month.replace('-20', ' ')}</th>`).join('')}</tr></thead><tbody>
-      ${M.kpis.map(k => `<tr><td><span class="pill-k">${k.id}</span></td><td class="num muted">${pc(c.weights[k.id])}</td>${Y.months.map(x => { const v = x.kpi[k.id].result; return `<td class="h ${x.month === m.month ? 'sel' : ''}" style="${heatColour(v, c.pass[k.id])}" title="${k.id} ${x.month}: ${v == null ? (x.reported ? 'not assessed' : 'not reported') : f1(v)}">${v == null ? '' : f0(v)}</td>`; }).join('')}</tr>`).join('')}
+    const heat = `<table class="t heat"><thead><tr><th>KPI</th><th class="num">Avg weight</th>${Y.months.map(x => `<th class="${x.month === m.month ? 'sel' : ''}" style="text-align:center">${x.month.replace('-20', ' ')}</th>`).join('')}</tr></thead><tbody>
+      ${M.kpis.map(k => `<tr><td><span class="pill-k">${k.id}</span></td><td class="num muted">${pc(C.avgWeight(c, k.id))}</td>${Y.months.map(x => { const v = x.kpi[k.id].result; return `<td class="h ${x.month === m.month ? 'sel' : ''}" style="${heatColour(v, c.pass[k.id])}" title="${k.id} ${x.month}: ${v == null ? (x.reported ? 'not assessed' : 'not reported') : f1(v)}">${v == null ? '' : f0(v)}</td>`; }).join('')}</tr>`).join('')}
       <tr><td><b>Overall</b></td><td></td>${Y.months.map(x => `<td class="h ${x.month === m.month ? 'sel' : ''}" style="${heatColour(x.overall, st.passThreshold)}"><b>${x.overall == null ? '' : f1(x.overall)}</b></td>`).join('')}</tr></tbody></table>`;
     const fails = m.failures.map(f => `<tr><td>${esc(f.event.date)}</td><td>${esc(f.event.name)}</td><td><span class="pill-k">${f.ref}</span> ${esc(f.s.name)}${f.s.critical ? ' <span class="crit">CRITICAL</span>' : ''}</td><td>${esc(f.note || '')}</td></tr>`).join('');
     const deds = (d.deductions || []).filter(x => x.month === m.month).map(x => { const s = C.STD[x.ref] || {}; return `<tr><td><span class="pill-k">${esc(x.ref)}</span> ${esc(s.name || '')}</td><td class="num">${esc(x.count)}</td><td class="num">${x.confirmed ? (x.count * C.points(c, x.ref)) : '<span class="muted">not confirmed</span>'}</td><td>${esc(x.note || '')}</td></tr>`; }).join('');
@@ -101,7 +102,7 @@
       <figure class="card chart-card"><figcaption><h2>Fee paid and abatement by month</h2><span class="muted small">Monthly performance fee ${money(st.monthlyFee)}</span></figcaption><div class="chart-box"><canvas id="chFee" role="img" aria-label="Stacked bar chart of fee paid and abatement by month"></canvas></div></figure>
     </div>
     <div class="card"><div class="flex-between"><h2>KPI results · ${esc(m.month)}</h2><span class="muted small">Result = mean event score less capped monthly deductions</span></div><div class="tablebox"><table class="t">
-      <thead><tr><th>KPI</th><th>Name</th><th class="num">Weight</th><th class="num">Result</th><th>Status</th><th class="num">Event score</th><th class="num">Deductions</th><th class="num">Year avg</th><th class="num">Months below</th><th class="num">Event fails (year)</th></tr></thead>
+      <thead><tr><th>KPI</th><th>Name</th><th class="num">Weight this month</th><th class="num">Result</th><th>Status</th><th class="num">Event score</th><th class="num">Deductions</th><th class="num">Year avg</th><th class="num">Months below</th><th class="num">Event fails (year)</th></tr></thead>
       <tbody>${kRows}</tbody></table></div></div>
     <div class="card"><h2>KPI results by month</h2><p class="muted small">Orange below the pass threshold, teal towards 100. Blank = not reported or not assessed. The month shown is in bold.</p><div class="tablebox">${heat}</div></div>
     <div class="grid">
@@ -213,7 +214,7 @@
   function vDeductions() {
     const c = cfg(), d = yd(), mo = S.ui.month, Mx = C.month(c, d, months(), mo);
     const rows = (d.deductions || []).map((x, i) => ({ x, i })).filter(o => o.x.month === mo);
-    const opts = sel => M.kpis.map(k => `<optgroup label="${k.id} ${esc(k.name)}">${M.standards.filter(s => s.kpi === k.id && s.cat).map(s => `<option value="${s.ref}" ${s.ref === sel ? 'selected' : ''}>${s.ref} ${esc(s.name)} (cat ${s.cat}, ${C.points(c, s.ref)} pts)</option>`).join('')}</optgroup>`).join('');
+    const opts = sel => M.kpis.map(k => `<optgroup label="${k.id} ${esc(k.name)}">${M.standards.filter(s => s.kpi === k.id && s.cat).map(s => `<option value="${s.ref}" ${s.ref === sel ? 'selected' : ''}>${s.ref} ${esc(s.name)} (cat ${s.cat}, ${C.points(c, s.ref)} pts)</option>`).join('')}</optgroup>`).join('') + `<optgroup label="Report only: Usage Cameras (not scored)">${M.standards.filter(s => s.kpi === 'Report only').map(s => `<option value="${s.ref}" ${s.ref === sel ? 'selected' : ''}>${s.ref} ${esc(s.name)}${s.critical ? ' (critical)' : ''}</option>`).join('')}</optgroup>`;
     const dRows = rows.map(({ x }) => { const s = C.STD[x.ref] || {};
       return `<tr data-did="${x.id}"><td style="min-width:260px"><select data-d="ref">${opts(x.ref)}</select><div class="small muted">${esc(s.link || '')}${s.critical ? ' · <span class="crit">CRITICAL</span>' : ''}</div></td>
         <td><input type="number" min="0" step="1" data-d="count" value="${esc(x.count)}" style="max-width:80px"></td>
@@ -262,11 +263,11 @@
   function vModel() {
     const c = cfg(), f = S.ui.kfilter || 'all', q = (S.ui.q || '').toLowerCase();
     const list = M.standards.filter(s => (f === 'all' || s.kpi === f || (f === 'critical' && s.critical) || (f === 'event' && s.event)) && (!q || (s.ref + ' ' + s.name + ' ' + (s.target || '')).toLowerCase().includes(q)));
-    const wTot = M.kpis.reduce((a, k) => a + (c.weights[k.id] || 0), 0);
+    const wTot = M.kpis.reduce((a, k) => a + C.avgWeight(c, k.id), 0);
     return `
     <div class="head"><div><div class="label">${esc(M.version)}</div><h1>Model reference</h1></div></div>
-    <div class="card"><h2>KPI scorecard (Part B)</h2><div class="tablebox"><table class="t"><thead><tr><th>KPI</th><th>Name</th><th>TS section</th><th class="num">Standards</th><th class="num">Event-scored</th><th class="num">Weight</th><th class="num">Pass</th></tr></thead><tbody>
-      ${M.kpis.map(k => `<tr><td><span class="pill-k">${k.id}</span></td><td>${esc(k.name)}${k.pilot ? ' <span class="chip">Pilot</span>' : ''}</td><td>TS ${esc(k.ts)} ${esc(k.service)}</td><td class="num">${M.standards.filter(s => s.kpi === k.id).length}</td><td class="num">${M.standards.filter(s => s.kpi === k.id && s.event).length}</td><td class="num">${pc(c.weights[k.id])}</td><td class="num">${c.pass[k.id]}</td></tr>`).join('')}
+    <div class="card"><h2>KPI scorecard (Part B)</h2><div class="tablebox"><table class="t"><thead><tr><th>KPI</th><th>Name</th><th>TS section</th><th class="num">Standards</th><th class="num">Event-scored</th><th class="num">Avg weight</th><th class="num">Pass</th></tr></thead><tbody>
+      ${M.kpis.map(k => `<tr><td><span class="pill-k">${k.id}</span></td><td>${esc(k.name)}</td><td>TS ${esc(k.ts)} ${esc(k.service)}</td><td class="num">${M.standards.filter(s => s.kpi === k.id).length}</td><td class="num">${M.standards.filter(s => s.kpi === k.id && s.event).length}</td><td class="num">${pc(C.avgWeight(c, k.id))}</td><td class="num">${c.pass[k.id]}</td></tr>`).join('')}
       <tr class="sub"><td colspan="5">Total</td><td class="num">${pc(wTot)}</td><td></td></tr></tbody></table></div></div>
     <div class="grid">
       <div class="card"><h2>Scoring (Part C)</h2><table class="t"><thead><tr><th>Cat.</th><th>Category</th><th class="num">Points</th></tr></thead><tbody>
@@ -276,7 +277,7 @@
     </div>
     <div class="card"><h2>Escalation and incentive (Part F)</h2><table class="t"><thead><tr><th>Trigger</th><th>Step</th><th>Who acts</th></tr></thead><tbody>${M.escalation.map(r => `<tr>${r.map(x => `<td>${esc(x)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
     <div class="card"><div class="flex-between"><h2>Standards register (${list.length} of ${M.standards.length})</h2>
-      <div class="row"><select data-kfilter><option value="all">All KPIs</option><option value="event" ${f === 'event' ? 'selected' : ''}>Event-scored only</option><option value="critical" ${f === 'critical' ? 'selected' : ''}>Critical only</option>${M.kpis.map(k => `<option value="${k.id}" ${f === k.id ? 'selected' : ''}>${k.id} ${esc(k.name)}</option>`).join('')}</select>
+      <div class="row"><select data-kfilter><option value="all">All KPIs</option><option value="event" ${f === 'event' ? 'selected' : ''}>Event-scored only</option><option value="critical" ${f === 'critical' ? 'selected' : ''}>Critical only</option><option value="Report only" ${f === 'Report only' ? 'selected' : ''}>Report only (Usage Cameras, not scored)</option>${M.kpis.map(k => `<option value="${k.id}" ${f === k.id ? 'selected' : ''}>${k.id} ${esc(k.name)}</option>`).join('')}</select>
       <input type="text" data-q placeholder="Search standards" value="${esc(S.ui.q || '')}"></div></div>
       <div class="tablebox"><table class="t"><thead><tr><th>Std</th><th>Standard and target</th><th>KPI link</th><th>Cat.</th><th class="num">Points</th></tr></thead><tbody>
       ${list.map(s => `<tr><td><span class="pill-k">${s.ref}</span>${s.critical ? '<div class="crit">CRITICAL</div>' : ''}</td><td><b>${esc(s.name)}</b><div class="small">${esc(s.target || '')}</div><details><summary>Measurement</summary><dl class="info"><dt>Applies</dt><dd>${esc(s.applies || '')}</dd><dt>Method</dt><dd>${esc(s.measure || '')}</dd><dt>By</dt><dd>${esc(s.by || '')}</dd></dl></details></td><td class="small">${esc(s.link)}</td><td>${s.event ? 'A' + (s.cat ? ' + ' + s.cat : '') : esc(s.cat)}</td><td class="num">${s.event ? c.settings.eventPoints : ''}${s.event && s.cat ? ' / ' : ''}${s.cat ? C.points(c, s.ref) : ''}</td></tr>`).join('')}</tbody></table></div></div>`;
@@ -286,13 +287,12 @@
   function vOverview() {
     const c = cfg(), st = c.settings, nStd = M.standards.length, nEv = M.standards.filter(s => s.event).length;
     const nCrit = M.standards.filter(s => s.critical).length;
-    const W = k => Math.round((c.weights[k] || 0) * 1000) / 10;
+    const W = k => Math.round(C.avgWeight(c, k) * 1000) / 10;
     const groups = [
       ['Event day', 'What players, officials and broadcasters see and feel at kick-off', ['KPI-M', 'KPI-P', 'KPI-O', 'KPI-L', 'KPI-R']],
       ['Surface between events', 'Keeping the surface healthy through the season', ['KPI-I', 'KPI-N', 'KPI-V', 'KPI-C']],
-      ['Support services', 'Treatments, lighting and equipment', ['KPI-T', 'KPI-F', 'KPI-G']],
-      ['Gardens and hard surfaces', 'Precinct presentation, cleanliness and safety', ['KPI-GD', 'KPI-HS']],
-      ['Pilot', 'Usage cameras: reported, not yet scored', ['KPI-U']]];
+      ['Support services', 'Treatments and equipment', ['KPI-T', 'KPI-G']],
+      ['Gardens and hard surfaces', 'Precinct presentation, cleanliness and safety', ['KPI-GD', 'KPI-HS']]];
     const maxW = Math.max(...M.kpis.map(k => W(k.id)), 1);
     const coreW = Math.round((M.coreShare ? M.coreShare.kpis : M.kpis.map(k => k.id)).reduce((a, k) => a + W(k), 0) * 10) / 10;
     const weightBars = groups.map(([g, sub, ks]) => `
@@ -384,7 +384,7 @@
         <div class="ov-src ov-res"><div class="label">KPI result</div><b class="ov-big">85</b><p>Pass mark ${st.passThreshold}. With no event in the month the KPI starts at ${st.noEventScore}.</p></div>
       </div></div>
 
-    <div class="card"><h2>Which service areas count most</h2><p class="muted small">The weight of each KPI in the overall score. Weights can be changed in Setup and always total 100%.</p>
+    <div class="card"><h2>Which service areas count most</h2><p class="muted small">Average weight of each KPI over the contract year. Weights are set month by month in Setup (each month totals 100%), so seasonal work such as renovations only counts in the months it is planned. Usage Cameras are reported, not scored.</p>
       <div class="ov-weights">${weightBars}</div></div>
 
     <div class="grid">
@@ -429,9 +429,9 @@
     <div class="card"><h2>Scoring settings (Part C)</h2><div class="kv" style="margin-top:10px">
       ${num('eventPoints', 'Points per failed event standard (A)')}${num('capPerStandard', 'Cap per standard per month')}${num('noEventScore', 'Score for a month with no event')}${num('creditShare', 'Band credit share when all standards met (%)', 5, 1)}
       ${Object.entries(M.categories).filter(([k]) => k !== 'A').sort().map(([k, v]) => `<label class="field">Category ${k}: ${esc(v.name)}<input type="number" step="1" data-cat="${k}" value="${c.categories[k]}"></label>`).join('')}</div></div>
-    <div class="card"><h2>KPI weightings (Part B)</h2><div class="tablebox"><table class="t"><thead><tr><th>KPI</th><th>Weight (%)</th><th>Pass</th></tr></thead><tbody>
-      ${M.kpis.map(k => `<tr><td><span class="pill-k">${k.id}</span> ${esc(k.name)}</td><td><input type="number" step="0.5" data-w="${k.id}" value="${+((c.weights[k.id] || 0) * 100).toFixed(2)}"></td><td><input type="number" step="1" data-p="${k.id}" value="${c.pass[k.id]}"></td></tr>`).join('')}
-      <tr class="sub"><td>Total</td><td>${pc(wTot)} ${Math.abs(wTot - 1) > 1e-6 ? '<span class="warn-note">Weights must total 100%</span>' : ''}</td><td></td></tr></tbody></table></div>
+    <div class="card"><h2>KPI weightings by month (Part B)</h2><p class="muted small">Each KPI's weight in each month, in %. A KPI at 0% is not scored that month. Each month should total 100%; if it does not, the score uses the weights entered as shares of their total.</p><div class="tablebox"><table class="t"><thead><tr><th>KPI</th>${y.months.map(m => `<th class="num">${m.replace('-20', ' ')}</th>`).join('')}<th class="num">Pass</th></tr></thead><tbody>
+      ${M.kpis.map(k => `<tr><td><span class="pill-k">${k.id}</span></td>${y.months.map((m, i) => `<td><input type="number" step="0.1" min="0" style="width:58px" data-mw="${k.id}|${i}" value="${+((c.mweights[k.id][i] || 0) * 100).toFixed(2)}"></td>`).join('')}<td><input type="number" step="1" style="width:52px" data-p="${k.id}" value="${c.pass[k.id]}"></td></tr>`).join('')}
+      <tr class="sub"><td>Total</td>${y.months.map((m, i) => { const t = M.kpis.reduce((a, k) => a + (c.mweights[k.id][i] || 0), 0); return `<td class="num">${pc(t)}${Math.abs(t - 1) > 1e-6 ? ' <span class="warn-note">≠100%</span>' : ''}</td>`; }).join('')}<td></td></tr></tbody></table></div>
       <div class="row" style="margin-top:10px"><button class="btn" data-act="resetSettings">Restore model settings</button></div></div>
     <div class="card"><h2>Data</h2><p class="muted small">Results are saved in this browser only and are not uploaded to Netlify. Export a backup file to share with a colleague or move to another computer, then import it there.</p>
       <div class="row"><button class="btn primary" data-act="exportXlsx">Export to Excel</button><button class="btn" data-act="exportJson">Export backup (JSON)</button>
@@ -477,11 +477,11 @@
       const img = await chartImages(); const cw = (W - 2 * mg - 6) / 2, ch = cw * 270 / 640, cy = 70;
       [['Overall score by month', img.score], ['Fee paid and abatement by month', img.fee]].forEach(([t, im], i) => { const x = mg + i * (cw + 6);
         doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(...ink); doc.text(t, x, cy); doc.setFont('helvetica', 'normal'); doc.addImage(im, 'PNG', x, cy + 2, cw, ch); });
-      const kpiStatus = r => r.result == null ? (m.reported ? (r.notAssessed ? 'Not assessed' : '–') : 'Not reported') : r.below ? 'Below' : 'Pass';
+      const kpiStatus = r => r.result == null ? (m.reported ? (r.notAssessed ? 'Not assessed' : r.offMonth ? 'Not scored this month' : '–') : 'Not reported') : r.below ? 'Below' : 'Pass';
       doc.addPage(); doc.setFont('helvetica', 'bold'); doc.setFontSize(13); doc.setTextColor(...ink); doc.text(`KPI results · ${m.month}`, mg, 16);
       doc.autoTable({ startY: 20, margin: { left: mg, right: mg }, theme: 'grid',
         head: [['KPI', 'Name', 'Weight', 'Event score', 'Deductions', 'Result', 'Status', 'Year avg', 'Months below']],
-        body: M.kpis.map(k => { const r = m.kpi[k.id], a = Y.kpiAvg[k.id]; return [k.id, k.name, pc(c.weights[k.id]), r.events ? f1(r.mean) : 'no event', r.ded || 0, f1(r.result), kpiStatus(r), f1(a.avg), a.below]; }),
+        body: M.kpis.map(k => { const r = m.kpi[k.id], a = Y.kpiAvg[k.id]; return [k.id, k.name, pc(m.weights[k.id]), r.events ? f1(r.mean) : 'no event', r.ded || 0, f1(r.result), kpiStatus(r), f1(a.avg), a.below]; }),
         styles: { fontSize: 8.5, cellPadding: 1.8, lineColor: line, textColor: ink }, headStyles: { fillColor: teal, textColor: 255 },
         didParseCell: x => { if (x.section === 'body' && x.column.index === 6) x.cell.styles.textColor = x.cell.raw === 'Below' ? red : x.cell.raw === 'Pass' ? green : muted; } });
       doc.setFont('helvetica', 'bold'); doc.setFontSize(13); doc.text('KPI results by month', mg, doc.lastAutoTable.finalY + 10);
@@ -570,7 +570,7 @@
     if (act === 'exportJson') download(`stadium-performance-model-${new Date().toISOString().slice(0, 10)}.json`, JSON.stringify(S, null, 1));
     if (act === 'importJson') $('#importFile').click();
     if (act === 'reset' && confirm('Clear all results and settings saved in this browser?')) { S = fresh(); S.sampleCleared = true; save(); route(); toast('Cleared'); }
-    if (act === 'resetSettings' && confirm('Restore the model weightings and settings?')) { S.settings = { values: {}, weights: {}, pass: {}, categories: {} }; save(); route(); }
+    if (act === 'resetSettings' && confirm('Restore the model weightings and settings?')) { S.settings = { values: {}, weights: {}, mweights: {}, pass: {}, categories: {} }; save(); route(); }
     if (act === 'sample' && (!hasData() || confirm('Replace the results saved in this browser with sample data?'))) loadSample(true);
     if (act === 'addContractor') { S.contractors.push('New contractor'); save(); route(); }
     if (act === 'addYear') { const last = S.years[S.years.length - 1], n = S.years.length + 1;
@@ -611,6 +611,7 @@
     else if (t.matches('[data-setv]')) { if (t.value === '') return; S.settings.values[t.dataset.setv] = t.dataset.pct ? +t.value / 100 : +t.value; save(); route(true); }
     else if (t.matches('[data-cat]')) { S.settings.categories[t.dataset.cat] = +t.value; save(); route(true); }
     else if (t.matches('[data-w]')) { S.settings.weights[t.dataset.w] = +t.value / 100; save(); route(true); }
+    else if (t.matches('[data-mw]')) { const [k, i] = t.dataset.mw.split('|'); S.settings.mweights = S.settings.mweights || {}; (S.settings.mweights[k] = S.settings.mweights[k] || [])[+i] = +t.value / 100; save(); route(true); }
     else if (t.matches('[data-p]')) { S.settings.pass[t.dataset.p] = +t.value; save(); route(true); }
     else if (t.id === 'importFile' && t.files[0]) {
       t.files[0].text().then(txt => { const x = JSON.parse(txt); if (!x.settings || !x.data) throw new Error(); S = x; save(); route(); toast('Backup imported'); }).catch(() => toast('That file is not a valid backup'));

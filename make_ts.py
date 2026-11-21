@@ -12,7 +12,7 @@ for el in d.element.body.iterchildren():
     if el.tag == qn('w:p'):
         t = W(el).strip()
         if style(el) == 'Heading2':
-            m = re.match(r'^(\d+)\.\s+(.*)$', t) or re.match(r'^Appendix ([AB])\.\s+(.*)$', t)
+            m = re.match(r'^(\d+)\.\s+(.*)$', t) or re.match(r'^Appendix ([A-D])\.\s+(.*)$', t)
             sec = {'num': m.group(1) if m and t[0].isdigit() else '', 'title': m.group(2) if m else t, 'subs': []}
             out['sections'].append(sec); sub = None; continue
         if not sec or not t: continue

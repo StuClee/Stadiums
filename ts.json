@@ -1,13 +1,13 @@
 {
  "cover": [
-  "Auckland Council Stadiums",
+  "Auckland Stadiums",
   "Stadiums Maintenance",
   "Technical Specification",
   "Prepared for TĀTAKI AUCKLAND UNLIMITED",
   "Prepared by Greenspace Consulting",
   "Stuart Cameron-Lee",
   "Draft for discussion",
-  "18 November 2026"
+  "21 November 2026"
  ],
  "sections": [
   {
@@ -44,7 +44,7 @@
          ],
          [
           {
-           "t": "Auckland Council Stadiums",
+           "t": "Auckland Stadiums",
            "li": false
           }
          ]
@@ -213,7 +213,7 @@
          ],
          [
           {
-           "t": "Prism gauge or approved turf height gauge; 15-point grid plus 4 run-off points fixed on the zone plan (Appendix 2 – Mowing height grid sampling). Height log with grid readings, mean, range and photographed gauge readings.",
+           "t": "Prism gauge or approved turf height gauge; 15-point grid plus 4 run-off points fixed on the zone plan (Appendix C, test point grid). Height log with grid readings, mean, range and photographed gauge readings.",
            "li": false
           }
          ],
@@ -333,7 +333,7 @@
          ],
          [
           {
-           "t": "Straight stripe pattern sideline to sideline from the dead-ball or goal line in the pattern the code or broadcaster specifies. Final cut within 24 hours of kick-off.",
+           "t": "Straight stripe pattern sideline to sideline from the dead-ball or goal line in the pattern the code or broadcaster specifies. Final cut within 24 hours of kick-off. For double headers, the final cut and pattern are set for the first match and held for both; no mowing between matches unless agreed with the Principal's Representative. Event-week patterns: two days before play, rugby union and rugby league cut lengthways goal to goal in 10 m stripes, and football in single stripes. Final cut (MD-1 or match morning): rugby union and rugby league sideline to sideline, with the in-goal area (try line to dead-ball line) striped; NRL in 10 m strips widthways from goal line to goal line; football in a single stripe pattern.",
            "li": false
           }
          ],
@@ -537,6 +537,94 @@
            "li": false
           }
          ]
+        ],
+        [
+         [
+          {
+           "t": "M1.9",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Mowing equipment",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Premier and #1 fields cut only with a triplex reel mower or a walk-behind (pedestrian) reel mower. Triplex units: at least 8 blades on each reel and at least 110 cuts per metre, all three units set to the same height, clippings collected. Reel speed matched to ground speed so the clip rate gives a consistent finish with no corrugations; height of cut adjustable on site by a single operator. Low-impact turf tyres on all mowers; equipment matched to the field size and weight on the turf. Each stadium site has at least three pedestrian cylinder mowers of up to 170 kg and two heavier units of 360 to 400 kg (electric preferred to petrol), and two to four pedestrian rotary mowers of no more than 170 kg, with grass collection and a rear roller, for lifting debris after matches. A ride-on triple cylinder mower with collection may be kept as a back-up, and a cassette system (verti-cutting, cleaning and aeration) may be used.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "LoS 1 to 3; continuous",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Equipment register with mower type, weight, blade count and clip rate; site inspection; photographs.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Supplier; Principal's Representative audits",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "KPI-M monthly deduction if breached at audit",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "M1.10",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Sustainability",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Mowing frequency matched to grass growth: no mowing when it is not needed (dry weather, dormancy or water stress) or when wet ground would be damaged, and mowing stopped when the Principal's Representative directs. Electric mowers used where they meet the cut standard. Fuel and energy use recorded and reported monthly (proposed). Clippings taken to an approved composting or green waste facility.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "LoS 1 to 4; continuous and monthly",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Mowing log against growth and weather; fuel and energy record; green waste dockets.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Supplier monthly report; Principal's Representative review",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "KPI-M monthly deduction if breached at audit",
+           "li": false
+          }
+         ]
         ]
        ]
       }
@@ -548,7 +636,7 @@
      "blocks": [
       {
        "type": "p",
-       "t": "Standards M1.1 to M1.8 feed KPI-M, Mowing and Presentation. Scoring, pass threshold and weighting are defined in the Performance Model (Schedule 1, Parts B and C) and are not repeated here. Cut counts do not enter KPI-M; they are reconciled annually against the declared band (Schedule 1, Part E).",
+       "t": "Standards M1.1 to M1.10 feed KPI-M, Mowing and Presentation. Scoring, pass threshold and weighting are defined in the Performance Model (Schedule 1, Parts B and C) and are not repeated here. Cut counts do not enter KPI-M; they are reconciled annually against the declared band (Schedule 1, Part E).",
        "li": false
       }
      ]
@@ -589,7 +677,7 @@
       },
       {
        "type": "p",
-       "t": "Event-week sequence of cuts, pattern and final cut timing",
+       "t": "Event-week sequence of cuts, pattern and final cut timing, including double headers",
        "li": true
       },
       {
@@ -651,7 +739,7 @@
      "blocks": [
       {
        "type": "p",
-       "t": "The Principal issues the event calendar at least 12 weeks ahead and confirms each event's code, kick-off time, pattern and broadcast requirements 10 working days before commencement; gives uninterrupted pitch access in the agreed preparation windows; decides closures and non-sporting uses and bears the recovery consequences under Schedule 1; and attends the joint readiness sign-off. Where the calendar changes inside the notice period, KPI-M for that event is assessed against the revised window.",
+       "t": "The Principal issues the seasonal event calendar at least 12 weeks ahead (one-off events as soon as they are confirmed) and confirms each event's code, kick-off time, pattern and broadcast requirements 10 working days before commencement; gives uninterrupted pitch access in the agreed preparation windows; decides closures and non-sporting uses and bears the recovery consequences under Schedule 1; and attends the joint readiness sign-off. Where the calendar changes inside the notice period, KPI-M for that event is assessed against the revised window.",
        "li": false
       }
      ]
@@ -703,7 +791,7 @@
          ],
          [
           {
-           "t": "Auckland Council Stadiums",
+           "t": "Auckland Stadiums",
            "li": false
           }
          ]
@@ -1255,6 +1343,20 @@
         [
          [
           {
+           "t": "#1 fields (all codes)",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Lines on #1 fields marked with a roller marker. Logos and sponsor branding brushed or sprayed through stencils. Distance numerals and other numbers filled in solid, not outlined only, in the colours the competition or broadcaster requires (for example a blue fill with a white outline, where approved).",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
            "t": "Multi-code use",
            "li": false
           }
@@ -1399,7 +1501,7 @@
      "blocks": [
       {
        "type": "p",
-       "t": "The Principal issues the event calendar at least 12 weeks ahead and confirms each event's code, competition, field dimensions, marking drawing, line colours, logos and broadcast requirements 10 working days before commencement; supplies competition and sponsor branding drawings and stencils where these are competition items; sets the code changeover windows in the calendar; arranges the match commissioner or referee pitch inspection; and attends the joint readiness sign-off.",
+       "t": "The Principal issues the seasonal event calendar at least 12 weeks ahead (one-off events as soon as they are confirmed) and confirms each event's code, competition, field dimensions, marking drawing, line colours, logos and broadcast requirements 10 working days before commencement; supplies competition and sponsor branding drawings and stencils where these are competition items; sets the code changeover windows in the calendar; arranges the match commissioner or referee pitch inspection; and attends the joint readiness sign-off.",
        "li": false
       },
       {
@@ -1456,7 +1558,7 @@
          ],
          [
           {
-           "t": "Auckland Council Stadiums",
+           "t": "Auckland Stadiums",
            "li": false
           }
          ]
@@ -1745,7 +1847,7 @@
          ],
          [
           {
-           "t": "Controller and central control logs cross-checked against the event run sheet, rain sensor and weather station data. Rainfall and weather data from TAU's monitoring system used to suspend irrigation.",
+           "t": "Controller and central control logs cross-checked against the event run sheet, rain sensor and weather station data. Rainfall and weather data from TAU's monitoring system, or the Supplier's weather station and reporting tools, used to suspend irrigation.",
            "li": false
           }
          ],
@@ -2096,6 +2198,20 @@
         [
          [
           {
+           "t": "Pre-match watering timing",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Field watered to the event band the night before the fixture, or some hours before a night fixture, so it is not wet for mowing and marking on match morning. Where possible the field is prepared the day before; line marking may be done on match day if needed, as it does not affect play.",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
            "t": "Non-sporting events and covers",
            "li": false
           }
@@ -2381,7 +2497,7 @@
       },
       {
        "type": "p",
-       "t": "Water restrictions issued by Auckland Council or Watercare are followed.",
+       "t": "Water restrictions issued by TAU or Watercare are followed.",
        "li": true
       },
       {
@@ -2417,7 +2533,7 @@
      "blocks": [
       {
        "type": "p",
-       "t": "The Principal issues the event calendar at least 12 weeks ahead and confirms each event's code, kick-off time, cover or overlay dates and any pre-match or half-time watering request 10 working days before (proposed); provides access to the controllers, central control software, meter and telemetry data and the Hydrotel portal; holds the capital renewal programme and decides on system upgrades from the Condition Report; and attends the joint readiness sign-off.",
+       "t": "The Principal issues the seasonal event calendar at least 12 weeks ahead (one-off events as soon as they are confirmed) and confirms each event's code, kick-off time, cover or overlay dates and any pre-match or half-time watering request 10 working days before (proposed); provides access to the controllers, central control software, meter and telemetry data and the Hydrotel portal; holds the capital renewal programme and decides on system upgrades from the Condition Report; and attends the joint readiness sign-off.",
        "li": false
       },
       {
@@ -2489,7 +2605,7 @@
          ],
          [
           {
-           "t": "Auckland Council Stadiums",
+           "t": "Auckland Stadiums",
            "li": false
           }
          ]
@@ -2559,7 +2675,7 @@
          ],
          [
           {
-           "t": "LoS 1 Event set-up (padding, nets, final checks). LoS 2 Installed posts between events (weekly inspection, cleaning). LoS 3 Code changeover (removal, installation and socket reinstatement). LoS 4 Storage, painting and condition inspection.",
+           "t": "LoS 1 Event set-up (nets, padding readiness check, final checks). LoS 2 Installed posts between events (weekly inspection, cleaning). LoS 3 Code changeover (removal, installation and socket reinstatement). LoS 4 Storage, painting and condition inspection.",
            "li": false
           }
          ]
@@ -2716,13 +2832,13 @@
          ],
          [
           {
-           "t": "Padding",
+           "t": "Padding readiness",
            "li": false
           }
          ],
          [
           {
-           "t": "Rugby union and rugby league posts padded for every match and for training when instructed, with padding complete, clean, undamaged and secure. Rugby union: external edge no more than 0.5 m from the post. Rugby league: at least the bottom 2 m of each upright. Competition or sponsor padding fitted as supplied.",
+           "t": "Post padding is supplied and fitted by the codes. Before every match, and every training session that needs padding, the Supplier checks that posts, sleeves and sockets are ready to take the padding, and reports missing or damaged padding to the Principal's Representative on the same day.",
            "li": false
           }
          ],
@@ -2734,7 +2850,7 @@
          ],
          [
           {
-           "t": "Visual check and tape measure of padding depth; padding register showing fitting, removal and storage; photographs.",
+           "t": "Pre-match check record; photographs of any damage reported.",
            "li": false
           }
          ],
@@ -2810,7 +2926,7 @@
          ],
          [
           {
-           "t": "Removal and installation for a change of code completed within the agreed changeover window and before the new code is line marked (L1.6). Unused sockets capped flush, level and safe, and turf reinstated to match the surface, with no trip hazard.",
+           "t": "Removal and installation for a change of code completed within the agreed changeover window and before the new code is line marked (L1.6). Unused sockets capped flush, level and safe, and turf reinstated to match the surface, with no trip hazard. Changeovers are carried out as a safe system of work: a documented Standard Operating Procedure (SOP) for lifting and handling, at least two trained staff for every lift (proposed), adequate lighting, and the stadium's after-hours and lone-worker procedures for any work outside normal hours.",
            "li": false
           }
          ],
@@ -3180,7 +3296,7 @@
      "blocks": [
       {
        "type": "p",
-       "t": "The Principal issues the event calendar at least 12 weeks ahead and confirms each event's code, competition padding and net requirements and the changeover window 10 working days before commencement; supplies competition or sponsor branded padding where this is a competition item; provides the goal post racks and storage area; owns the posts, goals and sleeves and decides on renewal from the Condition and Safety Report; and attends the joint readiness sign-off.",
+       "t": "The Principal issues the seasonal event calendar at least 12 weeks ahead (one-off events as soon as they are confirmed) and confirms each event's code, competition padding and net requirements and the changeover window 10 working days before commencement; supplies competition or sponsor branded padding where this is a competition item; provides the goal post racks and storage area; owns the posts, goals and sleeves and decides on renewal from the Condition and Safety Report; and attends the joint readiness sign-off.",
        "li": false
       },
       {
@@ -3215,894 +3331,8 @@
   },
   {
    "num": "5",
-   "title": "Sports Lighting",
-   "subs": [
-    {
-     "num": "5.1",
-     "title": "Background",
-     "blocks": [
-      {
-       "type": "table",
-       "rows": [
-        [
-         [
-          {
-           "t": "Item",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Description",
-           "li": false
-          }
-         ]
-        ],
-        [
-         [
-          {
-           "t": "Service area",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Auckland Council Stadiums",
-           "li": false
-          }
-         ]
-        ],
-        [
-         [
-          {
-           "t": "Service type",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Sports lighting (day-to-day operation and management, annual performance check, adjustment and re-aiming, condition reporting and repairs)",
-           "li": false
-          }
-         ]
-        ],
-        [
-         [
-          {
-           "t": "Schedule reference",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Schedule 2, Sports Lighting; standards feed KPI-F, Sports Lighting, in Schedule 1, Performance Model",
-           "li": false
-          }
-         ]
-        ],
-        [
-         [
-          {
-           "t": "Part 1. Outcome statement",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "The sports lighting delivers the illuminance, uniformity and glare control that the competition, code and broadcaster require for every event, and the levels set for training and other use, with every luminaire working, correctly aimed and switched to the schedule. Faults are found and fixed before they affect an event, energy and spill light are not wasted, and the Principal knows the condition of the system and what it needs.",
-           "li": false
-          }
-         ]
-        ],
-        [
-         [
-          {
-           "t": "Part 2. Scope and assets",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "The stadium sports lighting system: luminaires, mounting and aiming hardware, masts, headframes and stand or roof-mounted lighting gantries, drivers, cabling, switchboards and circuit protection, and the lighting control system and scenes. Includes day-to-day operation and scheduling, monitoring and fault reporting, cleaning, the annual inspection and photometric survey, adjustment and re-aiming, the annual condition report, and minor repairs. Electrical work is carried out by registered electrical workers. Capital renewal, major structural work and temporary broadcast lighting remain with the Principal.",
-           "li": false
-          }
-         ]
-        ],
-        [
-         [
-          {
-           "t": "Levels of service",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "LoS 1 Event lighting (match and broadcast scenes). LoS 2 Training and non-event lighting. LoS 3 Lighting system condition, inspection and repairs. LoS 4 Controls, energy and records.",
-           "li": false
-          }
-         ]
-        ]
-       ]
-      }
-     ]
-    },
-    {
-     "num": "5.2",
-     "title": "Performance standards and measurement",
-     "blocks": [
-      {
-       "type": "table",
-       "rows": [
-        [
-         [
-          {
-           "t": "PS ref",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Service component",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Performance standard (target and tolerance)",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Applies (LoS and condition)",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Measurement method and evidence",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Measured by and when",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "KPI link",
-           "li": false
-          }
-         ]
-        ],
-        [
-         [
-          {
-           "t": "F1.1",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Event lighting",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "The correct event scene on at the time in the event run sheet, including any broadcaster lighting check, with every luminaire in the match scene working at readiness sign-off; scene changed or switched off as the run sheet requires.",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "LoS 1; every event",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Control system log against the run sheet; visual check of every luminaire at the readiness walk; broadcaster check record where held.",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Supplier every event; joint readiness walk",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "KPI-F event score",
-           "li": false
-          }
-         ]
-        ],
-        [
-         [
-          {
-           "t": "F1.2",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Illuminance and uniformity",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Maintained horizontal and vertical illuminance and uniformity at or above the design levels in the lighting as-built and the lighting requirements of the competitions and broadcasters for the highest level of play hosted, for each scene.",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "LoS 1, 2; annual and after any re-aiming",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Photometric survey with a calibrated meter on the grid in the lighting as-built or the competition lighting guide, including vertical readings towards the main camera positions; uniformity calculated.",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Approved lighting contractor annually; Principal's Representative review",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "KPI-F monthly deduction if below requirement and not corrected",
-           "li": false
-          }
-         ]
-        ],
-        [
-         [
-          {
-           "t": "F1.3",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Day-to-day operation",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Scenes programmed to the event calendar and training allocations; lights on only within approved times; controls secure; lighting log kept for every use.",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "LoS 2, 4; continuous",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Lighting log against the calendar and allocations; control system schedule export.",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Supplier weekly; Principal's Representative at audits",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "KPI-F monthly deduction if breached at audit",
-           "li": false
-          }
-         ]
-        ],
-        [
-         [
-          {
-           "t": "F1.4",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Fault monitoring and response",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Lighting and controls checked before every use; luminaire outages and control faults reported to the Principal's Representative the same day. Outages in the field of play repaired within 5 working days and always before the next event; any fault in event week treated as a Critical request for service.",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "LoS 1 to 3; every use and continuous",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Pre-use check record; fault register with times reported and repaired; RFS records.",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Supplier every use; Principal's Representative monthly",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "KPI-F monthly deduction per late repair; KPI-F event score for event-week faults",
-           "li": false
-          }
-         ]
-        ],
-        [
-         [
-          {
-           "t": "F1.5",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Annual inspection",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Annual inspection before the main playing season by a suitably qualified lighting contractor of luminaires, lenses, fixings, aiming, drivers, cabling, switchboards, controls and structures (masts, headframes, gantries and height safety systems), with the photometric survey in F1.2.",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "LoS 3; annual",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Inspection checklist with photographs; survey results; contractor qualifications.",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Approved lighting contractor; Principal's Representative review",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "KPI-F monthly deduction if late or incomplete",
-           "li": false
-          }
-         ]
-        ],
-        [
-         [
-          {
-           "t": "F1.6",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Adjustment and re-aiming",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Luminaires found out of aim against the as-built aiming schedule re-aimed and locked, and the result confirmed by survey; aiming records updated. No change to aiming or scene settings without the Principal's Representative's approval.",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "LoS 3; annual and as required",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Aiming check against the aiming schedule; post-adjustment survey; updated aiming records.",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Approved lighting contractor; Principal's Representative approval",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "KPI-F monthly deduction if breached",
-           "li": false
-          }
-         ]
-        ],
-        [
-         [
-          {
-           "t": "F1.7",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Condition report",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Annual condition report within 20 working days of the inspection: survey results against design and requirements, faults found and fixed, condition rating for each component group, remaining life, energy use, and prioritised repair and renewal recommendations with costs. Submitted before 30 September to inform TAU's operating budget.",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "LoS 3, 4; annual",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Condition report in the approved format.",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Supplier; Principal's Representative review on receipt",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "KPI-F monthly deduction if late or incomplete",
-           "li": false
-          }
-         ]
-        ],
-        [
-         [
-          {
-           "t": "F1.8",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Repairs",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Repairs carried out by registered electrical workers, with certificates of compliance or electrical safety certificates issued as the regulations require. Replacement parts match the existing model, optics and colour temperature, or are approved equivalents. Repairs under $1,000 completed without prior approval; repairs over $1,000 quoted and approved first.",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "LoS 3; every repair",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Repair records with photographs; certificates of compliance; parts records; quotes and approvals.",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Supplier every repair; Principal's Representative at audits",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "KPI-F monthly deduction per non-compliant repair",
-           "li": false
-          }
-         ]
-        ],
-        [
-         [
-          {
-           "t": "F1.9",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Cleaning",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Luminaire lenses and optics cleaned to the manufacturer's schedule and the maintenance factor in the lighting design, and at least once a year before the main playing season.",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "LoS 3; annual",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Cleaning record with before and after photographs.",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Supplier annually",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "KPI-F monthly deduction if missed",
-           "li": false
-          }
-         ]
-        ],
-        [
-         [
-          {
-           "t": "F1.10",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Safe access and turf protection",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Work at height under an approved safety plan with isolation and lock-out procedures. Elevated work platforms and access plant used on the pitch only with ground protection, outside event weeks where practicable, with no damage to turf, irrigation or hybrid systems.",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "LoS 3; every access",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Safety plan and permits; ground protection record; post-work turf inspection.",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Supplier every access; Principal's Representative at audits",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "KPI-F monthly deduction per confirmed incident",
-           "li": false
-          }
-         ]
-        ]
-       ]
-      }
-     ]
-    },
-    {
-     "num": "5.3",
-     "title": "Lighting operation and maintenance guidelines (referenced by F1.1 to F1.10)",
-     "blocks": [
-      {
-       "type": "table",
-       "rows": [
-        [
-         [
-          {
-           "t": "Item",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Requirement",
-           "li": false
-          }
-         ]
-        ],
-        [
-         [
-          {
-           "t": "Event day",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Pre-use check of every luminaire and the control system; event scene on at the run sheet time, including any broadcaster lighting check; scene changes and switch-off as the run sheet requires; any fault reported straight away.",
-           "li": false
-          }
-         ]
-        ],
-        [
-         [
-          {
-           "t": "Training and non-event use",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Training scenes programmed to the allocations; lights off when the session ends; spill and energy kept to a minimum.",
-           "li": false
-          }
-         ]
-        ],
-        [
-         [
-          {
-           "t": "Fault response",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Event-week fault: Critical request for service. Field-of-play outage outside event week: within 5 working days. Control system fault: within 24 hours.",
-           "li": false
-          }
-         ]
-        ],
-        [
-         [
-          {
-           "t": "Annual inspection",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Before the main playing season: luminaires, lenses, fixings, aiming, drivers, cabling, switchboards, controls, masts, headframes, gantries and height safety systems.",
-           "li": false
-          }
-         ]
-        ],
-        [
-         [
-          {
-           "t": "Photometric survey",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Calibrated meter; grid as set out in the lighting as-built or the competition lighting guide; horizontal readings and vertical readings towards the main camera positions; average illuminance and uniformity for each scene, compared with the design and competition requirements.",
-           "li": false
-          }
-         ]
-        ],
-        [
-         [
-          {
-           "t": "Aiming",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Checked against the as-built aiming schedule; out-of-aim luminaires re-aimed, locked and re-surveyed; aiming records updated.",
-           "li": false
-          }
-         ]
-        ],
-        [
-         [
-          {
-           "t": "Cleaning",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "To the manufacturer's schedule and the design maintenance factor, and at least once a year before the main season.",
-           "li": false
-          }
-         ]
-        ],
-        [
-         [
-          {
-           "t": "Records",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Lighting as-built, aiming schedule, scene settings, survey results, fault register, certificates of compliance and condition reports, kept current and available to the Principal.",
-           "li": false
-          }
-         ]
-        ],
-        [
-         [
-          {
-           "t": "Turf link",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Access plant on the pitch only with ground protection, outside event weeks where practicable, and coordinated with the turf programme.",
-           "li": false
-          }
-         ]
-        ]
-       ]
-      }
-     ]
-    },
-    {
-     "num": "5.4",
-     "title": "KPI and weighting",
-     "blocks": [
-      {
-       "type": "p",
-       "t": "Standards F1.1 to F1.10 feed KPI-F, Sports Lighting. Scoring, pass threshold and weighting are defined once in the Performance Model (Schedule 1, Parts B and C) and are not repeated here.",
-       "li": false
-      },
-      {
-       "type": "p",
-       "t": "Energy use does not enter KPI-F; it is reported monthly and in the annual condition report.",
-       "li": false
-      }
-     ]
-    },
-    {
-     "num": "5.5",
-     "title": "Supplier plan requirements (Maintenance & Operations Plan content)",
-     "blocks": [
-      {
-       "type": "p",
-       "t": "The Maintenance & Operations Plan shall show for sports lighting:",
-       "li": false
-      },
-      {
-       "type": "p",
-       "t": "How lighting scenes are scheduled to the event calendar and training allocations",
-       "li": true
-      },
-      {
-       "type": "p",
-       "t": "The pre-use check and fault reporting process",
-       "li": true
-      },
-      {
-       "type": "p",
-       "t": "The approved lighting contractor and registered electrical workers, and their qualifications",
-       "li": true
-      },
-      {
-       "type": "p",
-       "t": "The annual inspection, photometric survey and cleaning programme",
-       "li": true
-      },
-      {
-       "type": "p",
-       "t": "The aiming check and adjustment process",
-       "li": true
-      },
-      {
-       "type": "p",
-       "t": "Spare parts holding and repair response",
-       "li": true
-      },
-      {
-       "type": "p",
-       "t": "Work at height, isolation and turf protection procedures",
-       "li": true
-      },
-      {
-       "type": "p",
-       "t": "Lighting records and reporting",
-       "li": true
-      }
-     ]
-    },
-    {
-     "num": "5.6",
-     "title": "Mandatory conditions",
-     "blocks": [
-      {
-       "type": "p",
-       "t": "All electrical work is carried out by registered electrical workers, with certificates of compliance or electrical safety certificates issued as the regulations require.",
-       "li": true
-      },
-      {
-       "type": "p",
-       "t": "No change is made to luminaire aiming or scene settings without the Principal's Representative's approval.",
-       "li": true
-      },
-      {
-       "type": "p",
-       "t": "Work at height follows an approved safety plan, with isolation and lock-out procedures.",
-       "li": true
-      },
-      {
-       "type": "p",
-       "t": "Access plant is used on the pitch only with ground protection, and any turf damage is repaired at the Supplier's cost.",
-       "li": true
-      },
-      {
-       "type": "p",
-       "t": "Any fault that could affect an event is reported to the Principal's Representative immediately.",
-       "li": true
-      }
-     ]
-    },
-    {
-     "num": "5.7",
-     "title": "Principal interfaces",
-     "blocks": [
-      {
-       "type": "p",
-       "t": "The Principal issues the event calendar at least 12 weeks ahead and confirms each event's lighting and broadcast requirements 10 working days before; provides the lighting as-built, aiming schedule, scene settings and design maintenance factor; sets training allocations and approved lighting times; pays for energy; decides on renewal from the condition report; and attends the joint readiness sign-off.",
-       "li": false
-      },
-      {
-       "type": "p",
-       "t": "Where the calendar changes inside the notice period, KPI-F for that event is assessed against what could be delivered in the revised window.",
-       "li": false
-      }
-     ]
-    },
-    {
-     "num": "5.8",
-     "title": "Pricing reference",
-     "blocks": [
-      {
-       "type": "p",
-       "t": "Day-to-day operation, monitoring and reporting are priced as an annual lump sum. The annual inspection, photometric survey, cleaning and condition report are priced as an annual lump sum. Repairs are priced from the Schedule of Rates, with repairs under $1,000 completed without prior approval and repairs over $1,000 quoted and approved first. Energy is supplied by the Principal.",
-       "li": false
-      },
-      {
-       "type": "p",
-       "t": "The band operates as set out in Schedule 1, Part E.",
-       "li": false
-      }
-     ]
-    }
-   ]
+   "title": "Sports Lighting: not used",
+   "subs": []
   },
   {
    "num": "6",
@@ -4138,7 +3368,7 @@
          ],
          [
           {
-           "t": "Auckland Council Stadiums",
+           "t": "Auckland Stadiums",
            "li": false
           }
          ]
@@ -5239,7 +4469,7 @@
      "blocks": [
       {
        "type": "p",
-       "t": "The Principal issues the event calendar at least 12 weeks ahead with the tier of each event, and confirms each event's code and kick-off time 10 working days before commencement; approves the annual programme, nitrogen plan and event peaking programme within 10 working days of submission; approves the testing laboratory; supplies TAU-procured products on time where TAU elects to procure; has its agronomist review test results and the monthly report; and attends the joint readiness sign-off.",
+       "t": "The Principal issues the seasonal event calendar at least 12 weeks ahead (one-off events as soon as they are confirmed) with the tier of each event, and confirms each event's code and kick-off time 10 working days before commencement; approves the annual programme, nitrogen plan and event peaking programme within 10 working days of submission; approves the testing laboratory; supplies TAU-procured products on time where TAU elects to procure; has its agronomist review test results and the monthly report; and attends the joint readiness sign-off.",
        "li": false
       },
       {
@@ -5301,7 +4531,7 @@
          ],
          [
           {
-           "t": "Auckland Council Stadiums",
+           "t": "Auckland Stadiums",
            "li": false
           }
          ]
@@ -5870,6 +5100,50 @@
            "li": false
           }
          ]
+        ],
+        [
+         [
+          {
+           "t": "R1.11",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "During-event turf management",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "During every event, and between matches where more than one is played on the day (for example curtain-raisers before the main match), the turf team walks the field of play to replace and firm divots, wets the leaf with light irrigation where the competition allows and the match commissioner agrees (I1.4), and clears surface water from wet areas with approved water removal equipment (for example a water removal roller, or approved equivalent). Turf staff get event passes through the Principal's event management staff before each event (EV1.3).",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "LoS 1; every event",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Event-day log with the time of each field walk and the actions taken; photographs of wet areas before and after.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Supplier every event; Principal's Representative spot audits",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "KPI-R event score",
+           "li": false
+          }
+         ]
         ]
        ]
       }
@@ -5905,7 +5179,7 @@
          ],
          [
           {
-           "t": "After every event, across the whole field of play. Divots replaced root-down and firmed, or filled with divot mix of matching sand and seed; surface brushed and level before the next mow.",
+           "t": "After every event, across the whole field of play. Divots replaced root-down and firmed, or filled with divot mix of matching sand and seed; surface brushed and level before the next mow. Also between matches where more than one is played on the day.",
            "li": false
           }
          ]
@@ -6004,7 +5278,7 @@
      "blocks": [
       {
        "type": "p",
-       "t": "Standards R1.1 to R1.10 feed KPI-R, Surface Repair and Recovery. Scoring, pass threshold and weighting are defined once in the Performance Model (Schedule 1, Parts B and C) and are not repeated here.",
+       "t": "Standards R1.1 to R1.11 feed KPI-R, Surface Repair and Recovery. Scoring, pass threshold and weighting are defined once in the Performance Model (Schedule 1, Parts B and C) and are not repeated here.",
        "li": false
       },
       {
@@ -6031,6 +5305,11 @@
       {
        "type": "p",
        "t": "The divoting plant and equipment and method, crew size and timing after each event, and the divot mix specification",
+       "li": true
+      },
+      {
+       "type": "p",
+       "t": "During-event and between-match turf checks, and the water removal equipment used",
        "li": true
       },
       {
@@ -6122,7 +5401,7 @@
      "blocks": [
       {
        "type": "p",
-       "t": "The Principal issues the event calendar at least 12 weeks ahead and confirms each event's code and kick-off time 10 working days before commencement; gives access for post-event divoting and repairs straight after each event; approves the turf source and any on-site nursery or harvest area; decides on escalation to renovation; bears the recovery cost of damage from non-sporting use under Schedule 1; and attends the joint readiness sign-off.",
+       "t": "The Principal issues the seasonal event calendar at least 12 weeks ahead (one-off events as soon as they are confirmed) and confirms each event's code and kick-off time 10 working days before commencement; gives access for post-event divoting and repairs straight after each event; approves the turf source and any on-site nursery or harvest area; decides on escalation to renovation; bears the recovery cost of damage from non-sporting use under Schedule 1; and attends the joint readiness sign-off.",
        "li": false
       },
       {
@@ -6184,7 +5463,7 @@
          ],
          [
           {
-           "t": "Auckland Council Stadiums",
+           "t": "Auckland Stadiums",
            "li": false
           }
          ]
@@ -6597,7 +5876,7 @@
          ],
          [
           {
-           "t": "Agrichemicals applied only by GROWSAFE certified operators in line with NZS 8409 and TAU policy. Spray notification given to the Principal's Representative at least one week before work and recorded in the Spray Notification Register. Signs at all entry points until application is complete. Re-entry no longer than 'when fully dry'; residual products only with approval.",
+           "t": "Agrichemicals applied only by GROWSAFE certified operators in line with NZS 8409 and TAU policy. Spray notification given to the Principal's Representative at least one week before work and recorded in the Spray Notification Register. Signs at all entry points until application is complete. On the #1 fields at GMS, NHS and WSB, signs are also placed at all four corners and the centre of the field. Event and TAU staff on the notification list (Appendix D) are notified at least 24 hours before spraying. Re-entry no longer than 'when fully dry'; residual products only with approval.",
            "li": false
           }
          ],
@@ -6685,7 +5964,7 @@
          ],
          [
           {
-           "t": "No treatment applied within 48 hours of kick-off unless agreed with the stadium turf manager; re-entry period ended and no residue or odour on the surface before bump-in and team walk-throughs.",
+           "t": "No treatment applied after the Captain's Run unless approved by the Principal's Representative; foliar iron or greening treatments may be applied up to the Captain's Run; re-entry period ended and no residue or odour on the surface before bump-in and team walk-throughs.",
            "li": false
           }
          ],
@@ -7198,7 +6477,7 @@
          ],
          [
           {
-           "t": "No treatment within 48 hours of kick-off unless agreed; re-entry period ended and surface clear before bump-in; curative treatment of an outbreak agreed with the stadium turf manager.",
+           "t": "No treatment applied after the Captain's Run unless approved by the Principal's Representative; foliar iron or greening treatments may be applied up to the Captain's Run; re-entry period ended and surface clear before bump-in; curative treatment of an outbreak agreed with the stadium turf manager.",
            "li": false
           }
          ]
@@ -7536,7 +6815,7 @@
      "blocks": [
       {
        "type": "p",
-       "t": "The Principal issues the event calendar at least 12 weeks ahead and confirms each event's code and kick-off time 10 working days before commencement; approves the treatment programme and products within 10 working days of submission; supplies TAU-procured products on time where TAU elects to procure; has its agronomist review monitoring records and the monthly report; and attends the joint readiness sign-off.",
+       "t": "The Principal issues the seasonal event calendar at least 12 weeks ahead (one-off events as soon as they are confirmed) and confirms each event's code and kick-off time 10 working days before commencement; approves the treatment programme and products within 10 working days of submission; supplies TAU-procured products on time where TAU elects to procure; has its agronomist review monitoring records and the monthly report; and attends the joint readiness sign-off.",
        "li": false
       },
       {
@@ -7603,7 +6882,7 @@
          ],
          [
           {
-           "t": "Auckland Council Stadiums",
+           "t": "Auckland Stadiums",
            "li": false
           }
          ]
@@ -7659,7 +6938,7 @@
          ],
          [
           {
-           "t": "Playing surface including in-goal, run-off and warm-up zones (stadium zone plan Z1 to Z3) and grass surrounds inside the perimeter fence (Z4). The field of play includes stitched fibre and mat-backed hybrid zones, shown on the hybrid zone plan, and each treatment is matched to the zone. Includes solid tine and needle tine aeration (verti-drain), slicing and spiking, hybrid turf grooming, rolling, sand carpet depth checks, marking of irrigation, drainage and in-ground sensor assets before treatment, and surface testing to guide the programme. Deep decompaction and coring during renovation are covered by the renovation programme.",
+           "t": "Playing surface including in-goal, run-off and warm-up zones (stadium zone plan Z1 to Z3) and grass surrounds inside the perimeter fence (Z4). The field of play may include stitched fibre or mat-backed hybrid zones (system for each field in Appendix B), shown on the hybrid zone plan, and each treatment is matched to the zone. Includes solid tine and needle tine aeration (verti-drain), slicing and spiking, hybrid turf grooming, rolling, sand carpet depth checks, marking of irrigation, drainage and in-ground sensor assets before treatment, and surface testing to guide the programme. Deep decompaction and coring during renovation are covered by the renovation programme.",
            "li": false
           }
          ]
@@ -8244,7 +7523,7 @@
          ],
          [
           {
-           "t": "Clegg hammer or approved firmness readings on the 15-point grid; infiltration test at monitoring plots in each zone type; straightedge evenness checks.",
+           "t": "Clegg hammer or approved firmness readings at the test grid points (Appendix C); infiltration test at monitoring plots in each zone type; straightedge evenness checks.",
            "li": false
           }
          ],
@@ -8295,7 +7574,7 @@
          ],
          [
           {
-           "t": "Every treatment starts by confirming from the hybrid zone plan whether the area is natural turf, stitched hybrid or mat-backed hybrid. Where zones meet or overlap, the more restrictive set-up applies.",
+           "t": "Every treatment starts by confirming from the hybrid zone plan whether the area is natural turf, stitched hybrid or mat-backed hybrid. Where zones meet or overlap, the more restrictive set-up applies. The system at each field is recorded in the asset schedule (Appendix B); GMS #1 is mat-backed.",
            "li": false
           }
          ]
@@ -8559,7 +7838,7 @@
      "blocks": [
       {
        "type": "p",
-       "t": "The Principal issues the event calendar at least 12 weeks ahead and confirms each event's code and kick-off time 10 working days before commencement; gives access in the agreed treatment windows; approves plant set-up and the annual programme; provides as-built drawings of the root zone, sand carpet, drainage and hybrid systems, the hybrid zone plan and each manufacturer's maintenance manual and warranty conditions; and attends the joint readiness sign-off.",
+       "t": "The Principal issues the seasonal event calendar at least 12 weeks ahead (one-off events as soon as they are confirmed) and confirms each event's code and kick-off time 10 working days before commencement; gives access in the agreed treatment windows; approves plant set-up and the annual programme; provides as-built drawings of the root zone, sand carpet, drainage and hybrid systems, the hybrid zone plan and each manufacturer's maintenance manual and warranty conditions; and attends the joint readiness sign-off.",
        "li": false
       },
       {
@@ -8621,7 +7900,7 @@
          ],
          [
           {
-           "t": "Auckland Council Stadiums",
+           "t": "Auckland Stadiums",
            "li": false
           }
          ]
@@ -8677,7 +7956,7 @@
          ],
          [
           {
-           "t": "Playing surface including in-goal, run-off and warm-up zones (stadium zone plan Z1 to Z3) and grass surrounds inside the perimeter fence (Z4), including the hybrid turf system, which combines stitched fibre and mat-backed zones. Includes the annual renovation programme and reporting; coring and hollow tine aeration; compaction relief; soil recycling; scarification; natural turf and hybrid turf surface removal (top planing and fraise mowing); seeding and stolonising; topdressing; renovation materials (sand, soil, seed) supply, testing, delivery and storage; grow-in; and clean-up. Minor repairs are covered in Section 7 and routine physical treatments in Section 9.",
+           "t": "Playing surface including in-goal, run-off and warm-up zones (stadium zone plan Z1 to Z3) and grass surrounds inside the perimeter fence (Z4), including any hybrid turf system (stitched fibre or mat-backed, as recorded for each field in Appendix B). Includes the annual renovation programme and reporting; coring and hollow tine aeration; compaction relief; soil recycling; scarification; natural turf and hybrid turf surface removal (top planing and fraise mowing); seeding and stolonising; topdressing; renovation materials (sand, soil, seed) supply, testing, delivery and storage; grow-in; and clean-up. Minor repairs are covered in Section 7 and routine physical treatments in Section 9.",
            "li": false
           }
          ]
@@ -8810,7 +8089,7 @@
          ],
          [
           {
-           "t": "Weekly renovation update by 3 pm Friday showing planned, completed, deferred and upcoming works with rationale; completion report for each treatment with date, issues, cumulative completion against programme and claim against budget; before and after photographs; included in the monthly contract report.",
+           "t": "Weekly renovation update by 11.00 am Friday showing planned, completed, deferred and upcoming works with rationale; completion report for each treatment with date, issues, cumulative completion against programme and claim against budget; before and after photographs; included in the monthly contract report.",
            "li": false
           }
          ],
@@ -9074,7 +8353,7 @@
          ],
          [
           {
-           "t": "The pitch combines stitched fibre and mat-backed hybrid systems. Removal depth is set zone by zone from a pre-works survey of fibre height, organic layer depth and depth to the mat, so cutting tools never contact the mat in mat-backed zones and never cut or pull out fibres in stitched zones; where the systems meet or overlap the shallower limit applies. Method agreed with each system manufacturer where the warranty requires it. Pitch then aerated, seeded and topdressed, with fibres standing upright and fibre exposure and infill restored to each manufacturer's specification (Surface removal guidelines, 10.4.2).",
+           "t": "Hybrid fields may be stitched fibre or mat-backed (Appendix B). Removal depth is set zone by zone from a pre-works survey of fibre height, organic layer depth and depth to the mat, so cutting tools never contact the mat in mat-backed zones and never cut or pull out fibres in stitched zones; where the systems meet or overlap the shallower limit applies. Method agreed with each system manufacturer where the warranty requires it. Pitch then aerated, seeded and topdressed, with fibres standing upright and fibre exposure and infill restored to each manufacturer's specification (Surface removal guidelines, 10.4.2).",
            "li": false
           }
          ],
@@ -9278,6 +8557,50 @@
            "li": false
           }
          ]
+        ],
+        [
+         [
+          {
+           "t": "V1.13",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Hybrid surface at handover",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "In hybrid zones, handover after renovation also needs fibre exposure above the surface and sand carpet depth over the mat within each system manufacturer's limits (TAU to confirm the values for each system), measured at the fixed survey grid points, with no exposed or damaged mat.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "LoS 1 to 3; every renovation",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Post-works survey of fibre exposure and sand carpet depth at fixed grid points; photographs; manufacturer sign-off where required.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Supplier; joint handover inspection with the Principal's Representative",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "KPI-V event score for the first event after renovation",
+           "li": false
+          }
+         ]
         ]
        ]
       }
@@ -9341,7 +8664,7 @@
          ],
          [
           {
-           "t": "Blade type, spacing and depth set to maximise compaction relief and rooting depth without heave; blades, knives and bullets not worn; direction set to intercept existing drainage. At least one pass. Not used in mat-backed hybrid zones; in stitched zones only with the manufacturer's approval.",
+           "t": "Blade type, spacing and depth set to maximise compaction relief and rooting depth without heave; blades, knives and bullets not worn; direction set to intercept existing drainage. At least one pass. In mat-backed hybrid zones, decompaction only with tines and depths approved in writing by the mat system manufacturer (see P1.8); in stitched zones only with the manufacturer's approval. Where the manufacturer approves, a decompaction pass is completed before every event, within the timing limits in P1.1 (proposed).",
            "li": false
           }
          ]
@@ -9439,7 +8762,7 @@
          ],
          [
           {
-           "t": "Hard surfaces, storage and loading areas swept or blown clean within 24 hours (48 hours for successive sites); no vegetative material on adjacent turf, assets, sumps, drains or channels; sumps and cesspits protected where material is stored on hard surfaces; signage if clean-up is delayed.",
+           "t": "Hard surfaces (including athletics tracks), storage and loading areas swept or blown clean within 24 hours (48 hours for successive sites); no vegetative material on adjacent turf, assets, sumps, drains or channels; sumps and cesspits protected where material is stored on hard surfaces; signage if clean-up is delayed.",
            "li": false
           }
          ]
@@ -9612,7 +8935,7 @@
          ],
          [
           {
-           "t": "The pitch combines a stitched fibre system and a mat-backed system. The hybrid zone plan shows where each is installed and where they meet or overlap. Each zone is renovated to its own manufacturer's renovation guidance and warranty conditions, with the method agreed with each manufacturer before work where the warranty requires it.",
+           "t": "Each hybrid field is stitched fibre or mat-backed (Appendix B), and a field may contain both. The hybrid zone plan shows where each is installed and where they meet or overlap. Each zone is renovated to its own manufacturer's renovation guidance and warranty conditions, with the method agreed with each manufacturer before work where the warranty requires it.",
            "li": false
           }
          ]
@@ -9819,7 +9142,7 @@
          ],
          [
           {
-           "t": "Certified species and cultivars adapted to Auckland conditions with proven sports field performance (drought tolerance, recovery, lower fertiliser need, disease resistance, wear tolerance); blends of at least three cultivars, with at least 65% A-List approved varieties where A-List seed is used.",
+           "t": "Certified species and cultivars adapted to Auckland conditions with proven sports field performance (drought tolerance, recovery, lower fertiliser need, disease resistance, wear tolerance); blends of at least three cultivars, changed through the year to suit the season (for example more disease-resistant cultivars in summer), as set out in the annual programme and approved by the Principal's Representative. A-List approved varieties are acceptable but not required.",
            "li": false
           }
          ]
@@ -9848,7 +9171,7 @@
      "blocks": [
       {
        "type": "p",
-       "t": "Standards V1.1 to V1.12 feed KPI-V, Renovation and Recovery. Scoring, pass threshold and weighting are defined once in the Performance Model (Schedule 1, Parts B and C) and are not repeated here.",
+       "t": "Standards V1.1 to V1.13 feed KPI-V, Renovation and Recovery. Scoring, pass threshold and weighting are defined once in the Performance Model (Schedule 1, Parts B and C) and are not repeated here.",
        "li": false
       },
       {
@@ -10038,7 +9361,7 @@
          ],
          [
           {
-           "t": "Auckland Council Stadiums",
+           "t": "Auckland Stadiums",
            "li": false
           }
          ]
@@ -10094,7 +9417,7 @@
          ],
          [
           {
-           "t": "All zones (stadium zone plan Z1 to Z4) and every service area in Sections 1 to 10. Includes key personnel; the Maintenance & Operations Plan; event readiness sign-off and event-day turf operations; pitch use, training allocation and wear management; wet-weather and closure management; protection and recovery for non-sporting events and overlays; Eyes and Ears early warning; response maintenance; reporting; quality assurance; stakeholder liaison with codes, competitions and broadcasters; and health, safety and environmental management.",
+           "t": "All zones (stadium zone plan Z1 to Z4) and every service area in Sections 1 to 4, 6 to 10 and 12 to 17. Includes key personnel; the Maintenance & Operations Plan; event readiness sign-off and event-day turf operations; pitch use, training allocation and wear management; wet-weather and closure management; protection and recovery for non-sporting events and overlays; Eyes and Ears early warning; response maintenance; reporting; quality assurance; stakeholder liaison with codes, competitions and broadcasters; and health, safety and environmental management.",
            "li": false
           }
          ]
@@ -10183,7 +9506,7 @@
          ],
          [
           {
-           "t": "A Stadium Turf Operations Manager (National Certificate in Sports Turf Management Level 4 or equivalent, with stadium event experience) leads the services as the single point of contact, supported by the Irrigation Specialist (Section 3) and Renovation Manager (Section 10). Key people changed only with the Principal's Representative's approval; trained cover nominated for absences.",
+           "t": "A Stadium Turf Operations Manager (National Certificate in Sports Turf Management Level 4 or equivalent, with stadium event experience) leads the services as the single point of contact, supported by the Irrigation Specialist (Section 3) and Renovation Manager (Section 10). Key roles may be combined where one person holds the qualifications and has the capacity, with the Principal's Representative's approval (for example, the head groundsperson may also act as Renovation Manager). The minimum number of full-time turf staff on site at each stadium is set out in 11.5. Key people changed only with the Principal's Representative's approval; trained cover nominated for absences.",
            "li": false
           }
          ],
@@ -10227,7 +9550,7 @@
          ],
          [
           {
-           "t": "A single Maintenance & Operations Plan bringing together the Supplier plan requirements of Sections 1 to 10, submitted at least 20 working days before the contract starts and reviewed annually by 1 June; updated within 10 working days of any material change and approved before use.",
+           "t": "A single Maintenance & Operations Plan bringing together the Supplier plan requirements of Sections 1 to 4, 6 to 10 and 12 to 17, submitted at least 20 working days before the contract starts and reviewed annually by 1 June; updated within 10 working days of any material change and approved before use.",
            "li": false
           }
          ],
@@ -10271,7 +9594,7 @@
          ],
          [
           {
-           "t": "Joint readiness walk for every event, completed at least 4 hours before kick-off, using the readiness checklist for all service area standards (mowing, line marking, irrigation, goal posts, sports lighting, nutrition, repairs, treatments and physical treatments). Every fail rectified before kick-off or recorded with the reason and agreed action.",
+           "t": "Joint readiness walk for every event, completed at least 4 hours before kick-off, using the readiness checklist for all service area standards (mowing, line marking, irrigation, goal posts, nutrition, repairs, treatments and physical treatments). Every fail rectified before kick-off or recorded with the reason and agreed action.",
            "li": false
           }
          ],
@@ -10535,7 +9858,7 @@
          ],
          [
           {
-           "t": "After-hours and weekend response register with escalation tree, updated weekly. Requests for service met within the RFS timeframes: Critical, response 1 hour and completion 2 hours; Priority 2, response 4 hours and completion 8 hours; Urgent, response 24 hours and completion 48 hours. Site made safe where not resolved at the first visit; response report with before and after photographs. A named on-call turf staff member is available for weekend and event-day sport and can be on site within 1 hour (proposed).",
+           "t": "After-hours and weekend response register with escalation tree, updated weekly. Requests for service met within the RFS timeframes: Critical, response 1 hour and completion 2 hours; Priority 2, response 4 hours and completion 8 hours; Urgent, response 24 hours and completion 48 hours. Site made safe where not resolved at the first visit; response report with before and after photographs. A named on-call turf staff member shall be available for weekend and event-day sport and on site within 1 hour of call-out.",
            "li": false
           }
          ],
@@ -10579,7 +9902,7 @@
          ],
          [
           {
-           "t": "Weekly report by 3.00 pm Friday (works completed and planned, event readiness, issues, closures, response register); monthly contract report with the evidence for every KPI, water, nutrition, treatment and renovation data; annual condition report. All reports accurate, complete and in the approved formats.",
+           "t": "Weekly report by 11.00 am Friday (works completed and planned, event readiness, issues, closures, response register); monthly contract report with the evidence for every KPI, water, nutrition, treatment and renovation data; annual condition report. All reports accurate, complete and in the approved formats. Monthly claims itemised by asset ID (Appendix B).",
            "li": false
           }
          ],
@@ -10705,81 +10028,37 @@
          ],
          [
           {
-           "t": "Event works requests and quotes",
+           "t": "Storage, compound and workshop areas",
            "li": false
           }
          ],
          [
           {
-           "t": "Requests from TAU's events team for event-day works (additional staff on site, extra preparation, reinstatement) acknowledged within 1 working day and quoted within 3 working days (proposed), showing staff numbers, hours, plant and rates; works delivered as quoted and invoiced against the approved quote.",
+           "t": "Storage, compound, workshop and stockpile areas allocated to the Supplier are used only for contract purposes and kept tidy, secure and free of litter and waste. Plant, materials, fuel and chemicals stored only in their designated areas (agrichemicals as Section 8). Nothing stored on turf or in public areas without approval. Areas returned in their original condition at the end of the contract.",
            "li": false
           }
          ],
          [
           {
-           "t": "LoS 1, 3; every request",
+           "t": "LoS 4; monthly",
            "li": false
           }
          ],
          [
           {
-           "t": "Request and quote register with dates; approved quotes; invoices against quotes.",
+           "t": "Monthly storage area inspection checklist; photographs.",
            "li": false
           }
          ],
          [
           {
-           "t": "Supplier; Principal's Representative review",
+           "t": "Supplier monthly; Principal's Representative audits",
            "li": false
           }
          ],
          [
           {
-           "t": "KPI-O monthly deduction per late quote",
-           "li": false
-          }
-         ]
-        ],
-        [
-         [
-          {
-           "t": "O1.14",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Event flooring (turf protection)",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Turf protection flooring installed, cleaned and removed to the agreed protection plan (O1.7) and the flooring manufacturer's guidance; installed no earlier and removed no later than the agreed times; surface cleared of debris; turf condition surveyed before and after.",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "LoS 3; every non-sporting event",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Flooring log with installation and removal times and area in m2; condition surveys; photographs.",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Supplier; joint inspection with the Principal's Representative",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "KPI-O monthly deduction if breached",
+           "t": "KPI-O monthly deduction if breached at audit",
            "li": false
           }
          ]
@@ -10818,7 +10097,7 @@
          ],
          [
           {
-           "t": "Event calendar issued by the Principal; event preparation dates and renovation windows set in the Maintenance & Operations Plan programme.",
+           "t": "Seasonal event calendar issued by the Principal (one-off events as soon as they are confirmed); event preparation dates and renovation windows set in the Maintenance & Operations Plan programme.",
            "li": false
           }
          ]
@@ -11025,7 +10304,7 @@
          ],
          [
           {
-           "t": "Named on-call turf staff for weekend and event-day sport, on site within 1 hour (proposed); listed in the response register.",
+           "t": "Named on-call turf staff for weekend and event-day sport, on site within 1 hour of call-out; listed in the response register.",
            "li": false
           }
          ]
@@ -11081,7 +10360,7 @@
          ],
          [
           {
-           "t": "By 3.00 pm Friday.",
+           "t": "By 11.00 am Friday.",
            "li": false
           }
          ]
@@ -11109,7 +10388,7 @@
          ],
          [
           {
-           "t": "Costed condition reports and recommendations for irrigation, goal posts, sports lighting, renovation and compliance testing submitted before 30 September for TAU's operating budget.",
+           "t": "Costed condition reports and recommendations for irrigation, goal posts, renovation and compliance testing submitted before 30 September for TAU's operating budget.",
            "li": false
           }
          ]
@@ -11134,11 +10413,64 @@
     },
     {
      "num": "11.5",
+     "title": "Minimum on-site staffing (referenced by O1.1)",
+     "blocks": [
+      {
+       "type": "table",
+       "rows": [
+        [
+         [
+          {
+           "t": "Stadium",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Minimum full-time turf staff on site",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "GMS and WSB",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "At least 3 full-time staff",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "NHS",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "At least 2 full-time staff",
+           "li": false
+          }
+         ]
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "num": "11.6",
      "title": "KPI and weighting",
      "blocks": [
       {
        "type": "p",
-       "t": "Standards O1.1 to O1.14 feed KPI-O, Operations and Management. Scoring, pass threshold and weighting are defined once in the Performance Model (Schedule 1, Parts B and C) and are not repeated here.",
+       "t": "Standards O1.1 to O1.13 feed KPI-O, Operations and Management. Scoring, pass threshold and weighting are defined once in the Performance Model (Schedule 1, Parts B and C) and are not repeated here.",
        "li": false
       },
       {
@@ -11149,7 +10481,7 @@
      ]
     },
     {
-     "num": "11.6",
+     "num": "11.7",
      "title": "Supplier plan requirements (Maintenance & Operations Plan content)",
      "blocks": [
       {
@@ -11164,7 +10496,7 @@
       },
       {
        "type": "p",
-       "t": "How the Supplier plan requirements of Sections 1 to 10 are integrated into one annual programme keyed to the event calendar",
+       "t": "How the Supplier plan requirements of Sections 1 to 4, 6 to 10 and 12 to 17 are integrated into one annual programme keyed to the event calendar",
        "li": true
       },
       {
@@ -11211,11 +10543,16 @@
        "type": "p",
        "t": "The site-specific health, safety and environmental plan",
        "li": true
+      },
+      {
+       "type": "p",
+       "t": "How storage, compound and workshop areas are kept tidy and secure",
+       "li": true
       }
      ]
     },
     {
-     "num": "11.7",
+     "num": "11.8",
      "title": "Mandatory conditions",
      "blocks": [
       {
@@ -11252,16 +10589,21 @@
        "type": "p",
        "t": "The Supplier communicates with codes, competitions and broadcasters only as agreed with the Principal's Representative.",
        "li": true
+      },
+      {
+       "type": "p",
+       "t": "The Supplier works collaboratively with all TAU staff, including the Events, Stadiums and Property teams.",
+       "li": true
       }
      ]
     },
     {
-     "num": "11.8",
+     "num": "11.9",
      "title": "Principal interfaces",
      "blocks": [
       {
        "type": "p",
-       "t": "The Principal issues the event calendar at least 12 weeks ahead and confirms each event's details 10 working days before; sets training allocations and approves use limits; decides closures, cancellations and non-sporting uses and bears the recovery consequences under Schedule 1; communicates closures to users and the public; provides access to the booking, RFS and reporting systems; attends the joint readiness sign-off and monthly performance meeting; and approves the Maintenance & Operations Plan. TAU's events team requests event-day works and event flooring in writing with the event details at least 10 working days before the event (proposed).",
+       "t": "The Principal issues the seasonal event calendar at least 12 weeks ahead (one-off events as soon as they are confirmed) and confirms each event's details 10 working days before; sets training allocations and approves use limits; decides closures, cancellations and non-sporting uses and bears the recovery consequences under Schedule 1; communicates closures to users and the public; provides access to the booking, RFS and reporting systems; attends the joint readiness sign-off and monthly performance meeting; and approves the Maintenance & Operations Plan. TAU's events team requests event-day works and event flooring in writing with the event details at least 10 working days before the event (proposed).",
        "li": false
       },
       {
@@ -11272,7 +10614,7 @@
      ]
     },
     {
-     "num": "11.9",
+     "num": "11.10",
      "title": "Pricing reference",
      "blocks": [
       {
@@ -11323,7 +10665,7 @@
          ],
          [
           {
-           "t": "Auckland Council Stadiums",
+           "t": "Auckland Stadiums",
            "li": false
           }
          ]
@@ -11379,7 +10721,7 @@
          ],
          [
           {
-           "t": "All #1 (match) fields and training fields in the asset schedule (Appendix B). Includes weekly testing of training fields and fortnightly testing of #1 fields during the playing season, pre-event testing for Tier A events, the standard test template, calibration of test equipment, data storage and reporting to TAU. Independent testing commissioned by TAU is not included.",
+           "t": "All #1 (match) fields and training fields in the asset schedule (Appendix B). Includes weekly testing of training fields and fortnightly testing of #1 fields during the playing season, pre-event testing for Tier A events, the standard test template, calibration of test equipment, data storage and reporting to TAU. Independent testing commissioned by TAU is not included. Includes compliance testing of the artificial ring roads at North Harbour Stadium and Go Media Stadium Mt Smart every two years (C1.9).",
            "li": false
           }
          ]
@@ -11556,7 +10898,7 @@
          ],
          [
           {
-           "t": "Tests taken at fixed points on the zone plan for each field (the 15-point grid used for M1.1, plus goalmouth and other high-wear points), using the methods in the test template, with weather and surface conditions recorded.",
+           "t": "Tests taken at fixed points on the zone plan for each field (the 15-point test grid in Appendix C, used for M1.1, plus goalmouth and other high-wear points), using the equipment listed in 12.3 and the methods in the test template, with weather and surface conditions recorded.",
            "li": false
           }
          ],
@@ -11804,6 +11146,50 @@
            "li": false
           }
          ]
+        ],
+        [
+         [
+          {
+           "t": "C1.9",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Artificial surfaces (ring roads)",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "The artificial surface ring roads at North Harbour Stadium and Go Media Stadium Mt Smart are compliance tested every two years by an accredited testing provider, to the tests and standard approved by TAU, with results and any corrective actions reported to TAU within 10 working days of the test (proposed).",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "LoS 4; every two years",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Test reports and certificates; corrective action log.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Supplier; Principal's Representative review",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "KPI-C monthly deduction per missed test",
+           "li": false
+          }
+         ]
         ]
        ]
       }
@@ -11980,7 +11366,7 @@
      "blocks": [
       {
        "type": "p",
-       "t": "Standards C1.1 to C1.8 feed KPI-C, Surface Compliance. Scoring, pass threshold and weighting are defined once in the Performance Model (Schedule 1, Parts B and C) and are not repeated here.",
+       "t": "Standards C1.1 to C1.9 feed KPI-C, Surface Compliance. Scoring, pass threshold and weighting are defined once in the Performance Model (Schedule 1, Parts B and C) and are not repeated here.",
        "li": false
       },
       {
@@ -12125,7 +11511,7 @@
          ],
          [
           {
-           "t": "Auckland Council Stadiums",
+           "t": "Auckland Stadiums",
            "li": false
           }
          ]
@@ -12606,6 +11992,50 @@
            "li": false
           }
          ]
+        ],
+        [
+         [
+          {
+           "t": "U1.9",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Privacy protocol for AI-assisted cameras",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "A privacy protocol, approved by TAU's privacy officer before the cameras go live, under which: cameras do not record, or footage is locked and not viewed, during closed team sessions, including the Captain's Run (T-1) and any session a code or competition says is closed; raw images are processed on the device or platform and deleted automatically within 72 hours (proposed), keeping only anonymised position and count data; footage kept longer for a safety incident or complaint is isolated, logged and deleted when no longer needed; only people on the named access list can view footage, and every access is logged; and facial recognition and any other feature that could identify individuals is switched off, in line with the Privacy Act 2020 and the Biometric Processing Privacy Code 2025.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "LoS 3, 4; continuous",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Approved privacy protocol; platform retention and deletion settings; access log; closed-session schedule checked against recording logs.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Supplier; TAU privacy officer; Principal's Representative audits",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "KPI-U monthly deduction per confirmed breach",
+           "li": false
+          }
+         ]
         ]
        ]
       }
@@ -12753,7 +12183,7 @@
          ],
          [
           {
-           "t": "Anonymised at source; used only for measuring use; Privacy Act 2020 and TAU policy; privacy impact assessment; signage; Principal owns the data.",
+           "t": "Anonymised at source; used only for measuring use; Privacy Act 2020 and TAU policy; privacy impact assessment; signage; Principal owns the data. Privacy protocol (U1.9): no recording in closed team sessions; raw images deleted within 72 hours (proposed).",
            "li": false
           }
          ]
@@ -12768,7 +12198,7 @@
      "blocks": [
       {
        "type": "p",
-       "t": "Standards U1.1 to U1.8 feed KPI-U, Usage Data and Reporting. Scoring, pass threshold and weighting are defined once in the Performance Model (Schedule 1, Parts B and C) and are not repeated here.",
+       "t": "Standards U1.1 to U1.9 feed KPI-U, Usage Data and Reporting. Scoring, pass threshold and weighting are defined once in the Performance Model (Schedule 1, Parts B and C) and are not repeated here.",
        "li": false
       },
       {
@@ -12819,6 +12249,11 @@
       },
       {
        "type": "p",
+       "t": "The privacy protocol for AI-assisted cameras (U1.9)",
+       "li": true
+      },
+      {
+       "type": "p",
        "t": "The pilot programme, review timing and proposed final measures",
        "li": true
       }
@@ -12836,6 +12271,11 @@
       {
        "type": "p",
        "t": "The Supplier does not store, copy or share identifiable images, and complies with the Privacy Act 2020 and TAU privacy policy.",
+       "li": true
+      },
+      {
+       "type": "p",
+       "t": "No recording is made, and no footage is viewed, during closed team sessions, including the Captain's Run, unless the code or competition agrees.",
        "li": true
       },
       {
@@ -12923,7 +12363,7 @@
          ],
          [
           {
-           "t": "Auckland Council Stadiums",
+           "t": "Auckland Stadiums",
            "li": false
           }
          ]
@@ -12983,7 +12423,7 @@
          ],
          [
           {
-           "t": "All garden beds, planter boxes, rose and perennial beds, shrub and groundcover plantings and hedges within the stadium precinct shown in the asset schedule (Appendix B) and the precinct zone plan, including entrances, forecourts, concourses, plazas, car park islands and the surrounds of the field of play. Trees in or beside garden beds are included for sucker and epicormic growth removal to the first branch junction only.",
+           "t": "All garden beds, planter boxes, shrub and groundcover plantings and hedges within the stadium precinct shown in the asset schedule (Appendix B) and the precinct zone plan, including entrances, forecourts, concourses, plazas, car park islands and the surrounds of the field of play. Trees in or beside garden beds are included for sucker and epicormic growth removal to the first branch junction only.",
            "li": false
           },
           {
@@ -13170,13 +12610,13 @@
          ],
          [
           {
-           "t": "Pruning timing and roses",
+           "t": "Pruning timing",
            "li": false
           }
          ],
          [
           {
-           "t": "Pruning timed to the species and flowering period: spring flowering plants after flowering, summer flowering shrubs in dormancy, bleeding species not pruned when sap is flowing. Roses winter pruned July to August, summer pruned to shape, carpet roses tidied by hand after mechanical trimming, rootstock suckers removed, and the post-pruning copper and winter oil programme applied.",
+           "t": "Pruning timed to the species and flowering period: spring flowering plants after flowering, summer flowering shrubs in dormancy, bleeding species not pruned when sap is flowing.",
            "li": false
           }
          ],
@@ -13220,7 +12660,7 @@
          ],
          [
           {
-           "t": "No spent flower heads on roses or annuals; spent perennial flowering stems removed after each flowering; no skirt of dead leaves at the base of flax and no dead flax seed heads in LoS 1 gardens; no shoots or suckers from the rootstock, base or main stem of roses and trees in or beside beds.",
+           "t": "No skirt of dead leaves at the base of flax and no dead flax seed heads in LoS 1 gardens; no shoots or suckers from the rootstock, base or main stem of trees in or beside beds.",
            "li": false
           }
          ],
@@ -13352,7 +12792,7 @@
          ],
          [
           {
-           "t": "Perennials cut down in autumn and lifted, divided and replanted as the species needs. After pruning, approved weed-free compost spread at 1 m3 per 10 m2 of perennial and rose bed with crowns and stems kept clear; individual roses given a 500 mm weed-free circle mulched 50 mm deep; approved organic fertiliser applied each growing season.",
+           "t": "After pruning, approved weed-free compost spread where the annual garden programme specifies, with crowns and stems kept clear; approved organic fertiliser applied each growing season.",
            "li": false
           }
          ],
@@ -13528,7 +12968,7 @@
          ],
          [
           {
-           "t": "Mulch held at a 100 mm target depth (75 to 125 mm; minimum 50 mm where it cannot be contained), even across the bed and clear of stems, trunks and crowns; no areas over 150 mm deep; no mulch left on hard surfaces, grass or assets after a visit; stone mulch replaced like for like; no chipped material in LoS 1 rose and perennial beds.",
+           "t": "Mulch held at a 100 mm target depth (75 to 125 mm; minimum 50 mm where it cannot be contained), even across the bed and clear of stems, trunks and crowns; no areas over 150 mm deep; no mulch left on hard surfaces, grass or assets after a visit; stone mulch replaced like for like.",
            "li": false
           }
          ],
@@ -13723,7 +13163,7 @@
          ],
          [
           {
-           "t": "To NZQA Unit Standard 21032. Sharp bypass (scissor action) secateurs and loppers, not anvil type. Mechanical trimmers only where approved for the species, for example carpet roses and formally shaped shrubs. Rejuvenation pruning in late winter and in stages, with the amount removed at one time suited to species and age.",
+           "t": "To NZQA Unit Standard 21032. Sharp bypass (scissor action) secateurs and loppers, not anvil type. Mechanical trimmers only where approved for the species, for example formally shaped shrubs. Rejuvenation pruning in late winter and in stages, with the amount removed at one time suited to species and age.",
            "li": false
           }
          ]
@@ -13745,27 +13185,13 @@
         [
          [
           {
-           "t": "Roses",
+           "t": "Flax",
            "li": false
           }
          ],
          [
           {
-           "t": "Winter prune July to August for basal growth and a balanced, compact habit. Summer prune to shape and remove damaged growth without forcing lush shoots. Old-fashioned roses after the main flowering, removing no more than one third. Carpet roses after flowering and before dormancy, then hand tidied. Copper and winter oil applied straight after winter pruning. Deadhead at every visit.",
-           "li": false
-          }
-         ]
-        ],
-        [
-         [
-          {
-           "t": "Perennials and flax",
-           "li": false
-          }
-         ],
-         [
-          {
-           "t": "Spent stems removed to ground after each flowering without damaging basal growth points; cut down in autumn; lifted and divided as the species needs. Flax: dead leaves cut to the base with a flax knife; dead seed heads removed in LoS 1 gardens and may be kept elsewhere for habitat.",
+           "t": "Dead leaves cut to the base with a flax knife; dead seed heads removed in LoS 1 gardens and may be kept elsewhere for habitat.",
            "li": false
           }
          ]
@@ -13793,7 +13219,7 @@
          ],
          [
           {
-           "t": "After autumn and winter work, 1 m3 of approved weed-free compost per 10 m2 of perennial and rose bed, spread evenly with crowns and stems clear. Individual roses: 500 mm weed-free circle, 50 mm compost. Approved organic fertiliser (for example sheep pellets or blood and bone) at the manufacturer's rate each growing season.",
+           "t": "Approved weed-free compost where the annual garden programme specifies, spread evenly with crowns and stems clear. Approved organic fertiliser (for example sheep pellets or blood and bone) at the manufacturer's rate each growing season.",
            "li": false
           }
          ]
@@ -13932,7 +13358,7 @@
       },
       {
        "type": "p",
-       "t": "The annual garden programme: pruning by species and season, rose and perennial work, compost, fertiliser and mulch top-up",
+       "t": "The annual garden programme: pruning by species and season, compost, fertiliser and mulch top-up",
        "li": true
       },
       {
@@ -14024,7 +13450,7 @@
      "blocks": [
       {
        "type": "p",
-       "t": "The Principal issues the event calendar at least 12 weeks ahead and confirms each event's gate opening time and any hospitality, sponsor or broadcast areas needing LoS 1 presentation 10 working days before the event; approves the Annual Spray Plan (Section 8) and the annual mulch programme; supplies water and power for irrigation; funds replacement and new planting; and attends the joint readiness sign-off.",
+       "t": "The Principal issues the seasonal event calendar at least 12 weeks ahead (one-off events as soon as they are confirmed) and confirms each event's gate opening time and any hospitality, sponsor or broadcast areas needing LoS 1 presentation 10 working days before the event; approves the Annual Spray Plan (Section 8) and the annual mulch programme; supplies water and power for irrigation; funds replacement and new planting; and attends the joint readiness sign-off.",
        "li": false
       },
       {
@@ -14086,7 +13512,7 @@
          ],
          [
           {
-           "t": "Auckland Council Stadiums",
+           "t": "Auckland Stadiums",
            "li": false
           }
          ]
@@ -14146,7 +13572,7 @@
          ],
          [
           {
-           "t": "Hard surfaces shown in the precinct zone plan and the asset schedule (Appendix B): entrance forecourts and plazas, concourses, paths, steps, ramps and landings, aprons and surrounds to seats, tables, shelters, structures and toilets, the hard perimeter of the field of play, tunnel and player access routes, maintenance yards and, where listed, car parks.",
+           "t": "Hard surfaces shown in the precinct zone plan and the asset schedule (Appendix B): entrance forecourts and plazas, concourses, paths, steps, ramps and landings, aprons and surrounds to seats, tables, shelters, structures and toilets, the hard perimeter of the field of play, athletics tracks, tunnel and player access routes, maintenance yards and, where listed, car parks.",
            "li": false
           },
           {
@@ -14675,6 +14101,50 @@
            "li": false
           }
          ]
+        ],
+        [
+         [
+          {
+           "t": "HS1.11",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Major event and seasonal cleans",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Additional sweeps of the stadium hard surfaces, including athletics tracks, after a major event or for seasonal leaf fall, completed within the timeframe set by the Principal's Representative when instructed. The number of these cleans is set in the pricing band, not in this specification.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "LoS 1 to 3; when instructed",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Instruction and completion record; dated photographs.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Supplier; Principal's Representative audits",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "KPI-HS monthly score",
+           "li": false
+          }
+         ]
         ]
        ]
       }
@@ -14851,7 +14321,7 @@
      "blocks": [
       {
        "type": "p",
-       "t": "Standards HS1.1 to HS1.10 feed KPI-HS, Hard Surfaces and Cleanliness. Scoring, pass threshold and weighting are defined once in the Performance Model (Schedule 1, Parts B and C) and are not repeated here.",
+       "t": "Standards HS1.1 to HS1.11 feed KPI-HS, Hard Surfaces and Cleanliness. Scoring, pass threshold and weighting are defined once in the Performance Model (Schedule 1, Parts B and C) and are not repeated here.",
        "li": false
       },
       {
@@ -14964,7 +14434,7 @@
      "blocks": [
       {
        "type": "p",
-       "t": "The Principal issues the event calendar at least 12 weeks ahead and confirms each event's gate opening time, crowd areas and any hospitality, sponsor or broadcast zones 10 working days before the event; approves the cleaning product list and methods; provides access and water supply points; arranges removal of graffiti over 1 m2, illegal dumping and hazardous material; and funds surface repairs not caused by the Supplier.",
+       "t": "The Principal issues the seasonal event calendar at least 12 weeks ahead (one-off events as soon as they are confirmed) and confirms each event's gate opening time, crowd areas and any hospitality, sponsor or broadcast zones 10 working days before the event; approves the cleaning product list and methods; provides access and water supply points; arranges removal of graffiti over 1 m2, illegal dumping and hazardous material; and funds surface repairs not caused by the Supplier.",
        "li": false
       },
       {
@@ -14980,7 +14450,1459 @@
      "blocks": [
       {
        "type": "p",
-       "t": "Scheduled cleaning, event cleans, drain clearing and reporting are priced as an annual lump sum per level of service with a declared minimum and maximum number of event cleans. Additional cleans and specialist treatments requested by the Principal are priced from the Schedule of Rates.",
+       "t": "Scheduled cleaning, event cleans, drain clearing and reporting are priced as an annual lump sum per level of service with a declared minimum and maximum number of event cleans and of major event and seasonal cleans (HS1.11). Additional cleans and specialist treatments requested by the Principal are priced from the Schedule of Rates.",
+       "li": false
+      },
+      {
+       "type": "p",
+       "t": "The band operates as set out in Schedule 1, Part E.",
+       "li": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "num": "16",
+   "title": "Events Management",
+   "subs": [
+    {
+     "num": "16.1",
+     "title": "Background",
+     "blocks": [
+      {
+       "type": "table",
+       "rows": [
+        [
+         [
+          {
+           "t": "Item",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Description",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "Service area",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Auckland Stadiums",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "Service type",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Event management for the grounds services: event bookings and notice, event planning and run sheets, event-day works requests and quotes, event passes for Supplier staff, turf protection flooring and post-event debriefs",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "Schedule reference",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Schedule 2, Events Management; standards feed KPI-O, Operations and Management, in Schedule 1, Performance Model",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "Part 1. Outcome statement",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Every event at the stadiums is planned with the turf and grounds team from the time it is booked, so the field, line marking, goal posts, gardens and hard surfaces are ready on time, event-day works are agreed and priced before they happen, and the field is protected and handed back promptly afterwards.",
+           "li": false
+          },
+          {
+           "t": "TAU's Events, Stadiums and Property teams and the Supplier work from one event calendar and one run sheet for each event.",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "Part 2. Scope and assets",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "All events and bookings at the stadiums in the asset schedule (Appendix B): sporting fixtures, one-off events, non-sporting events and overlays. Includes the booking and notice process, event planning meetings, run sheets, event-day works requests and quotes, event passes for Supplier staff, turf protection flooring and post-event debriefs.",
+           "li": false
+          },
+          {
+           "t": "Event-day turf operations (O1.4), protection plans for non-sporting events (O1.7) and during-event turf management (R1.11) are set out in those standards.",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "Levels of service",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "LoS 1 Tier A and major events.",
+           "li": false
+          },
+          {
+           "t": "LoS 2 Other sporting fixtures.",
+           "li": false
+          },
+          {
+           "t": "LoS 3 Non-sporting events and overlays.",
+           "li": false
+          },
+          {
+           "t": "LoS 4 Bookings, planning and records.",
+           "li": false
+          }
+         ]
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "num": "16.2",
+     "title": "Performance standards and measurement",
+     "blocks": [
+      {
+       "type": "table",
+       "rows": [
+        [
+         [
+          {
+           "t": "PS ref",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Service component",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Performance standard (target and tolerance)",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Applies (LoS and condition)",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Measurement method and evidence",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Measured by and when",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "KPI link",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "EV1.1",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Event bookings and notice",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Every booking received through TAU's events team is entered in the Maintenance & Operations Plan programme within 2 working days (proposed). The seasonal event calendar is issued at least 12 weeks ahead; one-off events are notified as soon as they are confirmed, and the Supplier confirms within 2 working days (proposed) what preparation can be delivered in the time available.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "LoS 1 to 3; every booking",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Booking register with dates received, entered and confirmed.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Supplier; Principal's Representative monthly review",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "KPI-O monthly deduction if late",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "EV1.2",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Event planning and run sheets",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "The Supplier attends TAU event planning meetings when invited and works to the run sheet agreed with TAU's Events, Stadiums and Property teams for each event, covering preparation windows, bump-in and bump-out, field access, code changeovers, watering and covers.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "LoS 1 to 3; every event",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Meeting attendance record; run sheet with Supplier actions signed off.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Supplier; Principal's Representative review",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "KPI-O event score",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "EV1.3",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Event passes and access",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Turf staff needed on event day are named to TAU's event management staff in time to receive event passes (at least 2 working days before the event, proposed), carry their passes at all times and follow the stadium's event access and safety rules.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "LoS 1 to 3; every event",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Event pass list; access incident log.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Supplier; event management staff",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "KPI-O event score",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "EV1.4",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Event works requests and quotes",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Requests from TAU's events team for event-day works (additional staff on site, extra preparation, reinstatement) acknowledged within 1 working day and quoted within 3 working days (proposed), showing staff numbers, hours, plant and rates; works delivered as quoted and invoiced against the approved quote.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "LoS 1, 3; every request",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Request and quote register with dates; approved quotes; invoices against quotes.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Supplier; Principal's Representative review",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "KPI-O monthly deduction per late quote",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "EV1.5",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Event flooring (turf protection)",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Turf protection flooring installed, cleaned and removed to the agreed protection plan (O1.7) and the flooring manufacturer's guidance; installed no earlier and removed no later than the agreed times; surface cleared of debris; turf condition surveyed before and after. Installation, cleaning and removal priced per m2 from the Schedule of Rates, and the flooring stacked away tidily after use.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "LoS 3; every non-sporting event",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Flooring log with installation and removal times and area in m2; condition surveys; photographs.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Supplier; joint inspection with the Principal's Representative",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "KPI-O monthly deduction if breached",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "EV1.6",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Post-event summary and debrief",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "For Tier A and non-sporting events, a post-event summary to the Principal within 2 working days covering turf condition, damage, recovery actions and costs, and lessons for the next event; attendance at the TAU post-event debrief when invited.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "LoS 1, 3; every event",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Post-event summaries; debrief notes.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Supplier; Principal's Representative review",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "KPI-O monthly deduction if late",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "EV1.7",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Event communication",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "The Supplier communicates with codes, competitions, promoters and broadcasters only as agreed with the Principal's Representative, and refers any request for event works outside the agreed run sheet to TAU's events team.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "LoS 1 to 3; continuous",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Communication log; record of requests referred.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Supplier; Principal's Representative review",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "KPI-O monthly deduction per confirmed breach",
+           "li": false
+          }
+         ]
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "num": "16.3",
+     "title": "Event management process (referenced by EV1.1 to EV1.6)",
+     "blocks": [
+      {
+       "type": "table",
+       "rows": [
+        [
+         [
+          {
+           "t": "Item",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Requirement",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "Bookings",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Bookings are made through TAU's events team, not with the Supplier. TAU adds each booking to the event calendar, and the Supplier enters it in the Maintenance & Operations Plan programme.",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "Notice",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Seasonal event calendar at least 12 weeks ahead; one-off events as soon as they are confirmed; each event's details confirmed 10 working days before, or as soon as practicable for a one-off event.",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "Event planning",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "The Supplier attends planning meetings for Tier A, major and non-sporting events, and for any event that needs changes to the field, covers or overlays.",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "Run sheet",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "One run sheet for each event, agreed with TAU's Events, Stadiums and Property teams, showing preparation windows, bump-in and bump-out times, field access, code changeovers, watering and cover dates.",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "Event works quotes",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Requests from TAU's events team for extra staff on site, extra preparation or reinstatement acknowledged within 1 working day and quoted within 3 working days (proposed), showing staff numbers, hours, plant and rates.",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "Turf protection flooring",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Installed, cleaned, removed and stacked away tidily to the protection plan (O1.7). Rates per m2 for installation, cleaning and removal in the Schedule of Rates.",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "Event passes",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Named turf staff submitted to event management staff for passes at least 2 working days before the event (proposed).",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "Debrief",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Post-event summary within 2 working days for Tier A and non-sporting events; attendance at TAU debriefs when invited.",
+           "li": false
+          }
+         ]
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "num": "16.4",
+     "title": "KPI and weighting",
+     "blocks": [
+      {
+       "type": "p",
+       "t": "Standards EV1.1 to EV1.7 feed KPI-O, Operations and Management. Scoring, pass threshold and weighting are defined once in the Performance Model (Schedule 1, Parts B and C) and are not repeated here.",
+       "li": false
+      },
+      {
+       "type": "p",
+       "t": "Event works and flooring quantities do not enter KPI-O; they are reconciled against approved quotes and the Schedule of Rates.",
+       "li": false
+      }
+     ]
+    },
+    {
+     "num": "16.5",
+     "title": "Supplier plan requirements (Maintenance & Operations Plan content)",
+     "blocks": [
+      {
+       "type": "p",
+       "t": "The Maintenance & Operations Plan shall show for events management:",
+       "li": false
+      },
+      {
+       "type": "p",
+       "t": "How bookings and event notices are received, entered in the programme and confirmed",
+       "li": true
+      },
+      {
+       "type": "p",
+       "t": "Who attends event planning meetings and signs off run sheets",
+       "li": true
+      },
+      {
+       "type": "p",
+       "t": "The event works request, quote and approval process, with rates",
+       "li": true
+      },
+      {
+       "type": "p",
+       "t": "The turf protection flooring method, equipment and storage",
+       "li": true
+      },
+      {
+       "type": "p",
+       "t": "Event pass arrangements for Supplier staff",
+       "li": true
+      },
+      {
+       "type": "p",
+       "t": "The post-event summary and debrief process",
+       "li": true
+      }
+     ]
+    },
+    {
+     "num": "16.6",
+     "title": "Mandatory conditions",
+     "blocks": [
+      {
+       "type": "p",
+       "t": "Event works outside the agreed run sheet are carried out only when quoted and approved by the Principal's Representative.",
+       "li": true
+      },
+      {
+       "type": "p",
+       "t": "Supplier staff on event day hold event passes and follow the stadium's event access and safety rules.",
+       "li": true
+      },
+      {
+       "type": "p",
+       "t": "The Supplier does not take bookings or agree event arrangements directly with hirers, codes or promoters.",
+       "li": true
+      }
+     ]
+    },
+    {
+     "num": "16.7",
+     "title": "Principal interfaces",
+     "blocks": [
+      {
+       "type": "p",
+       "t": "The Principal issues the seasonal event calendar at least 12 weeks ahead (one-off events as soon as they are confirmed) and confirms each event's details 10 working days before; invites the Supplier to event planning meetings; agrees the run sheet; approves event works quotes; and arranges event passes for named Supplier staff.",
+       "li": false
+      },
+      {
+       "type": "p",
+       "t": "Where an event is added or changed inside the notice period, the EV standards for that event are assessed against what could be delivered in the revised window.",
+       "li": false
+      }
+     ]
+    },
+    {
+     "num": "16.8",
+     "title": "Pricing reference",
+     "blocks": [
+      {
+       "type": "p",
+       "t": "Event planning, run sheets, event passes and debriefs are included in the operations lump sum (Section 11). Event works and turf protection flooring are priced from the Schedule of Rates (flooring per m2 for installation, cleaning and removal) and approved before work starts.",
+       "li": false
+      },
+      {
+       "type": "p",
+       "t": "The band operates as set out in Schedule 1, Part E.",
+       "li": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "num": "17",
+   "title": "Capital Works",
+   "subs": [
+    {
+     "num": "17.1",
+     "title": "Background",
+     "blocks": [
+      {
+       "type": "table",
+       "rows": [
+        [
+         [
+          {
+           "t": "Item",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Description",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "Service area",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Auckland Stadiums",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "Service type",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "How capital works (renewals, upgrades and new assets delivered by TAU or its contractors, or by the Supplier when separately engaged) are planned, carried out and handed back into maintenance",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "Schedule reference",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Schedule 2, Capital Works; standards feed KPI-O, Operations and Management, in Schedule 1, Performance Model",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "Part 1. Outcome statement",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Capital works are planned with the maintenance team, carried out without avoidable damage to the playing surfaces and other assets, and handed back with the records and warranties needed to maintain the new or renewed asset.",
+           "li": false
+          },
+          {
+           "t": "Maintenance budgets and capital budgets are kept separate, and no capital work is done without a written instruction.",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "Part 2. Scope and assets",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "All capital works within the stadium precincts in the asset schedule (Appendix B) that affect the services: turf, hybrid system, irrigation, drainage, goal post, garden and hard surface renewals and upgrades. Includes input to capital planning, site handover and protection, maintenance of areas next to the works, practical completion inspections, defects and warranties, and updating asset records.",
+           "li": false
+          },
+          {
+           "t": "The design and construction of capital works are not included unless the Supplier is separately engaged.",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "Levels of service",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "LoS 1 Works affecting the field of play.",
+           "li": false
+          },
+          {
+           "t": "LoS 2 Works affecting other turf, gardens and hard surfaces.",
+           "li": false
+          },
+          {
+           "t": "LoS 3 Works affecting irrigation, drainage and other infrastructure.",
+           "li": false
+          },
+          {
+           "t": "LoS 4 Capital planning and records.",
+           "li": false
+          }
+         ]
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "num": "17.2",
+     "title": "Performance standards and measurement",
+     "blocks": [
+      {
+       "type": "table",
+       "rows": [
+        [
+         [
+          {
+           "t": "PS ref",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Service component",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Performance standard (target and tolerance)",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Applies (LoS and condition)",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Measurement method and evidence",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Measured by and when",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "KPI link",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "CW1.1",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Capital planning input",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Costed recommendations for renewals and upgrades, with condition evidence and priority, submitted with the budget input reports before 30 September each year (11.4).",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "LoS 4; annual",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Capital recommendations report.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Supplier; Principal's Representative review",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "KPI-O monthly deduction if late",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "CW1.2",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Authority for capital works",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "The Supplier carries out capital works only when instructed in writing by the Principal's Representative under a separate quote or contract variation; maintenance lump sums are not used for capital works.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "LoS 1 to 4; continuous",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Written instructions and approved quotes.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Principal's Representative audits",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "KPI-O monthly deduction per confirmed breach",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "CW1.3",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Site handover and protection",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Before works start: a joint pre-works condition survey, the works area handed over to the contractor, turf, irrigation, sockets and other assets outside the works area protected, and access routes and ground protection agreed.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "LoS 1 to 3; every project",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Pre-works survey with photographs; handover record.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Supplier and Principal's Representative jointly",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "KPI-O monthly deduction if missed",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "CW1.4",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Maintenance during works",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Areas still in the Supplier's care are maintained to this specification; areas handed to a contractor are excluded until handed back. Damage or risk to the services from the works is reported to the Principal's Representative the same day.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "LoS 1 to 3; continuous",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Early warning log; photographs.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Supplier; Principal's Representative review",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "KPI-O monthly deduction per issue not reported",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "CW1.5",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Practical completion and handback",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Joint inspection at practical completion; the area is taken back into maintenance only when it meets this specification or the defects are listed; establishment and grow-in periods agreed.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "LoS 1 to 3; every project",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Practical completion inspection and defects list; handback record.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Supplier and Principal's Representative jointly",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "KPI-O monthly deduction if missed",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "CW1.6",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Defects and warranties",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Defects found during the defects liability period reported to the Principal's Representative within 2 working days (proposed); maintenance carried out to the manufacturer's or installer's warranty conditions so warranties are kept.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "LoS 1 to 3; defects liability period",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Defects register; warranty conditions on file.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Supplier; Principal's Representative review",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "KPI-O monthly deduction per confirmed breach",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "CW1.7",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Asset records",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Asset schedule (Appendix B), zone plans, irrigation as-built drawings and the Maintenance & Operations Plan updated within 20 working days (proposed) of each handback.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "LoS 4; every project",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Updated asset schedule and plans with version control.",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Supplier; Principal's Representative review",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "KPI-O monthly deduction if late",
+           "li": false
+          }
+         ]
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "num": "17.3",
+     "title": "Capital works process (referenced by CW1.1 to CW1.7)",
+     "blocks": [
+      {
+       "type": "table",
+       "rows": [
+        [
+         [
+          {
+           "t": "Stage",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Requirement",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "Planning",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Condition reports and capital recommendations by 30 September; TAU decides the capital programme.",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "Instruction",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Supplier capital works only under a written instruction and approved quote, separate from the maintenance lump sums.",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "Before works",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Pre-works condition survey; works area handed to the contractor; protection and access agreed; irrigation, sockets and other services marked.",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "During works",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Supplier maintains areas still in its care and gives early warning of damage or risk; areas held by the contractor are the contractor's responsibility.",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "Handback",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Joint practical completion inspection; defects listed; grow-in or establishment agreed; area returned to maintenance.",
+           "li": false
+          }
+         ]
+        ],
+        [
+         [
+          {
+           "t": "After works",
+           "li": false
+          }
+         ],
+         [
+          {
+           "t": "Defects reported in the liability period; warranty conditions followed; asset records updated.",
+           "li": false
+          }
+         ]
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "num": "17.4",
+     "title": "KPI and weighting",
+     "blocks": [
+      {
+       "type": "p",
+       "t": "Standards CW1.1 to CW1.7 feed KPI-O, Operations and Management. Scoring, pass threshold and weighting are defined once in the Performance Model (Schedule 1, Parts B and C) and are not repeated here.",
+       "li": false
+      }
+     ]
+    },
+    {
+     "num": "17.5",
+     "title": "Supplier plan requirements (Maintenance & Operations Plan content)",
+     "blocks": [
+      {
+       "type": "p",
+       "t": "The Maintenance & Operations Plan shall show for capital works:",
+       "li": false
+      },
+      {
+       "type": "p",
+       "t": "How condition evidence feeds capital recommendations",
+       "li": true
+      },
+      {
+       "type": "p",
+       "t": "Pre-works survey, handover and protection methods",
+       "li": true
+      },
+      {
+       "type": "p",
+       "t": "How areas held by contractors are excluded from and returned to maintenance",
+       "li": true
+      },
+      {
+       "type": "p",
+       "t": "The practical completion, defects and warranty process",
+       "li": true
+      },
+      {
+       "type": "p",
+       "t": "How asset records are updated after each project",
+       "li": true
+      }
+     ]
+    },
+    {
+     "num": "17.6",
+     "title": "Mandatory conditions",
+     "blocks": [
+      {
+       "type": "p",
+       "t": "No capital works are carried out by the Supplier without a written instruction from the Principal's Representative.",
+       "li": true
+      },
+      {
+       "type": "p",
+       "t": "Warranty conditions for new or renewed assets are followed in maintenance.",
+       "li": true
+      },
+      {
+       "type": "p",
+       "t": "Damage to existing assets caused by the Supplier during capital works is repaired at the Supplier's cost.",
+       "li": true
+      }
+     ]
+    },
+    {
+     "num": "17.7",
+     "title": "Principal interfaces",
+     "blocks": [
+      {
+       "type": "p",
+       "t": "The Principal sets the capital programme; tells the Supplier about planned works at least 20 working days before they start (proposed); manages its capital works contractors; arranges the pre-works and practical completion inspections; and provides as-built drawings, warranties and maintenance requirements at handback.",
+       "li": false
+      },
+      {
+       "type": "p",
+       "t": "Where capital works stop the Supplier meeting a standard, that standard is not assessed for the affected area and period.",
+       "li": false
+      }
+     ]
+    },
+    {
+     "num": "17.8",
+     "title": "Pricing reference",
+     "blocks": [
+      {
+       "type": "p",
+       "t": "Capital planning input, handover inspections and asset records are included in the operations lump sum (Section 11). Capital works carried out by the Supplier are priced separately by quote.",
        "li": false
       },
       {
@@ -15000,6 +15922,16 @@
   {
    "num": "",
    "title": "Asset schedule",
+   "subs": []
+  },
+  {
+   "num": "",
+   "title": "Test point grid",
+   "subs": []
+  },
+  {
+   "num": "",
+   "title": "Spray and event notification list",
    "subs": []
   }
  ]

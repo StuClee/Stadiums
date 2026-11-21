@@ -1,11 +1,19 @@
 /* Scoring rules for the Stadium Performance Model (Schedule 1, Parts B to F). No DOM here.
-   Mirrors the Calculation Sheet Draft V2 formulas so results match the workbook. */
+   Mirrors the Calculation Sheet Draft V4 formulas so results match the workbook.
+   Weights are set month by month (Monthly Weights sheet); a KPI at 0% is not scored that month. */
 (function (global) {
   'use strict';
   const M = global.MODEL;
   const STD = Object.fromEntries(M.standards.map(s => [s.ref, s]));
 
-  /* cfg = { settings, weights:{kpi:fraction}, pass:{kpi:points}, categories:{cat:points} } */
+  /* cfg = { settings, weights:{kpi:base fraction}, mweights:{kpi:[12 monthly fractions]}, pass:{kpi:points}, categories:{cat:points} } */
+  function weightAt(cfg, months, mo, k) {
+    const i = months.indexOf(mo), a = (cfg.mweights || {})[k];
+    return a && i >= 0 && a[i] != null ? a[i] : (cfg.weights[k] || 0);
+  }
+  function avgWeight(cfg, k) {
+    const a = (cfg.mweights || {})[k]; return a && a.length ? a.reduce((x, y) => x + (y || 0), 0) / a.length : (cfg.weights[k] || 0);
+  }
   function points(cfg, ref) {
     const s = STD[ref]; if (!s || !s.cat) return 0;
     return cfg.categories[s.cat] != null ? cfg.categories[s.cat] : (M.categories[s.cat] || {}).points || 0;
@@ -48,11 +56,13 @@
       const mean = scores.length ? scores.reduce((a, b) => a + b, 0) / scores.length : cfg.settings.noEventScore;
       const ded = deductions(cfg, yd, k.id, mo);
       const na = (yd.notAssessed || {})[mo] && (yd.notAssessed[mo] || {})[k.id] != null;
-      const result = !isRep || na ? null : Math.max(0, mean - ded);
-      kpi[k.id] = { events: scores.length, mean, ded, notAssessed: !!na, result, below: result != null && result < (cfg.pass[k.id] ?? 90) };
+      const off = weightAt(cfg, months, mo, k.id) === 0;   // 0% this month: not scored (Monthly Weights)
+      const result = !isRep || na || off ? null : Math.max(0, mean - ded);
+      kpi[k.id] = { events: scores.length, mean, ded, notAssessed: !!na, offMonth: off && isRep && !na, result, below: result != null && result < (cfg.pass[k.id] ?? 90) };
     });
     let wSum = 0, sum = 0;
-    M.kpis.forEach(k => { const r = kpi[k.id].result; const w = cfg.weights[k.id] || 0; if (r != null) { wSum += w; sum += w * r; } });
+    const weights = {};
+    M.kpis.forEach(k => { const r = kpi[k.id].result; const w = weightAt(cfg, months, mo, k.id); weights[k.id] = w; if (r != null) { wSum += w; sum += w * r; } });
     const overall = isRep && wSum > 0 ? sum / wSum : null;
     const st = cfg.settings;
     const feePct = overall == null ? null : overall >= st.passThreshold ? 1 : Math.max(1 - st.abatementCap, 1 - Math.floor(st.passThreshold - overall + 1e-9) * st.abatementPerPoint);
@@ -61,7 +71,7 @@
     evs.forEach(e => Object.entries(e.results || {}).forEach(([ref, r]) => { const s = STD[ref]; if (s && s.event && r && r.r === 'fail') failures.push({ event: e, ref, s, note: r.note }); }));
     const critical = failures.filter(f => f.s.critical).map(f => ({ ref: f.ref, where: f.event.name }))
       .concat((yd.deductions || []).filter(d => d.month === mo && d.confirmed && STD[d.ref] && STD[d.ref].critical).map(d => ({ ref: d.ref, where: 'Deduction log' })));
-    return { month: mo, reported: isRep, events: evs, kpi, weightAssessed: wSum, overall, feePct, fee,
+    return { month: mo, reported: isRep, events: evs, kpi, weights, weightAssessed: wSum, overall, feePct, fee,
              feePaid: fee == null ? null : Math.round(fee * feePct * 100) / 100, abatement: fee == null ? null : Math.round(fee * (1 - feePct) * 100) / 100,
              below: overall != null && overall < st.passThreshold, atIncentive: overall != null && overall >= st.incentiveScore,
              eventFailure: isRep && failures.length > 0, failures, critical: isRep ? critical : [] };
@@ -110,9 +120,10 @@
   function cfgFrom(settings) {
     return { settings: { ...M.settings, ...(settings.values || {}) },
              weights: { ...Object.fromEntries(M.kpis.map(k => [k.id, k.weight])), ...(settings.weights || {}) },
+             mweights: Object.fromEntries(M.kpis.map(k => [k.id, (k.monthly || Array(12).fill(k.weight)).map((w, i) => { const o = ((settings.mweights || {})[k.id] || [])[i]; return o != null ? o : w; })])),
              pass: { ...Object.fromEntries(M.kpis.map(k => [k.id, k.pass])), ...(settings.pass || {}) },
              categories: { ...Object.fromEntries(Object.entries(M.categories).map(([c, v]) => [c, v.points])), ...(settings.categories || {}), A: (settings.values || {}).eventPoints ?? M.settings.eventPoints } };
   }
 
-  global.CORE = { STD, eventScore, deductions, month, year, band, points, cfgFrom, eventKpi };
+  global.CORE = { STD, eventScore, deductions, month, year, band, points, cfgFrom, eventKpi, weightAt, avgWeight };
 })(window);

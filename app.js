@@ -77,6 +77,22 @@
   function vDashboard() {
     const c = cfg(), d = yd(), Y = C.year(c, d, months()), m = Y.months.find(x => x.month === S.ui.month) || Y.months[0];
     const st = c.settings;
+    const ytd = S.ui.dashView === 'ytd';
+    // Year to date = months reported from the start of the year up to the month chosen in the top bar
+    const upto = Y.months.slice(0, Y.months.indexOf(m) + 1), yms = upto.filter(x => x.reported && x.overall != null);
+    const avgOf = a => a.length ? a.reduce((p, v) => p + v, 0) / a.length : null;
+    const T = { score: avgOf(yms.map(x => x.overall)), fee: yms.reduce((a, x) => a + (x.fee || 0), 0), paid: yms.reduce((a, x) => a + (x.feePaid || 0), 0),
+      abate: yms.reduce((a, x) => a + (x.abatement || 0), 0), below: yms.filter(x => x.below).length, rect: yms.filter(x => x.rectification).length,
+      crit: yms.filter(x => x.critical.length).length, evf: yms.filter(x => x.eventFailure).length, inc: yms.filter(x => x.atIncentive).length,
+      span: yms.length ? (yms.length > 1 ? `${yms[0].month} to ${yms[yms.length - 1].month}` : yms[0].month) : 'no months reported' };
+    const yk = k => { const rs = yms.map(x => x.kpi[k]).filter(r => r.result != null);
+      return { avg: avgOf(rs.map(r => r.result)), scored: rs.length, events: yms.reduce((a, x) => a + x.kpi[k].events, 0), ded: yms.reduce((a, x) => a + x.kpi[k].ded, 0),
+        below: yms.filter(x => x.kpi[k].below).length, fails: yms.reduce((a, x) => a + x.failures.filter(f => f.s.kpi === k).length, 0),
+        w: avgOf(yms.map(x => x.weights[k] || 0)) }; };
+    const kRowsYtd = M.kpis.map(k => { const a = yk(k.id), pass = c.pass[k.id];
+      return `<tr><td><span class="pill-k">${k.id}</span></td><td>${esc(k.name)}<div class="muted small">TS ${esc(k.ts)} ${esc(k.service)}</div></td>
+        <td class="num">${pc(a.w)}</td><td class="num"><b>${f1(a.avg)}</b></td><td>${a.avg == null ? '<span class="status s-na">Not scored</span>' : a.avg < pass ? `<span class="status s-below">Below ${pass}</span>` : '<span class="status s-pass">Pass</span>'}</td>
+        <td class="num">${a.scored} of ${yms.length}</td><td class="num">${a.events}</td><td class="num">${a.ded ? '−' + a.ded : '0'}</td><td class="num">${a.below}</td><td class="num">${a.fails}</td></tr>`; }).join('');
     const kRows = M.kpis.map(k => { const r = m.kpi[k.id], a = Y.kpiAvg[k.id], pass = c.pass[k.id];
       return `<tr><td><span class="pill-k">${k.id}</span></td><td>${esc(k.name)}<div class="muted small">TS ${esc(k.ts)} ${esc(k.service)}</div></td>
         <td class="num">${pc(m.weights[k.id])}</td><td class="num"><b>${f1(r.result)}</b></td><td>${statusOf(r, pass, k, m)}</td>
@@ -85,20 +101,12 @@
     const heat = `<table class="t heat"><thead><tr>${th('KPI', 'Key performance indicator')}${th('Avg weight', 'Across the year')}${Y.months.map(x => `<th class="${x.month === m.month ? 'sel' : ''}" style="text-align:center">${x.month.replace('-20', ' ')}</th>`).join('')}</tr></thead><tbody>
       ${M.kpis.map(k => `<tr><td><span class="pill-k">${k.id}</span> <span class="small">${esc(shortName(k.id))}</span></td><td class="num muted">${pc(C.avgWeight(c, k.id))}</td>${Y.months.map(x => { const v = x.kpi[k.id].result; return `<td class="h ${x.month === m.month ? 'sel' : ''}" style="${heatColour(v, c.pass[k.id])}" title="${k.id} ${x.month}: ${v == null ? (x.reported ? (x.kpi[k.id].offMonth ? 'not scored this month (0% weight)' : 'not assessed') : 'not reported') : f1(v)}">${v == null ? (x.reported && x.kpi[k.id].offMonth ? '<span class="muted">–</span>' : '') : f0(v)}</td>`; }).join('')}</tr>`).join('')}
       <tr><td><b>Overall</b></td><td></td>${Y.months.map(x => `<td class="h ${x.month === m.month ? 'sel' : ''}" style="${heatColour(x.overall, st.passThreshold)}"><b>${x.overall == null ? '' : f1(x.overall)}</b></td>`).join('')}</tr></tbody></table>`;
-    const fails = m.failures.map(f => `<tr><td>${esc(f.event.date)}</td><td>${esc(f.event.name)}</td><td><span class="pill-k">${f.ref}</span> ${esc(f.s.name)}${f.s.critical ? ' <span class="crit">CRITICAL</span>' : ''}</td><td>${esc(f.note || '')}</td></tr>`).join('');
-    const deds = (d.deductions || []).filter(x => x.month === m.month).map(x => { const s = C.STD[x.ref] || {}; return `<tr><td><span class="pill-k">${esc(x.ref)}</span> ${esc(s.name || '')}</td><td class="num">${esc(x.count)}</td><td class="num">${x.confirmed ? (x.count * C.points(c, x.ref)) : '<span class="muted">not confirmed</span>'}</td><td>${esc(x.note || '')}</td></tr>`; }).join('');
+    const failSrc = ytd ? yms.flatMap(x => x.failures) : m.failures;
+    const fails = failSrc.map(f => `<tr><td style="white-space:nowrap">${esc(f.event.date)}</td><td>${esc(f.event.name)}</td><td><span class="pill-k">${f.ref}</span> ${esc(f.s.name)}${f.s.critical ? ' <span class="crit">CRITICAL</span>' : ''}</td><td>${esc(f.note || '')}</td></tr>`).join('');
+    const ymSet = new Set(yms.map(x => x.month));
+    const deds = (d.deductions || []).filter(x => ytd ? ymSet.has(x.month) : x.month === m.month).map(x => { const s = C.STD[x.ref] || {}; return `<tr><td><span class="pill-k">${esc(x.ref)}</span> ${esc(s.name || '')}${ytd ? `<div class="small muted">${esc(x.month)}</div>` : ''}</td><td class="num">${esc(x.count)}</td><td class="num">${x.confirmed ? (x.count * C.points(c, x.ref)) : '<span class="muted">not confirmed</span>'}</td><td>${esc(x.note || '')}</td></tr>`; }).join('');
     const yesNo = b => b ? '<span class="status s-below">Yes</span>' : '<span class="status s-pass">No</span>';
-    const bandsTot = M.bands.reduce((a, b) => { const r = C.band(c, (d.bands || {})[b.id] || {}); a.extra += r.extra; a.credit += r.credit; return a; }, { extra: 0, credit: 0 });
-    return `
-    ${S.sample ? `<div class="card small no-print" style="background:var(--warn-soft);border-color:var(--warn-soft)"><b>Showing sample data for ${esc(SAMPLE.contractor)}.</b> These are illustrative results, not real assessments. Clear them in Setup before you start recording.</div>` : ''}
-    ${!hasData() ? '<div class="card small no-print">Nothing recorded yet. <a href="#events">Record an event</a>, or <a href="#setup">load sample data</a> in Setup to see how the dashboard works.</div>' : ''}
-    <div class="head"><div><div class="label">${esc(S.ui.contractor)} · ${esc(yearObj().name)} · ${esc(m.month)}</div><h1>Performance dashboard</h1></div>
-      <div class="row no-print"><button class="btn primary" data-act="pdf">Save as PDF</button><button class="btn" data-act="print">Print</button></div></div>
-    ${howTo('dashboard', 'This page is the <b>summary and report</b>. Nothing is entered here: results come from the <a href="#events">Events</a> and <a href="#deductions">Monthly</a> tabs.', [
-      ['Choose the month', 'Pick the contractor, year and month in the top bar. Months after the last month reported (Setup) stay blank.'],
-      ['Read the headline', 'The tiles show the overall score, fee paid, abatement, whether a rectification plan is needed, the year to date score and incentive progress.'],
-      ['Check the KPIs', 'KPI results for the month show each KPI\'s weight, result and status. KPI results by month shows the whole year: orange is below the pass mark.'],
-      ['Check escalation and report', 'Review the escalation tests, failures, deductions and fee totals, then click <b>Save as PDF</b> for the monthly report.']])}
+    const tilesMonth = `
     <div class="tiles">
       <div class="card tile ${m.below ? 'bad' : ''}"><div class="label">Overall score · ${esc(m.month)}</div><div class="big">${m.overall == null ? '–' : f1(m.overall)}</div>
         <div class="small">${m.overall == null ? (m.reported ? 'No KPIs assessed' : `After the last month reported (${esc(d.lastReported)})`) : m.below ? `Below the pass threshold of ${st.passThreshold}` : `Pass (threshold ${st.passThreshold})`}</div></div>
@@ -110,17 +118,46 @@
       <div class="card tile ${Y.incentive ? 'good' : ''}"><div class="label">Incentive (Part F)</div><div class="big" style="font-size:1.5rem">${Y.incentive ? 'Released' : 'Not yet'}</div>
         <div class="small">${Y.atIncentive} of ${st.incentiveMonths} months at ${st.incentiveScore}+ · trends ${d.trendsImproving ? 'improving' : 'not confirmed'}</div></div>
     </div>
+`;
+    const tilesYtd = `
+    <div class="tiles">
+      <div class="card tile ${T.score != null && T.score < st.passThreshold ? 'bad' : ''}"><div class="label">Year to date score</div><div class="big">${f1(T.score)}</div>
+        <div class="small">Average of ${yms.length} month${yms.length === 1 ? '' : 's'} reported (${esc(T.span)})</div></div>
+      <div class="card tile"><div class="label">Fee paid, year to date</div><div class="big">${T.fee ? pc(T.paid / T.fee) : '–'}</div><div class="small">${money(T.paid)} of ${money(T.fee)}</div></div>
+      <div class="card tile ${T.abate ? 'bad' : ''}"><div class="label">Abatement, year to date</div><div class="big">${money(T.abate)}</div><div class="small">Held in the incentive pool</div></div>
+      <div class="card tile ${T.rect ? 'bad' : 'good'}"><div class="label">Rectification plans</div><div class="big">${T.rect}</div>
+        <div class="small">Months needing a plan · event failures in ${T.evf} · critical in ${T.crit}</div></div>
+      <div class="card tile ${T.below ? 'bad' : ''}"><div class="label">Months below ${st.passThreshold}</div><div class="big">${T.below}</div><div class="small">Three in any six: ${Y.threeInSix ? 'Yes' : 'No'} · six in twelve: ${Y.sixInTwelve ? 'Yes' : 'No'}</div></div>
+      <div class="card tile ${Y.incentive ? 'good' : ''}"><div class="label">Incentive (Part F)</div><div class="big" style="font-size:1.5rem">${Y.incentive ? 'Released' : 'Not yet'}</div>
+        <div class="small">${T.inc} of ${st.incentiveMonths} months at ${st.incentiveScore}+ · trends ${d.trendsImproving ? 'improving' : 'not confirmed'}</div></div>
+    </div>
+`;
+    const bandsTot = M.bands.reduce((a, b) => { const r = C.band(c, (d.bands || {})[b.id] || {}); a.extra += r.extra; a.credit += r.credit; return a; }, { extra: 0, credit: 0 });
+    return `
+    ${S.sample ? `<div class="card small no-print" style="background:var(--warn-soft);border-color:var(--warn-soft)"><b>Showing sample data for ${esc(SAMPLE.contractor)}.</b> These are illustrative results, not real assessments. Clear them in Setup before you start recording.</div>` : ''}
+    ${!hasData() ? '<div class="card small no-print">Nothing recorded yet. <a href="#events">Record an event</a>, or <a href="#setup">load sample data</a> in Setup to see how the dashboard works.</div>' : ''}
+    <div class="head"><div><div class="label">${esc(S.ui.contractor)} · ${esc(yearObj().name)} · ${esc(m.month)}</div><h1>Performance dashboard</h1></div>
+      <div class="row no-print"><button class="btn primary" data-act="pdf">Save as PDF</button><button class="btn" data-act="print">Print</button></div></div>
+    ${howTo('dashboard', 'This page is the <b>summary and report</b>. Nothing is entered here: results come from the <a href="#events">Events</a> and <a href="#deductions">Monthly</a> tabs.', [
+      ['Choose the month and view', 'Pick the contractor, year and month in the top bar, then <b>This month</b> or <b>Year to date</b> (from the start of the year to the month chosen). Months after the last month reported (Setup) stay blank.'],
+      ['Read the headline', 'The tiles show the overall score, fee paid, abatement, whether a rectification plan is needed, the year to date score and incentive progress.'],
+      ['Check the KPIs', 'KPI results for the month show each KPI\'s weight, result and status. KPI results by month shows the whole year: orange is below the pass mark.'],
+      ['Check escalation and report', 'Review the escalation tests, failures, deductions and fee totals, then click <b>Save as PDF</b> for the monthly report.']])}
+    <div class="seg no-print" role="group" aria-label="Dashboard view"><button class="${ytd ? '' : 'on'}" data-act="dashMonth" aria-pressed="${!ytd}">This month · ${esc(m.month)}</button><button class="${ytd ? 'on' : ''}" data-act="dashYtd" aria-pressed="${ytd}">Year to date · ${esc(T.span)}</button></div>
+    ${ytd ? tilesYtd : tilesMonth}
     <div class="charts">
       <figure class="card chart-card"><figcaption><h2>Overall score by month</h2><span class="muted small">Dashed lines mark the pass threshold (${st.passThreshold}) and incentive score (${st.incentiveScore})</span></figcaption><div class="chart-box"><canvas id="chScore" role="img" aria-label="Bar chart of the overall performance score by month"></canvas></div></figure>
       <figure class="card chart-card"><figcaption><h2>Fee paid and abatement by month</h2><span class="muted small">Monthly performance fee ${money(st.monthlyFee)}</span></figcaption><div class="chart-box"><canvas id="chFee" role="img" aria-label="Stacked bar chart of fee paid and abatement by month"></canvas></div></figure>
     </div>
-    <div class="card"><div class="flex-between"><h2>KPI results · ${esc(m.month)}</h2><span class="muted small">Result = mean event score less capped monthly deductions</span></div><div class="tablebox"><table class="t">
+    ${ytd ? `<div class="card"><div class="flex-between"><h2>KPI results · year to date</h2><span class="muted small">${esc(T.span)} · average of each month's result</span></div><div class="tablebox"><table class="t">
+      <thead><tr>${th('KPI', 'Code')}${th('Name', 'Key performance indicator')}${th('Avg weight', 'Over the months reported')}${th('YTD result', 'Average of monthly results')}${th('Status', 'Against the KPI pass mark')}${th('Months scored', 'Of months reported')}${th('Events', 'Scored this year')}${th('Deductions', 'Confirmed points, all months')}${th('Months below', 'Below the pass mark')}${th('Event fails', 'Failed standards')}</tr></thead>
+      <tbody>${kRowsYtd}</tbody></table></div></div>` : `<div class="card"><div class="flex-between"><h2>KPI results · ${esc(m.month)}</h2><span class="muted small">Result = mean event score less capped monthly deductions</span></div><div class="tablebox"><table class="t">
       <thead><tr>${th('KPI', 'Code')}${th('Name', 'Key performance indicator')}${th('Weight this month', 'Share of the overall score')}${th('Result', 'Out of 100')}${th('Status', 'Against the KPI pass mark')}${th('Event score', 'Average of the month\'s events')}${th('Deductions', 'Confirmed points taken off')}${th('Year avg', 'Months reported so far')}${th('Months below', 'Below the pass mark this year')}${th('Event fails', 'Failed standards this year')}</tr></thead>
-      <tbody>${kRows}</tbody></table></div></div>
+      <tbody>${kRows}</tbody></table></div></div>`}
     <div class="card"><h2>KPI results by month</h2><p class="muted small">Orange below the pass threshold, teal towards 100. Blank = not reported or not assessed; – = not scored that month (0% weight). The month shown is in bold.</p><div class="tablebox">${heat}</div></div>
     <div class="grid">
-      <div class="card"><h2>Event failures · ${esc(m.month)}</h2>${fails ? `<div class="tablebox"><table class="t"><thead><tr><th>Date</th><th>Event</th><th>Standard</th><th>Note</th></tr></thead><tbody>${fails}</tbody></table></div>` : '<p class="muted small">No failed event standards this month.</p>'}</div>
-      <div class="card"><h2>Monthly deductions · ${esc(m.month)}</h2>${deds ? `<div class="tablebox"><table class="t"><thead><tr><th>Standard</th><th class="num">Count</th><th class="num">Points</th><th>Note</th></tr></thead><tbody>${deds}</tbody></table></div>` : '<p class="muted small">No deductions logged this month.</p>'}</div>
+      <div class="card"><h2>Event failures · ${ytd ? 'year to date' : esc(m.month)}</h2>${fails ? `<div class="tablebox"><table class="t"><thead><tr><th>Date</th><th>Event</th><th>Standard</th><th>Note</th></tr></thead><tbody>${fails}</tbody></table></div>` : `<p class="muted small">No failed event standards ${ytd ? 'this year' : 'this month'}.</p>`}</div>
+      <div class="card"><h2>Monthly deductions · ${ytd ? 'year to date' : esc(m.month)}</h2>${deds ? `<div class="tablebox"><table class="t"><thead><tr><th>Standard</th><th class="num">Count</th><th class="num">Points</th><th>Note</th></tr></thead><tbody>${deds}</tbody></table></div>` : `<p class="muted small">No deductions logged ${ytd ? 'this year' : 'this month'}.</p>`}</div>
     </div>
     <div class="grid">
       <div class="card"><h2>Escalation and incentive (Part F)</h2><table class="t"><tbody>
@@ -743,6 +780,7 @@
     const act = t.dataset.act; if (!act) return;
     const d = yd();
     if (act === 'toList') { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+    if (act === 'dashMonth' || act === 'dashYtd') { S.ui.dashView = act === 'dashYtd' ? 'ytd' : 'month'; save(); route(true); return; }
     if (act === 'print') window.print();
     if (act === 'pdf') savePdf(t);
     if (act === 'addEvent') { const ev = { id: uid('e'), date: '', month: '', name: '', tier: 'B', firstAfterRenovation: false, results: {} }; (d.events = d.events || []).push(ev); S.ui.event = ev.id; dirty(); save(); route(); toScorecard(); toast('Event added: enter its date and name'); }

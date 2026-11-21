@@ -250,3 +250,8 @@ details.howto > summary h2 { margin: 0; }
 details.howto > summary::before { content: '▸'; color: var(--accent); font-weight: 700; transition: transform .15s; }
 details.howto[open] > summary::before { transform: rotate(90deg); }
 details.howto > p { margin-top: 10px; }
+
+.seg { display: flex; width: fit-content; border: 1.5px solid var(--line); border-radius: 8px; overflow: hidden; margin: 0 0 14px; background: var(--surface); }
+.seg button { font: 600 14px var(--f-body); border: 0; background: transparent; color: var(--muted); padding: 9px 16px; min-height: 40px; cursor: pointer; }
+.seg button + button { border-left: 1.5px solid var(--line); }
+.seg button.on { background: var(--accent); color: var(--accent-ink); }

@@ -176,7 +176,7 @@
     const evKpis = M.kpis.filter(k => C.eventKpi(k.id));
     const list = evs.map(e => { const nf = Object.values(e.results || {}).filter(r => r.r === 'fail').length;
       const ok = months().includes(e.month);
-      return `<tr><td style="white-space:nowrap">${esc(e.date)}</td><td><a href="#events" data-event="${e.id}"><b>${esc(e.name || 'Untitled event')}</b></a>${e.firstAfterRenovation ? ' <span class="chip">First after renovation</span>' : ''}${ok ? '' : ' <span class="warn-note">Date outside this contract year</span>'}</td>
+      return `<tr class="${e.id === S.ui.event ? 'ev-sel' : ''}"><td style="white-space:nowrap">${esc(e.date)}</td><td><a href="#events" data-event="${e.id}" title="Open the scorecard to mark or change results"><b>${esc(e.name || 'Untitled event')}</b></a>${e.firstAfterRenovation ? ' <span class="chip">First after renovation</span>' : ''}${ok ? '' : ' <span class="warn-note">Date outside this contract year</span>'}</td>
         <td>${esc(e.tier ? 'Tier ' + e.tier : '')}</td><td class="num">${nf ? `<span class="status s-fail">${nf} fail${nf > 1 ? 's' : ''}</span>` : '<span class="status s-pass">All pass</span>'}</td>
         ${evKpis.map(k => { const v = C.eventScore(c, e, k.id); return `<td class="num" style="${heatColour(v, c.pass[k.id])}">${v == null ? '' : v}</td>`; }).join('')}</tr>`; }).join('');
     let detail = '';
@@ -195,8 +195,8 @@
               ${r.r === 'fail' ? `<input class="note" type="text" data-evnote placeholder="Reading or observation, photo reference" value="${esc(r.note || '')}">` : ''}</div>`; }).join('')}</div>`; }).join('');
       const checked = Object.keys(ev.results || {}).length, total = M.standards.filter(s => s.event && (s.kpi !== 'KPI-V' || ev.firstAfterRenovation)).length;
       detail = `
-      <div class="card sticky-bar"><div class="flex-between"><div><div class="label">Readiness sign-off scorecard</div><h2>${esc(ev.name || 'Untitled event')}</h2></div>
-        <div class="row"><span class="muted small">${checked} of ${total} standards checked</span><button class="btn" data-act="allPass">Mark unchecked as pass</button><button class="btn danger" data-act="delEvent">Delete event</button></div></div></div>
+      <div class="card sticky-bar" id="scorecard"><div class="flex-between"><div><div class="label">Readiness sign-off scorecard</div><h2>${esc(ev.name || 'Untitled event')}</h2></div>
+        <div class="row"><a href="#events" class="btn" data-act="toList">Back to event list</a><span class="muted small">${checked} of ${total} standards checked</span><button class="btn" data-act="allPass">Mark unchecked as pass</button><button class="btn danger" data-act="delEvent">Delete event</button></div></div></div>
       <div class="card kv">
         <label class="field">Event date<input type="date" data-ev="date" value="${esc(ev.date || '')}"></label>
         <label class="field">Event and code<input type="text" data-ev="name" value="${esc(ev.name || '')}" placeholder="e.g. NRL round 12"></label>
@@ -209,7 +209,7 @@
     return `
     <div class="head"><div><div class="label">${esc(S.ui.contractor)} · ${esc(yearObj().name)}</div><h1>Events and readiness sign-off</h1></div>
       <div class="row"><button class="btn primary" data-act="addEvent">Add event</button></div></div>
-    <div class="card"><p class="muted small">Each KPI with event-scored standards starts at 100 at every event and loses ${c.settings.eventPoints} points for each failed standard. Each KPI column shows that KPI's event score out of 100: 100 means every standard passed; orange means the score is below the KPI's pass mark. Hover over a heading for the full KPI name.</p>
+    <div class="card"><p class="muted small">Each KPI with event-scored standards starts at 100 at every event and loses ${c.settings.eventPoints} points for each failed standard. Click an event name to open its scorecard below the list, where you mark or change each standard. Each KPI column shows that KPI's event score out of 100: 100 means every standard passed; orange means the score is below the KPI's pass mark. Hover over a heading for the full KPI name.</p>
       <div class="tablebox"><table class="t"><thead><tr>${th('Date', 'Event day')}${th('Event', 'Click to open the scorecard')}${th('Tier', 'Event tier')}${th('Result', 'Failed standards')}${evKpis.map(kth).join('')}</tr></thead>
       <tbody>${list || `<tr><td colspan="99" class="muted">No events yet. Add one from the event calendar.</td></tr>`}</tbody></table></div></div>
     ${detail}`;
@@ -577,7 +577,7 @@
         <dt>KPI results by month</dt><dd>A heat map of every KPI for every month. Orange is below the pass mark, teal is towards 100. Blank means not reported or not assessed; a dash means the KPI has 0% weight that month.</dd>
         <dt>Escalation and incentive</dt><dd>The Part F tests for the year: months below the threshold, three in any six, six in any twelve, critical months and incentive progress.</dd></dl>` },
       { id: 'events', title: 'Events and readiness sign-off', body: `
-        <p><b>Add event</b>, enter the date, name and tier, then mark each standard Pass or Fail. A failed standard asks for a reading or observation (for example a photo reference).</p>
+        <p><b>Add event</b>, enter the date, name and tier, then mark each standard Pass or Fail. To change an existing event, click its name in the events list: the page moves down to its scorecard, where you can change any Pass or Fail (or Clear it). <b>Back to event list</b> returns to the top.</p><p> A failed standard asks for a reading or observation (for example a photo reference).</p>
         <ul><li>Each KPI with event-scored standards starts at 100 at every event and loses ${st.eventPoints} points per failed standard (not below 0).</li>
         <li>The KPI columns in the events list (M, L, I, G and so on) show each KPI's event score. Hover over a heading for the full KPI name.</li>
         <li><b>Mark unchecked as pass</b> fills in every standard you have not marked yet.</li>
@@ -700,20 +700,22 @@
     if (name !== 'help') lastView = name;
     if (keepScroll) window.scrollTo(0, y);
   }
+  const toScorecard = () => { const el = document.getElementById('scorecard'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); };
   const curEvent = () => (yd().events || []).find(e => e.id === S.ui.event);
   const dirty = () => {};
   document.addEventListener('click', e => {
     const t = e.target.closest('button, a'); if (!t) return;
-    if (t.dataset.event) { e.preventDefault(); S.ui.event = t.dataset.event; save(); route(); return; }
+    if (t.dataset.event) { e.preventDefault(); S.ui.event = t.dataset.event; save(); route(); toScorecard(); return; }
     if ('pf' in t.dataset) { const ev = curEvent(), ref = t.closest('[data-ref]').dataset.ref; ev.results = ev.results || {};
       if (!t.dataset.pf) delete ev.results[ref]; else ev.results[ref] = { ...(ev.results[ref] || {}), r: t.dataset.pf };
       dirty(); save(); route(true); return; }
     if (t.dataset.helpgo) { e.preventDefault(); const el = document.getElementById(t.dataset.helpgo === 'ask' ? 'ask' : 'help-' + t.dataset.helpgo); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.add('help-flash'); setTimeout(() => el.classList.remove('help-flash'), 1500); } return; }
     const act = t.dataset.act; if (!act) return;
     const d = yd();
+    if (act === 'toList') { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
     if (act === 'print') window.print();
     if (act === 'pdf') savePdf(t);
-    if (act === 'addEvent') { const ev = { id: uid('e'), date: '', month: '', name: '', tier: 'B', firstAfterRenovation: false, results: {} }; (d.events = d.events || []).push(ev); S.ui.event = ev.id; dirty(); save(); route(); toast('Event added: enter its date and name'); }
+    if (act === 'addEvent') { const ev = { id: uid('e'), date: '', month: '', name: '', tier: 'B', firstAfterRenovation: false, results: {} }; (d.events = d.events || []).push(ev); S.ui.event = ev.id; dirty(); save(); route(); toScorecard(); toast('Event added: enter its date and name'); }
     if (act === 'delEvent' && confirm('Delete this event and its scorecard?')) { d.events = d.events.filter(x => x.id !== S.ui.event); S.ui.event = null; save(); route(); }
     if (act === 'allPass') { const ev = curEvent(); M.standards.filter(s => s.event && (s.kpi !== 'KPI-V' || ev.firstAfterRenovation)).forEach(s => { if (!ev.results[s.ref]) ev.results[s.ref] = { r: 'pass', note: '' }; }); dirty(); save(); route(true); }
     if (act === 'addDed') { (d.deductions = d.deductions || []).push({ id: uid('d'), month: S.ui.month, ref: M.standards.find(s => s.cat).ref, count: 1, confirmed: false, note: '' }); dirty(); save(); route(true); }

@@ -188,7 +188,7 @@
     <div class="seg no-print" role="group" aria-label="Dashboard view"><button class="${ytd ? '' : 'on'}" data-act="dashMonth" aria-pressed="${!ytd}">This month · ${esc(m.month)}</button><button class="${ytd ? 'on' : ''}" data-act="dashYtd" aria-pressed="${ytd}">Year to date · ${esc(T.span)}</button></div>
     ${ytd ? tilesYtd : tilesMonth}
     <div class="charts">
-      <figure class="card chart-card"><figcaption><h2>Overall score by month</h2><span class="muted small">Dashed lines mark the pass threshold (${st.passThreshold}) and incentive score (${st.incentiveScore})</span></figcaption><div class="chart-box"><canvas id="chScore" role="img" aria-label="Bar chart of the overall performance score by month"></canvas></div></figure>
+      <figure class="card chart-card"><figcaption><div class="flex-between"><h2>Overall score by month</h2><div class="seg seg-sm no-print" role="group" aria-label="Chart type"><button class="${S.ui.scoreChart === 'line' ? '' : 'on'}" data-act="chartBar" aria-pressed="${S.ui.scoreChart !== 'line'}">Bar</button><button class="${S.ui.scoreChart === 'line' ? 'on' : ''}" data-act="chartLine" aria-pressed="${S.ui.scoreChart === 'line'}">Line</button></div></div><span class="muted small">Dashed lines mark the pass threshold (${st.passThreshold}) and incentive score (${st.incentiveScore})</span></figcaption><div class="chart-box"><canvas id="chScore" role="img" aria-label="Bar chart of the overall performance score by month"></canvas></div></figure>
       <figure class="card chart-card"><figcaption><h2>Fee paid and abatement by month</h2><span class="muted small">Monthly performance fee ${money(st.monthlyFee)}</span></figcaption><div class="chart-box"><canvas id="chFee" role="img" aria-label="Stacked bar chart of fee paid and abatement by month"></canvas></div></figure>
     </div>
     ${ytd ? `<div class="card"><div class="flex-between"><h2>KPI results · year to date</h2><span class="muted small">${esc(T.span)} · average of each month's result</span></div>${barsYtd}<details class="more"><summary>Show the full table</summary><div class="tablebox"><table class="t kt">
@@ -241,11 +241,17 @@
     const legend = { position: 'bottom', labels: { usePointStyle: true, pointStyle: 'rectRounded', boxWidth: 10, boxHeight: 10, color: P.ink, padding: 14 } };
     const ref = (v, txt, col) => ({ type: 'line', label: txt, data: labels.map(() => v), borderColor: col, borderWidth: 1.5, borderDash: [5, 4], pointRadius: 0, pointHoverRadius: 0, isRef: true });
     const made = [];
+    const asLine = !target && S.ui.scoreChart === 'line';
+    const sv = Y.months.map(m => m.overall == null ? null : +m.overall.toFixed(1)), lo = Math.min(...sv.filter(v => v != null), st.passThreshold);
+    const yMin = asLine ? Math.max(0, Math.floor((lo - 10) / 10) * 10) : 0;
+    const mainSet = asLine
+      ? { type: 'line', label: 'Overall score', data: sv, borderColor: P.main, borderWidth: 2, tension: 0, spanGaps: false,
+          pointRadius: 5, pointHoverRadius: 7, pointBackgroundColor: Y.months.map(m => m.below ? P.bad : P.main), pointBorderColor: P.surface, pointBorderWidth: 2 }
+      : { label: 'Overall score', data: sv, backgroundColor: Y.months.map(m => m.below ? P.bad : P.main), borderRadius: 4, maxBarThickness: 34 };
     made.push(new Chart(cv.score, { type: 'bar',
-      data: { labels, datasets: [{ label: 'Overall score', data: Y.months.map(m => m.overall == null ? null : +m.overall.toFixed(1)),
-        backgroundColor: Y.months.map(m => m.below ? P.bad : P.main), borderRadius: 4, maxBarThickness: 34 },
+      data: { labels, datasets: [mainSet,
         ref(st.passThreshold, `Pass ${st.passThreshold}`, P.ref), ref(st.incentiveScore, `Incentive ${st.incentiveScore}`, P.inc)] },
-      options: { ...X, maintainAspectRatio: false, scales: { x: scaleX, y: { min: 0, max: 100, ticks: { stepSize: 20, color: P.muted }, grid: { color: P.grid }, border: { display: false } } },
+      options: { ...X, maintainAspectRatio: false, scales: { x: scaleX, y: { min: yMin, max: 100, ticks: { stepSize: asLine ? 10 : 20, color: P.muted }, grid: { color: P.grid }, border: { display: false } } },
         plugins: { legend: { ...legend, labels: { ...legend.labels, generateLabels: ch => Chart.defaults.plugins.legend.labels.generateLabels(ch).map((l, i) => i === 0 ? { ...l, fillStyle: P.main, strokeStyle: P.main } : l) } }, tooltip: { ...tip, filter: i => !i.dataset.isRef, callbacks: { label: x => ` Overall score: ${x.parsed.y == null ? 'not reported' : x.parsed.y.toFixed(1)}` } } } } }));
     made.push(new Chart(cv.fee, { type: 'bar',
       data: { labels, datasets: [
@@ -822,6 +828,7 @@
     const d = yd();
     if (act === 'toList') { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
     if (act === 'dashMonth' || act === 'dashYtd') { S.ui.dashView = act === 'dashYtd' ? 'ytd' : 'month'; save(); route(true); return; }
+    if (act === 'chartBar' || act === 'chartLine') { S.ui.scoreChart = act === 'chartLine' ? 'line' : 'bar'; save(); route(true); return; }
     if (act === 'print') window.print();
     if (act === 'pdf') savePdf(t);
     if (act === 'addEvent') { const ev = { id: uid('e'), date: '', month: '', name: '', tier: 'B', firstAfterRenovation: false, results: {} }; (d.events = d.events || []).push(ev); S.ui.event = ev.id; dirty(); save(); route(); toScorecard(); toast('Event added: enter its date and name'); }

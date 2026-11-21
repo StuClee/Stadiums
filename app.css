@@ -304,3 +304,4 @@ details.more > summary { cursor: pointer; color: var(--accent); font-weight: 600
 @media (max-width: 760px) { .kbar { grid-template-columns: 1fr 44px; } .kbar-track { grid-column: 1 / -1; } .kbar-val { grid-column: 1 / -1; } .wf-row { grid-template-columns: 1fr auto; } .wf-track { grid-column: 1 / -1; } }
 @media print { details.more:not([open]) > *:not(summary) { display: block; } }
 .kbar-head { text-transform: uppercase; letter-spacing: .05em; font-size: .7rem; font-weight: 600; }
+.seg.seg-sm { margin: 0; } .seg.seg-sm button { font-size: 12.5px; padding: 4px 12px; min-height: 30px; }

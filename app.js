@@ -17,6 +17,9 @@
   const shortName = id => SHORT[id] || (KPI[id] || {}).name || id;
   // Column heading with a short explanation underneath and a hover tip
   const th = (label, sub, tip) => `<th${tip ? ` title="${esc(tip)}"` : ''}>${label}${sub ? `<span class="th-sub">${sub}</span>` : ''}</th>`;
+  // "How this page works" box: collapsible, remembers if closed per page
+  const howTo = (page, intro, steps) => `<details class="card howto no-print" data-how="${page}" ${(S.ui.howClosed || {})[page] ? '' : 'open'}><summary><h2>How this page works</h2><span class="muted small">click to ${(S.ui.howClosed || {})[page] ? 'show' : 'hide'}</span></summary>
+      <p class="small">${intro}</p><ol class="ov-cycle">${steps.map(([t, d]) => `<li><b>${t}</b><span class="muted">${d}</span></li>`).join('')}</ol></details>`;
   const kth = k => th(k.id.replace('KPI-', ''), shortName(k.id), `${k.id} ${k.name}: event score out of 100`);
 
   /* ---------- state ---------- */
@@ -91,6 +94,11 @@
     ${!hasData() ? '<div class="card small no-print">Nothing recorded yet. <a href="#events">Record an event</a>, or <a href="#setup">load sample data</a> in Setup to see how the dashboard works.</div>' : ''}
     <div class="head"><div><div class="label">${esc(S.ui.contractor)} · ${esc(yearObj().name)} · ${esc(m.month)}</div><h1>Performance dashboard</h1></div>
       <div class="row no-print"><button class="btn primary" data-act="pdf">Save as PDF</button><button class="btn" data-act="print">Print</button></div></div>
+    ${howTo('dashboard', 'This page is the <b>summary and report</b>. Nothing is entered here: results come from the <a href="#events">Events</a> and <a href="#deductions">Monthly</a> tabs.', [
+      ['Choose the month', 'Pick the contractor, year and month in the top bar. Months after the last month reported (Setup) stay blank.'],
+      ['Read the headline', 'The tiles show the overall score, fee paid, abatement, whether a rectification plan is needed, the year to date score and incentive progress.'],
+      ['Check the KPIs', 'KPI results for the month show each KPI\'s weight, result and status. KPI results by month shows the whole year: orange is below the pass mark.'],
+      ['Check escalation and report', 'Review the escalation tests, failures, deductions and fee totals, then click <b>Save as PDF</b> for the monthly report.']])}
     <div class="tiles">
       <div class="card tile ${m.below ? 'bad' : ''}"><div class="label">Overall score · ${esc(m.month)}</div><div class="big">${m.overall == null ? '–' : f1(m.overall)}</div>
         <div class="small">${m.overall == null ? (m.reported ? 'No KPIs assessed' : `After the last month reported (${esc(d.lastReported)})`) : m.below ? `Below the pass threshold of ${st.passThreshold}` : `Pass (threshold ${st.passThreshold})`}</div></div>
@@ -209,9 +217,14 @@
     return `
     <div class="head"><div><div class="label">${esc(S.ui.contractor)} · ${esc(yearObj().name)}</div><h1>Events and readiness sign-off</h1></div>
       <div class="row"><button class="btn primary" data-act="addEvent">Add event</button></div></div>
-    <div class="card"><p class="muted small">Each KPI with event-scored standards starts at 100 at every event and loses ${c.settings.eventPoints} points for each failed standard. Click an event name to open its scorecard below the list, where you mark or change each standard. Each KPI column shows that KPI's event score out of 100: 100 means every standard passed; orange means the score is below the KPI's pass mark. Hover over a heading for the full KPI name.</p>
+    ${howTo('events', 'This page is where you <b>enter</b> the joint readiness sign-off for each event. Each KPI\'s event score feeds the <a href="#deductions">Monthly</a> results and the <a href="#dashboard">Dashboard</a>.', [
+      ['Add the event', 'Click <b>Add event</b>, then enter the date, the event name and code, the tier and who signed it off. Tick First event after renovation when it applies (it scores KPI-V).'],
+      ['Mark each standard', 'In the scorecard, click Pass, Fail or N/A for every standard. A Fail needs the reading or observation; an N/A needs the reason agreed with the Principal\'s Representative. <b>Mark unchecked as pass</b> fills in the rest.'],
+      ['Change a result', 'Click an event name in the list to open its scorecard. Change any result, or click Unmark to set it back to not checked.'],
+      ['Check the scores', `The list shows each KPI's event score: 100 less ${c.settings.eventPoints} per failed standard. Orange is below the KPI's pass mark.`]])}
+    <div class="card"><div class="flex-between"><h2>Event list</h2><button class="btn primary" data-act="addEvent">Add event</button></div><p class="muted small">Each KPI with event-scored standards starts at 100 at every event and loses ${c.settings.eventPoints} points for each failed standard. Click an event name to open its scorecard below the list, where you mark or change each standard. Each KPI column shows that KPI's event score out of 100: 100 means every standard passed; orange means the score is below the KPI's pass mark. Hover over a heading for the full KPI name.</p>
       <div class="tablebox"><table class="t"><thead><tr>${th('Date', 'Event day')}${th('Event', 'Click to open the scorecard')}${th('Tier', 'Event tier')}${th('Result', 'Failed standards')}${evKpis.map(kth).join('')}</tr></thead>
-      <tbody>${list || `<tr><td colspan="99" class="muted">No events yet. Add one from the event calendar.</td></tr>`}</tbody></table></div></div>
+      <tbody>${list || `<tr><td colspan="99" class="muted">No events yet. Click Add event to record one.</td></tr>`}</tbody></table></div></div>
     ${detail}`;
   }
 
@@ -238,17 +251,14 @@
       <div><div class="label">Overall score</div><div class="big" style="font-size:1.8rem">${f1(Mx.overall)}</div></div>
       <div><div class="label">Fee paid</div><div><b>${Mx.feePct == null ? '–' : pc(Mx.feePct)}</b> · abatement ${money(Mx.abatement)}</div></div>
       <div>${Mx.rectification ? '<span class="status s-below">Rectification plan required</span>' : ''}${!Mx.reported ? `<span class="status s-na">After the last month reported (${esc(d.lastReported)}); change it in Setup</span>` : ''}</div></div></div>
-    <div class="card"><h2>How this page works</h2>
-      <p class="small">This page is where you <b>enter</b> everything for ${esc(mo)} that is not scored at an event. Event results are entered on the <a href="#events">Events</a> tab, and the full monthly report is on the <a href="#dashboard">Dashboard</a>.</p>
-      <ol class="ov-cycle">
-        <li><b>Log deductions</b><span class="muted">Add a row for each incident, audit breach, late or incomplete item, or monthly measured standard outside tolerance. Tick Confirmed once the Principal's Representative agrees; only confirmed rows count.</span></li>
-        <li><b>Record any relief</b><span class="muted">In KPI results, tick Not assessed for a KPI covered by Part F relief (for example a field closed by TAU or a declared extreme weather event) and give the reason. Its weight moves to the other KPIs.</span></li>
-        <li><b>Check the results</b><span class="muted">The KPI results table and the bar above update as you go: each KPI's mean event score less deductions, the overall score, the fee paid and whether a rectification plan is needed.</span></li>
-        <li><b>Report</b><span class="muted">Go to the Dashboard to review the month and save the PDF report.</span></li>
-      </ol></div>
-    <div class="card"><h2>Step 1 · Deductions logged · ${esc(mo)}</h2><p class="muted small">One row per confirmed incident, audit breach, late or incomplete item, or monthly measured standard outside tolerance. Only rows confirmed by the Principal's Representative count. Each standard is capped at ${c.settings.capPerStandard} points a month.</p>
+    ${howTo('monthly', `This page is where you <b>enter</b> everything for ${esc(mo)} that is not scored at an event. Event results are entered on the <a href="#events">Events</a> tab, and the full monthly report is on the <a href="#dashboard">Dashboard</a>.`, [
+      ['Log deductions', 'Click <b>Add deduction</b> in Step 1 (or at the top of the page). Choose the standard, enter the count and a note, then tick Confirmed once the Principal\'s Representative agrees; only confirmed rows count.'],
+      ['Record any relief', 'In KPI results, tick Not assessed for a KPI covered by Part F relief (for example a field closed by TAU or a declared extreme weather event) and give the reason. Its weight moves to the other KPIs.'],
+      ['Check the results', 'The KPI results table and the bar above update as you go: each KPI\'s mean event score less deductions, the overall score, the fee paid and whether a rectification plan is needed.'],
+      ['Report', 'Go to the Dashboard to review the month and save the PDF report.']])}
+    <div class="card"><div class="flex-between"><h2>Step 1 · Deductions logged · ${esc(mo)}</h2><button class="btn primary" data-act="addDed">Add deduction</button></div><p class="muted small">One row per confirmed incident, audit breach, late or incomplete item, or monthly measured standard outside tolerance. Only rows confirmed by the Principal's Representative count. Each standard is capped at ${c.settings.capPerStandard} points a month.</p>
       <div class="tablebox"><table class="t"><thead><tr><th>Standard</th><th>Count</th><th>Confirmed by PR</th><th class="num">Points</th><th>Note</th><th></th></tr></thead>
-      <tbody>${dRows || '<tr><td colspan="6" class="muted">No deductions this month.</td></tr>'}</tbody></table></div></div>
+      <tbody>${dRows || '<tr><td colspan="6" class="muted">No deductions this month. Click Add deduction to log one.</td></tr>'}</tbody></table></div></div>
     <div class="card"><h2>Steps 2 and 3 · KPI results and relief · ${esc(mo)}</h2><p class="muted small">Tick Not assessed for Part F relief (for example a field closed by TAU, a declared extreme weather event, or a failed TAU asset). That KPI's weight is reallocated to the KPIs assessed. A month with no event starts at ${c.settings.noEventScore}. A KPI with 0% weight this month (Setup, monthly weightings) shows Not scored this month.</p>
       <div class="tablebox"><table class="t"><thead><tr>${th('KPI', 'Key performance indicator')}${th('Events', 'Scored this month')}${th('Mean event score', 'Average of the event scores, out of 100')}${th('Deductions', 'Confirmed points taken off (capped)')}${th('Result', 'Mean event score less deductions')}${th('Status', 'Result against the KPI pass mark')}${th('Relief', 'Part F: tick if not assessed')}</tr></thead><tbody>${kRows}</tbody></table></div></div>`;
   }
@@ -267,6 +277,11 @@
         <td class="num">${money(r.extra)}</td><td class="num">${money(r.credit)}</td><td class="num"><b>${money(r.net)}</b></td></tr>`; }).join('');
     return `
     <div class="head"><div><div class="label">${esc(S.ui.contractor)} · ${esc(yearObj().name)}</div><h1>Annual band reconciliation (Part E)</h1></div></div>
+    ${howTo('bands', 'This page is where you <b>enter</b> the annual band reconciliation for each tendered band line (Part E). The totals feed the fee and band totals on the <a href="#dashboard">Dashboard</a>.', [
+      ['Enter the tendered band', 'At the start of the contract, enter each line\'s lump sum, minimum and maximum quantity, rate above the maximum and credit below the minimum, from the contractor\'s price schedule.'],
+      ['Enter the year\'s quantities', 'At year end, enter the quantity logged for the year and the units above the maximum that TAU caused (for example extra events or changeovers TAU asked for).'],
+      ['Tick All met', `Tick All met when every standard for that service was met for the year. It reduces any credit below the minimum to ${pc(c.settings.creditShare)}.`],
+      ['Check the result', 'Status shows whether the line is within band, above or below. Extra, Credit and Net show what is paid or credited; the totals are at the bottom.']])}
     <div class="card small"><p>Enter the tendered band and rates for each line, the quantity logged for the year and the units above the maximum that TAU caused. Payable units are the lesser of units above the maximum and TAU-caused units; growth, weather or contractor-driven units above the maximum earn no payment. Units below the minimum earn a credit, reduced to ${pc(c.settings.creditShare)} where every standard in that service area was met all year. Renovation has no band and is reconciled against the approved programme and budget.</p></div>
     <div class="card"><div class="tablebox"><table class="t"><thead><tr><th>Band</th><th>Lump sum</th><th>Min</th><th>Max</th><th>Rate above max</th><th>Credit below min</th><th>Logged</th><th>TAU-caused</th><th>All met</th><th>Status</th><th class="num">Extra</th><th class="num">Credit</th><th class="num">Net</th></tr></thead>
       <tbody>${rows}<tr class="sub"><td>Total</td><td class="num">${money(tot.lump)}</td><td colspan="8"></td><td class="num">${money(tot.extra)}</td><td class="num">${money(tot.credit)}</td><td class="num">${money(tot.net)}</td></tr></tbody></table></div></div>`;
@@ -426,6 +441,11 @@
     const wTot = M.kpis.reduce((a, k) => a + (c.weights[k.id] || 0), 0);
     return `
     <div class="head"><h1>Setup</h1></div>
+    ${howTo('setup', 'This page holds the <b>settings</b> for this browser. Most are set once at the start of the contract; the one to update every month is Last month reported.', [
+      ['Set up the contract', 'Rename the sample contractor to the appointed contractor and check the contract year and its first month.'],
+      ['Each month', 'Set <b>Last month reported</b> to the month just assessed, so later months stay blank and do not count. Tick Condition trends improving when that is confirmed (for the incentive).'],
+      ['Settings and weightings', 'Fee, scoring settings and the KPI weightings by month follow Schedule 1 and the Calculation Sheet V4. Change them only if the contract changes; Restore model settings puts them back.'],
+      ['Back up and share', 'Results are kept in this browser only. Export a backup each month, and send the file to anyone who needs the results; they use Import backup.']])}
     <div class="card"><h2>Contractor</h2><div class="row" style="margin-top:10px">${S.contractors.map((s, i) => `<input type="text" data-con="${i}" value="${esc(s)}" aria-label="Contractor ${i + 1}">`).join('')}
       <button class="btn" data-act="addContractor">Add contractor</button></div>
       <p class="muted small">${esc(SAMPLE.contractor)} is the sample contractor. Rename it to the appointed contractor before recording real results.</p></div>
@@ -783,6 +803,9 @@
       t.files[0].text().then(txt => { const x = JSON.parse(txt); if (!x.settings || !x.data) throw new Error(); S = x; save(); route(); toast('Backup imported'); }).catch(() => toast('That file is not a valid backup'));
     }
   });
+  document.addEventListener('toggle', e => { const t = e.target; if (!t.matches || !t.matches('details[data-how]')) return;
+    S.ui.howClosed = S.ui.howClosed || {}; S.ui.howClosed[t.dataset.how] = !t.open; save();
+    const h = t.querySelector('summary .small'); if (h) h.textContent = 'click to ' + (t.open ? 'hide' : 'show'); }, true);
   window.addEventListener('hashchange', () => route());
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => route(true));
   function loadSample(go) {

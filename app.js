@@ -238,10 +238,18 @@
       <div><div class="label">Overall score</div><div class="big" style="font-size:1.8rem">${f1(Mx.overall)}</div></div>
       <div><div class="label">Fee paid</div><div><b>${Mx.feePct == null ? '–' : pc(Mx.feePct)}</b> · abatement ${money(Mx.abatement)}</div></div>
       <div>${Mx.rectification ? '<span class="status s-below">Rectification plan required</span>' : ''}${!Mx.reported ? `<span class="status s-na">After the last month reported (${esc(d.lastReported)}); change it in Setup</span>` : ''}</div></div></div>
-    <div class="card"><h2>Deductions logged · ${esc(mo)}</h2><p class="muted small">One row per confirmed incident, audit breach, late or incomplete item, or monthly measured standard outside tolerance. Only rows confirmed by the Principal's Representative count. Each standard is capped at ${c.settings.capPerStandard} points a month.</p>
+    <div class="card"><h2>How this page works</h2>
+      <p class="small">This page is where you <b>enter</b> everything for ${esc(mo)} that is not scored at an event. Event results are entered on the <a href="#events">Events</a> tab, and the full monthly report is on the <a href="#dashboard">Dashboard</a>.</p>
+      <ol class="ov-cycle">
+        <li><b>Log deductions</b><span class="muted">Add a row for each incident, audit breach, late or incomplete item, or monthly measured standard outside tolerance. Tick Confirmed once the Principal's Representative agrees; only confirmed rows count.</span></li>
+        <li><b>Record any relief</b><span class="muted">In KPI results, tick Not assessed for a KPI covered by Part F relief (for example a field closed by TAU or a declared extreme weather event) and give the reason. Its weight moves to the other KPIs.</span></li>
+        <li><b>Check the results</b><span class="muted">The KPI results table and the bar above update as you go: each KPI's mean event score less deductions, the overall score, the fee paid and whether a rectification plan is needed.</span></li>
+        <li><b>Report</b><span class="muted">Go to the Dashboard to review the month and save the PDF report.</span></li>
+      </ol></div>
+    <div class="card"><h2>Step 1 · Deductions logged · ${esc(mo)}</h2><p class="muted small">One row per confirmed incident, audit breach, late or incomplete item, or monthly measured standard outside tolerance. Only rows confirmed by the Principal's Representative count. Each standard is capped at ${c.settings.capPerStandard} points a month.</p>
       <div class="tablebox"><table class="t"><thead><tr><th>Standard</th><th>Count</th><th>Confirmed by PR</th><th class="num">Points</th><th>Note</th><th></th></tr></thead>
       <tbody>${dRows || '<tr><td colspan="6" class="muted">No deductions this month.</td></tr>'}</tbody></table></div></div>
-    <div class="card"><h2>KPI results · ${esc(mo)}</h2><p class="muted small">Tick Not assessed for Part F relief (for example a field closed by TAU, a declared extreme weather event, or a failed TAU asset). That KPI's weight is reallocated to the KPIs assessed. A month with no event starts at ${c.settings.noEventScore}. A KPI with 0% weight this month (Setup, monthly weightings) shows Not scored this month.</p>
+    <div class="card"><h2>Steps 2 and 3 · KPI results and relief · ${esc(mo)}</h2><p class="muted small">Tick Not assessed for Part F relief (for example a field closed by TAU, a declared extreme weather event, or a failed TAU asset). That KPI's weight is reallocated to the KPIs assessed. A month with no event starts at ${c.settings.noEventScore}. A KPI with 0% weight this month (Setup, monthly weightings) shows Not scored this month.</p>
       <div class="tablebox"><table class="t"><thead><tr>${th('KPI', 'Key performance indicator')}${th('Events', 'Scored this month')}${th('Mean event score', 'Average of the event scores, out of 100')}${th('Deductions', 'Confirmed points taken off (capped)')}${th('Result', 'Mean event score less deductions')}${th('Status', 'Result against the KPI pass mark')}${th('Relief', 'Part F: tick if not assessed')}</tr></thead><tbody>${kRows}</tbody></table></div></div>`;
   }
 

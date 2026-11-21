@@ -9,6 +9,7 @@ Monthly contract performance assessment for the Tātaki Auckland Unlimited stadi
 - **Monthly**: the deduction log for the month (incidents, audit breaches, late or incomplete items, monthly measured standards), confirmed by the Principal's Representative, and Part F relief (not assessed) for any KPI.
 - **Bands**: the annual band reconciliation (Part E) for every band in the specification.
 - **Model**: the 13 scored KPIs with base and monthly weightings (core sports turf 85%, KPI-GD Gardens 10%, KPI-HS Hard Surfaces 5%; KPI-U Usage Cameras is report only), scoring categories, score to fee table, escalation ladder and the full register of 169 performance standards with their targets and measurement methods.
+- **Help**: user manual for every tab, the scoring rules and common questions, with an Ask a question box. Typing shows the matching parts of the manual; Send question posts it to Netlify Forms (form `app-question`), or opens an email to Greenspace Consulting if forms are not enabled.
 - **Setup**: contractor name, contract year, last month reported, condition trends, all fee and scoring settings, KPI base weightings and the monthly weightings grid, export to Excel, backup and restore (JSON), sample data.
 
 Results are kept in the browser only and are not uploaded to Netlify. Use Export backup and Import backup to move them between people or computers.
@@ -55,4 +56,8 @@ Base and monthly weightings, thresholds and points can also be changed in Setup 
 
 ## Updating the live site (21 November 2026 changes)
 
-Upload the changed files to the existing GitHub repository (Add file > Upload files, keep the folder structure): `js/model.js`, `js/core.js`, `js/app.js`, `README.md`, and optionally `build_model.py`, `make_ts.py`, `ts.json`. Commit; Netlify redeploys automatically and the password stays as set.
+The GitHub repository keeps every file at the top level (no `js` or `css` folders), and its `index.html` refers to `app.css`, `model.js` and so on directly. Upload the changed files there: `index.html` (top-level version), `app.css`, `model.js`, `core.js`, `app.js`, `README.md`, and optionally `build_model.py`, `make_ts.py`, `ts.json`. Commit; Netlify redeploys automatically and the password stays as set.
+
+## Questions from the Help tab
+
+In Netlify: Project configuration > Forms, enable form detection, then redeploy once. Questions then appear under Forms > app-question; add an email notification there to receive them by email.

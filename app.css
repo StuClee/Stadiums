@@ -87,7 +87,7 @@ label.field { display: flex; flex-direction: column; gap: 4px; font-size: .86rem
 .chart-box { position: relative; height: 260px; }
 @media print { .chart-box { height: 220px; } }
 table.t { width: 100%; border-collapse: collapse; font-size: .9rem; }
-table.t th { text-align: left; font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; padding: 8px 10px; border-bottom: 2px solid var(--line); white-space: nowrap; }
+table.t th { text-align: center; vertical-align: bottom; font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; padding: 8px 10px; border-bottom: 2px solid var(--line); white-space: nowrap; }
 table.t td { padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
 table.t tr.sub td { background: var(--surface-2); font-weight: 600; font-size: .82rem; }
 .cell { display: inline-flex; min-width: 54px; justify-content: center; font-size: .78rem; font-weight: 700; padding: 3px 6px; border-radius: 5px; }
@@ -208,3 +208,33 @@ table.t input[type=number], table.t input[type=text], table.t select { min-heigh
   .ov-res { flex-basis: auto; } .ov-op { align-self: flex-start; }
   .ov-stairs { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* Centre-aligned tables: first column (labels) and long text stay left for reading */
+table.t td, table.t td.num, table.t th.num { text-align: center; }
+table.t th:first-child, table.t td:first-child, table.t td.txt, table.t th.txt { text-align: left; }
+table.t td .row { justify-content: center; }
+table.t td:first-child .row { justify-content: flex-start; }
+table.t td input[type=number] { margin: 0 auto; display: block; }
+.th-sub { display: block; text-transform: none; letter-spacing: 0; font-weight: 400; font-size: .72rem; color: var(--muted); white-space: normal; line-height: 1.25; margin-top: 2px; max-width: 150px; margin-left: auto; margin-right: auto; }
+table.t th:first-child .th-sub { margin-left: 0; }
+table.t th[title] { cursor: help; }
+/* Help and user manual */
+.help-grid { display: grid; grid-template-columns: minmax(200px, 260px) minmax(0, 1fr); gap: 18px; align-items: start; }
+.help-toc { position: sticky; top: 90px; }
+.help-toc a { display: block; padding: 5px 8px; border-radius: 6px; color: var(--ink); text-decoration: none; font-size: .92rem; }
+.help-toc a:hover { background: var(--surface-2); }
+.help-sec h2 { margin-top: 0; }
+.help-sec p, .help-sec li { max-width: 78ch; line-height: 1.55; }
+.help-sec ol, .help-sec ul { padding-left: 22px; }
+.help-sec dt { font-weight: 700; margin-top: 8px; }
+.help-sec dd { margin: 2px 0 0 0; }
+.help-ask textarea { width: 100%; min-height: 96px; font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 10px; resize: vertical; }
+.help-ask input[type=text], .help-ask input[type=email] { font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; min-height: 36px; width: 100%; }
+.help-ask .kv { margin: 8px 0; }
+.help-hits { margin-top: 10px; display: grid; gap: 6px; }
+.help-hits a { display: block; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; color: var(--ink); text-decoration: none; }
+.help-hits a:hover { border-color: var(--accent); }
+.help-hits mark { background: var(--accent-soft); color: inherit; padding: 0 2px; border-radius: 3px; }
+.help-flash { outline: 3px solid var(--accent); outline-offset: 4px; transition: outline-color 1.2s; }
+@media (max-width: 860px) { .help-grid { grid-template-columns: 1fr; } .help-toc { position: static; } }
+@media print { .help-toc, .help-ask { display: none; } .help-grid { display: block; } }

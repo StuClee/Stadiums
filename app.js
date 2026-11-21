@@ -13,6 +13,11 @@
   const monthOf = d => { if (!d) return ''; const [y, m] = d.split('-'); return MN[+m - 1] + '-' + y; };
   const uid = p => p + Math.random().toString(36).slice(2, 9);
   const KPI = Object.fromEntries(M.kpis.map(k => [k.id, k]));
+  const SHORT = { 'KPI-M': 'Mowing', 'KPI-L': 'Line marking', 'KPI-I': 'Irrigation', 'KPI-G': 'Goal posts', 'KPI-N': 'Nutrition', 'KPI-R': 'Surface repair', 'KPI-T': 'Turf health', 'KPI-P': 'Playability', 'KPI-V': 'Renovation', 'KPI-O': 'Operations', 'KPI-C': 'Compliance', 'KPI-GD': 'Gardens', 'KPI-HS': 'Hard surfaces' };
+  const shortName = id => SHORT[id] || (KPI[id] || {}).name || id;
+  // Column heading with a short explanation underneath and a hover tip
+  const th = (label, sub, tip) => `<th${tip ? ` title="${esc(tip)}"` : ''}>${label}${sub ? `<span class="th-sub">${sub}</span>` : ''}</th>`;
+  const kth = k => th(k.id.replace('KPI-', ''), shortName(k.id), `${k.id} ${k.name}: event score out of 100`);
 
   /* ---------- state ---------- */
   function newYear(id, name, months) { return { id, name, months: months.slice() }; }
@@ -74,8 +79,8 @@
         <td class="num">${pc(m.weights[k.id])}</td><td class="num"><b>${f1(r.result)}</b></td><td>${statusOf(r, pass, k, m)}</td>
         <td class="num">${r.events ? f1(r.mean) : '<span class="muted">no event</span>'}</td><td class="num">${r.ded ? '−' + r.ded : '0'}</td>
         <td class="num">${f1(a.avg)}</td><td class="num">${a.below}</td><td class="num">${a.fails}</td></tr>`; }).join('');
-    const heat = `<table class="t heat"><thead><tr><th>KPI</th><th class="num">Avg weight</th>${Y.months.map(x => `<th class="${x.month === m.month ? 'sel' : ''}" style="text-align:center">${x.month.replace('-20', ' ')}</th>`).join('')}</tr></thead><tbody>
-      ${M.kpis.map(k => `<tr><td><span class="pill-k">${k.id}</span></td><td class="num muted">${pc(C.avgWeight(c, k.id))}</td>${Y.months.map(x => { const v = x.kpi[k.id].result; return `<td class="h ${x.month === m.month ? 'sel' : ''}" style="${heatColour(v, c.pass[k.id])}" title="${k.id} ${x.month}: ${v == null ? (x.reported ? 'not assessed' : 'not reported') : f1(v)}">${v == null ? '' : f0(v)}</td>`; }).join('')}</tr>`).join('')}
+    const heat = `<table class="t heat"><thead><tr>${th('KPI', 'Key performance indicator')}${th('Avg weight', 'Across the year')}${Y.months.map(x => `<th class="${x.month === m.month ? 'sel' : ''}" style="text-align:center">${x.month.replace('-20', ' ')}</th>`).join('')}</tr></thead><tbody>
+      ${M.kpis.map(k => `<tr><td><span class="pill-k">${k.id}</span> <span class="small">${esc(shortName(k.id))}</span></td><td class="num muted">${pc(C.avgWeight(c, k.id))}</td>${Y.months.map(x => { const v = x.kpi[k.id].result; return `<td class="h ${x.month === m.month ? 'sel' : ''}" style="${heatColour(v, c.pass[k.id])}" title="${k.id} ${x.month}: ${v == null ? (x.reported ? (x.kpi[k.id].offMonth ? 'not scored this month (0% weight)' : 'not assessed') : 'not reported') : f1(v)}">${v == null ? (x.reported && x.kpi[k.id].offMonth ? '<span class="muted">–</span>' : '') : f0(v)}</td>`; }).join('')}</tr>`).join('')}
       <tr><td><b>Overall</b></td><td></td>${Y.months.map(x => `<td class="h ${x.month === m.month ? 'sel' : ''}" style="${heatColour(x.overall, st.passThreshold)}"><b>${x.overall == null ? '' : f1(x.overall)}</b></td>`).join('')}</tr></tbody></table>`;
     const fails = m.failures.map(f => `<tr><td>${esc(f.event.date)}</td><td>${esc(f.event.name)}</td><td><span class="pill-k">${f.ref}</span> ${esc(f.s.name)}${f.s.critical ? ' <span class="crit">CRITICAL</span>' : ''}</td><td>${esc(f.note || '')}</td></tr>`).join('');
     const deds = (d.deductions || []).filter(x => x.month === m.month).map(x => { const s = C.STD[x.ref] || {}; return `<tr><td><span class="pill-k">${esc(x.ref)}</span> ${esc(s.name || '')}</td><td class="num">${esc(x.count)}</td><td class="num">${x.confirmed ? (x.count * C.points(c, x.ref)) : '<span class="muted">not confirmed</span>'}</td><td>${esc(x.note || '')}</td></tr>`; }).join('');
@@ -102,9 +107,9 @@
       <figure class="card chart-card"><figcaption><h2>Fee paid and abatement by month</h2><span class="muted small">Monthly performance fee ${money(st.monthlyFee)}</span></figcaption><div class="chart-box"><canvas id="chFee" role="img" aria-label="Stacked bar chart of fee paid and abatement by month"></canvas></div></figure>
     </div>
     <div class="card"><div class="flex-between"><h2>KPI results · ${esc(m.month)}</h2><span class="muted small">Result = mean event score less capped monthly deductions</span></div><div class="tablebox"><table class="t">
-      <thead><tr><th>KPI</th><th>Name</th><th class="num">Weight this month</th><th class="num">Result</th><th>Status</th><th class="num">Event score</th><th class="num">Deductions</th><th class="num">Year avg</th><th class="num">Months below</th><th class="num">Event fails (year)</th></tr></thead>
+      <thead><tr>${th('KPI', 'Code')}${th('Name', 'Key performance indicator')}${th('Weight this month', 'Share of the overall score')}${th('Result', 'Out of 100')}${th('Status', 'Against the KPI pass mark')}${th('Event score', 'Average of the month\'s events')}${th('Deductions', 'Confirmed points taken off')}${th('Year avg', 'Months reported so far')}${th('Months below', 'Below the pass mark this year')}${th('Event fails', 'Failed standards this year')}</tr></thead>
       <tbody>${kRows}</tbody></table></div></div>
-    <div class="card"><h2>KPI results by month</h2><p class="muted small">Orange below the pass threshold, teal towards 100. Blank = not reported or not assessed. The month shown is in bold.</p><div class="tablebox">${heat}</div></div>
+    <div class="card"><h2>KPI results by month</h2><p class="muted small">Orange below the pass threshold, teal towards 100. Blank = not reported or not assessed; – = not scored that month (0% weight). The month shown is in bold.</p><div class="tablebox">${heat}</div></div>
     <div class="grid">
       <div class="card"><h2>Event failures · ${esc(m.month)}</h2>${fails ? `<div class="tablebox"><table class="t"><thead><tr><th>Date</th><th>Event</th><th>Standard</th><th>Note</th></tr></thead><tbody>${fails}</tbody></table></div>` : '<p class="muted small">No failed event standards this month.</p>'}</div>
       <div class="card"><h2>Monthly deductions · ${esc(m.month)}</h2>${deds ? `<div class="tablebox"><table class="t"><thead><tr><th>Standard</th><th class="num">Count</th><th class="num">Points</th><th>Note</th></tr></thead><tbody>${deds}</tbody></table></div>` : '<p class="muted small">No deductions logged this month.</p>'}</div>
@@ -171,7 +176,7 @@
     const evKpis = M.kpis.filter(k => C.eventKpi(k.id));
     const list = evs.map(e => { const nf = Object.values(e.results || {}).filter(r => r.r === 'fail').length;
       const ok = months().includes(e.month);
-      return `<tr><td>${esc(e.date)}</td><td><a href="#events" data-event="${e.id}"><b>${esc(e.name || 'Untitled event')}</b></a>${e.firstAfterRenovation ? ' <span class="chip">First after renovation</span>' : ''}${ok ? '' : ' <span class="warn-note">Date outside this contract year</span>'}</td>
+      return `<tr><td style="white-space:nowrap">${esc(e.date)}</td><td><a href="#events" data-event="${e.id}"><b>${esc(e.name || 'Untitled event')}</b></a>${e.firstAfterRenovation ? ' <span class="chip">First after renovation</span>' : ''}${ok ? '' : ' <span class="warn-note">Date outside this contract year</span>'}</td>
         <td>${esc(e.tier ? 'Tier ' + e.tier : '')}</td><td class="num">${nf ? `<span class="status s-fail">${nf} fail${nf > 1 ? 's' : ''}</span>` : '<span class="status s-pass">All pass</span>'}</td>
         ${evKpis.map(k => { const v = C.eventScore(c, e, k.id); return `<td class="num" style="${heatColour(v, c.pass[k.id])}">${v == null ? '' : v}</td>`; }).join('')}</tr>`; }).join('');
     let detail = '';
@@ -204,8 +209,8 @@
     return `
     <div class="head"><div><div class="label">${esc(S.ui.contractor)} · ${esc(yearObj().name)}</div><h1>Events and readiness sign-off</h1></div>
       <div class="row"><button class="btn primary" data-act="addEvent">Add event</button></div></div>
-    <div class="card"><p class="muted small">Each KPI with event-scored standards starts at 100 at every event and loses ${c.settings.eventPoints} points for each failed standard. Columns show each KPI's event score.</p>
-      <div class="tablebox"><table class="t"><thead><tr><th>Date</th><th>Event</th><th>Tier</th><th class="num">Result</th>${evKpis.map(k => `<th class="num">${k.id.replace('KPI-', '')}</th>`).join('')}</tr></thead>
+    <div class="card"><p class="muted small">Each KPI with event-scored standards starts at 100 at every event and loses ${c.settings.eventPoints} points for each failed standard. Each KPI column shows that KPI's event score out of 100: 100 means every standard passed; orange means the score is below the KPI's pass mark. Hover over a heading for the full KPI name.</p>
+      <div class="tablebox"><table class="t"><thead><tr>${th('Date', 'Event day')}${th('Event', 'Click to open the scorecard')}${th('Tier', 'Event tier')}${th('Result', 'Failed standards')}${evKpis.map(kth).join('')}</tr></thead>
       <tbody>${list || `<tr><td colspan="99" class="muted">No events yet. Add one from the event calendar.</td></tr>`}</tbody></table></div></div>
     ${detail}`;
   }
@@ -236,8 +241,8 @@
     <div class="card"><h2>Deductions logged · ${esc(mo)}</h2><p class="muted small">One row per confirmed incident, audit breach, late or incomplete item, or monthly measured standard outside tolerance. Only rows confirmed by the Principal's Representative count. Each standard is capped at ${c.settings.capPerStandard} points a month.</p>
       <div class="tablebox"><table class="t"><thead><tr><th>Standard</th><th>Count</th><th>Confirmed by PR</th><th class="num">Points</th><th>Note</th><th></th></tr></thead>
       <tbody>${dRows || '<tr><td colspan="6" class="muted">No deductions this month.</td></tr>'}</tbody></table></div></div>
-    <div class="card"><h2>KPI results · ${esc(mo)}</h2><p class="muted small">Tick Not assessed for Part F relief (for example a field closed by TAU, a declared extreme weather event, or a failed TAU asset). That KPI's weight is reallocated to the KPIs assessed.</p>
-      <div class="tablebox"><table class="t"><thead><tr><th>KPI</th><th class="num">Events</th><th class="num">Mean event score</th><th class="num">Deductions</th><th class="num">Result</th><th>Status</th><th>Relief</th></tr></thead><tbody>${kRows}</tbody></table></div></div>`;
+    <div class="card"><h2>KPI results · ${esc(mo)}</h2><p class="muted small">Tick Not assessed for Part F relief (for example a field closed by TAU, a declared extreme weather event, or a failed TAU asset). That KPI's weight is reallocated to the KPIs assessed. A month with no event starts at ${c.settings.noEventScore}. A KPI with 0% weight this month (Setup, monthly weightings) shows Not scored this month.</p>
+      <div class="tablebox"><table class="t"><thead><tr>${th('KPI', 'Key performance indicator')}${th('Events', 'Scored this month')}${th('Mean event score', 'Average of the event scores, out of 100')}${th('Deductions', 'Confirmed points taken off (capped)')}${th('Result', 'Mean event score less deductions')}${th('Status', 'Result against the KPI pass mark')}${th('Relief', 'Part F: tick if not assessed')}</tr></thead><tbody>${kRows}</tbody></table></div></div>`;
   }
 
   /* ---------- bands ---------- */
@@ -271,16 +276,16 @@
       <tr class="sub"><td colspan="5">Total</td><td class="num">${pc(wTot)}</td><td></td></tr></tbody></table></div></div>
     <div class="grid">
       <div class="card"><h2>Scoring (Part C)</h2><table class="t"><thead><tr><th>Cat.</th><th>Category</th><th class="num">Points</th></tr></thead><tbody>
-        ${Object.entries(M.categories).sort().map(([k, v]) => `<tr><td><b>${k}</b></td><td>${esc(v.name)}<div class="small muted">${esc(v.wording)}</div></td><td class="num">${k === 'A' ? c.settings.eventPoints + ' per fail' : c.categories[k]}</td></tr>`).join('')}</tbody></table>
+        ${Object.entries(M.categories).sort().map(([k, v]) => `<tr><td><b>${k}</b></td><td class="txt">${esc(v.name)}<div class="small muted">${esc(v.wording)}</div></td><td class="num">${k === 'A' ? c.settings.eventPoints + ' per fail' : c.categories[k]}</td></tr>`).join('')}</tbody></table>
         <p class="muted small">KPI result = mean of the month's event scores (or ${c.settings.noEventScore} with no event) less confirmed deductions, capped at ${c.settings.capPerStandard} points per standard per month.</p></div>
       <div class="card"><h2>Score to fee (Part D)</h2><table class="t"><thead><tr><th>Overall score</th><th>Fee paid</th><th>Other consequence</th></tr></thead><tbody>${M.scoreToFee.map(r => `<tr>${r.map(x => `<td>${esc(x)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
     </div>
-    <div class="card"><h2>Escalation and incentive (Part F)</h2><table class="t"><thead><tr><th>Trigger</th><th>Step</th><th>Who acts</th></tr></thead><tbody>${M.escalation.map(r => `<tr>${r.map(x => `<td>${esc(x)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
+    <div class="card"><h2>Escalation and incentive (Part F)</h2><table class="t"><thead><tr><th>Trigger</th><th>Step</th><th>Who acts</th></tr></thead><tbody>${M.escalation.map(r => `<tr>${r.map(x => `<td class="txt">${esc(x)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
     <div class="card"><div class="flex-between"><h2>Standards register (${list.length} of ${M.standards.length})</h2>
       <div class="row"><select data-kfilter><option value="all">All KPIs</option><option value="event" ${f === 'event' ? 'selected' : ''}>Event-scored only</option><option value="critical" ${f === 'critical' ? 'selected' : ''}>Critical only</option><option value="Report only" ${f === 'Report only' ? 'selected' : ''}>Report only (Usage Cameras, not scored)</option>${M.kpis.map(k => `<option value="${k.id}" ${f === k.id ? 'selected' : ''}>${k.id} ${esc(k.name)}</option>`).join('')}</select>
       <input type="text" data-q placeholder="Search standards" value="${esc(S.ui.q || '')}"></div></div>
       <div class="tablebox"><table class="t"><thead><tr><th>Std</th><th>Standard and target</th><th>KPI link</th><th>Cat.</th><th class="num">Points</th></tr></thead><tbody>
-      ${list.map(s => `<tr><td><span class="pill-k">${s.ref}</span>${s.critical ? '<div class="crit">CRITICAL</div>' : ''}</td><td><b>${esc(s.name)}</b><div class="small">${esc(s.target || '')}</div><details><summary>Measurement</summary><dl class="info"><dt>Applies</dt><dd>${esc(s.applies || '')}</dd><dt>Method</dt><dd>${esc(s.measure || '')}</dd><dt>By</dt><dd>${esc(s.by || '')}</dd></dl></details></td><td class="small">${esc(s.link)}</td><td>${s.event ? 'A' + (s.cat ? ' + ' + s.cat : '') : esc(s.cat)}</td><td class="num">${s.event ? c.settings.eventPoints : ''}${s.event && s.cat ? ' / ' : ''}${s.cat ? C.points(c, s.ref) : ''}</td></tr>`).join('')}</tbody></table></div></div>`;
+      ${list.map(s => `<tr><td><span class="pill-k">${s.ref}</span>${s.critical ? '<div class="crit">CRITICAL</div>' : ''}</td><td class="txt"><b>${esc(s.name)}</b><div class="small">${esc(s.target || '')}</div><details><summary>Measurement</summary><dl class="info"><dt>Applies</dt><dd>${esc(s.applies || '')}</dd><dt>Method</dt><dd>${esc(s.measure || '')}</dd><dt>By</dt><dd>${esc(s.by || '')}</dd></dl></details></td><td class="small">${esc(s.link)}</td><td>${s.event ? 'A' + (s.cat ? ' + ' + s.cat : '') : esc(s.cat)}</td><td class="num">${s.event ? c.settings.eventPoints : ''}${s.event && s.cat ? ' / ' : ''}${s.cat ? C.points(c, s.ref) : ''}</td></tr>`).join('')}</tbody></table></div></div>`;
   }
 
   /* ---------- overview: the model in plain English ---------- */
@@ -536,8 +541,153 @@
   }
   function download(name, text) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type: 'application/json' })); a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000); }
 
+  /* ---------- help and user manual ---------- */
+  const HELP_EMAIL = 'stu@greenspaceconsulting.co.nz';
+  function helpSections() {
+    const c = cfg(), st = c.settings, cat = k => c.categories[k];
+    const mw = k => { const a = (c.mweights[k] || []).map((v, i) => [months()[i], v]); return a; };
+    const onMonths = k => mw(k).filter(([, v]) => v > 0.031).map(([m]) => m.split('-')[0]).join(', ');
+    return [
+      { id: 'start', title: 'Getting started', body: `
+        <p>This app scores the stadium maintenance contractor each month under Schedule 1 (the Performance Model). It follows the Performance Model Calculation Sheet V4 and the Stadiums Maintenance Technical Specification (21 November 2026), so the numbers match the Excel workbook.</p>
+        <ol><li>Choose the <b>contractor</b>, <b>contract year</b> and <b>month</b> in the top bar. The month list only shows on the Dashboard and Monthly tabs.</li>
+        <li>Record each event in <b>Events</b> and mark every event-scored standard Pass or Fail.</li>
+        <li>Log incidents, audit breaches, late items and monthly measured standards in <b>Monthly</b>, and tick <b>Confirmed</b> once the Principal's Representative agrees.</li>
+        <li>Check the result on the <b>Dashboard</b> and save the monthly report with <b>Save as PDF</b>.</li>
+        <li>At year end, complete the <b>Bands</b> reconciliation.</li></ol>
+        <p>The first time you open the app it shows sample data for FieldTurf NZ (July to October 2026) so the screens are not empty. Clear it or rename the contractor in <b>Setup</b> before recording real results.</p>` },
+      { id: 'data', title: 'Where your data is kept', body: `
+        <p>Results are saved in <b>this browser on this computer only</b>. Nothing is uploaded to the website, and other people cannot see your entries.</p>
+        <ul><li>To share results or move to another computer, use <b>Setup &gt; Export backup (JSON)</b>, send the file, then <b>Import backup</b> on the other computer. Importing replaces what is in that browser.</li>
+        <li>Export a backup at the end of each month. Clearing browser data, or using a private window, removes saved results.</li>
+        <li><b>Export to Excel</b> gives a workbook of the year's results for filing or checking against the Calculation Sheet.</li></ul>` },
+      { id: 'monthly-steps', title: 'The monthly routine', body: `
+        <ol><li><b>During the month:</b> after each event, open it in Events, mark the readiness sign-off scorecard and record the person signing off.</li>
+        <li><b>Month end:</b> enter confirmed deductions in Monthly. Only rows ticked Confirmed count.</li>
+        <li>Tick <b>Not assessed</b> for any KPI covered by Part F relief (for example the field closed by TAU, a declared extreme weather event or a failed TAU asset) and record the reason.</li>
+        <li>In Setup, set <b>Last month reported</b> to this month so later months stay blank.</li>
+        <li>Review the Dashboard: overall score, fee paid, rectification test and escalation tests.</li>
+        <li>Save the PDF report and export a backup.</li></ol>` },
+      { id: 'dashboard', title: 'Dashboard', body: `
+        <p>The Dashboard summarises the month chosen in the top bar and the year to date.</p>
+        <dl><dt>Overall score</dt><dd>The weighted score for the month, out of 100.</dd>
+        <dt>Fee paid and abatement</dt><dd>The share of the monthly performance fee paid, and the amount withheld.</dd>
+        <dt>Rectification plan</dt><dd>Shows when a plan is required: any event failure, any critical standard failure, or ${st.rectificationMonths} consecutive months below ${st.passThreshold}.</dd>
+        <dt>KPI results table</dt><dd>One row per KPI: its weight this month, result, status, event score, deductions, year average, months below and failed event standards this year.</dd>
+        <dt>KPI results by month</dt><dd>A heat map of every KPI for every month. Orange is below the pass mark, teal is towards 100. Blank means not reported or not assessed; a dash means the KPI has 0% weight that month.</dd>
+        <dt>Escalation and incentive</dt><dd>The Part F tests for the year: months below the threshold, three in any six, six in any twelve, critical months and incentive progress.</dd></dl>` },
+      { id: 'events', title: 'Events and readiness sign-off', body: `
+        <p><b>Add event</b>, enter the date, name and tier, then mark each standard Pass or Fail. A failed standard asks for a reading or observation (for example a photo reference).</p>
+        <ul><li>Each KPI with event-scored standards starts at 100 at every event and loses ${st.eventPoints} points per failed standard (not below 0).</li>
+        <li>The KPI columns in the events list (M, L, I, G and so on) show each KPI's event score. Hover over a heading for the full KPI name.</li>
+        <li><b>Mark unchecked as pass</b> fills in every standard you have not marked yet.</li>
+        <li>KPI-V Renovation is scored only at the <b>first event after renovation</b>; tick that box on the event.</li>
+        <li>A standard fixed before kick-off still records the fail.</li></ul>` },
+      { id: 'deductions', title: 'Monthly deductions and relief', body: `
+        <p>Use <b>Add deduction</b> for each confirmed item: choose the standard, the count and tick Confirmed by the Principal's Representative.</p>
+        <dl><dt>Category B Breach (${cat('B')} points each)</dt><dd>Incidents, audit breaches, items missed or not corrected, and monthly measured standards outside target and tolerance.</dd>
+        <dt>Category D Timeliness and records (${cat('D')} points each)</dt><dd>Late responses, repairs or quotes, missed test rounds, late or incomplete records.</dd>
+        <dt>Category G Report only (${cat('G')} points)</dt><dd>KPI-U Usage Cameras: logged and reported, not scored. U1.7 and U1.9 are still critical, so a confirmed breach still triggers a rectification plan.</dd></dl>
+        <p>Deductions for one standard are capped at ${st.capPerStandard} points a month.</p>
+        <p>In the KPI results table, <b>Events</b> is the number of events scored, <b>Mean event score</b> is their average (${st.noEventScore} when there is no event), <b>Deductions</b> is the confirmed points taken off, and <b>Result</b> is the mean less deductions.</p>` },
+      { id: 'weights', title: 'KPI weightings by month', body: `
+        <p>Not every activity happens every month, so each KPI has a weight for each month (Setup, KPI weightings by month). The overall score uses that month's weights. Each month should total 100%.</p>
+        <ul><li><b>KPI-V Renovation:</b> counts in ${onMonths('KPI-V') || 'the renovation months'} only.</li>
+        <li><b>KPI-GD Gardens:</b> higher weight in ${onMonths('KPI-GD')} (the main garden rounds), a lower weight in other months.</li>
+        <li><b>KPI-HS Hard Surfaces:</b> higher weight in ${onMonths('KPI-HS')} (the main hard surface rounds), a lower weight in other months.</li>
+        <li>The other turf KPIs share the rest of each month in proportion to their base weights.</li></ul>
+        <p>A KPI with 0% weight in a month shows <b>Not scored this month</b> and does not affect the score. Change weights in Setup; <b>Restore model settings</b> returns to the V4 weights.</p>` },
+      { id: 'scoring', title: 'How the score and fee are worked out', body: `
+        <ol><li><b>Event score</b> for each KPI at each event: 100 less ${st.eventPoints} per failed standard.</li>
+        <li><b>KPI result</b> for the month: average event score (${st.noEventScore} with no event) less confirmed deductions, capped at ${st.capPerStandard} points per standard.</li>
+        <li><b>Overall score:</b> KPI results multiplied by this month's weights, divided by the weights of the KPIs assessed (relief moves a KPI's weight to the others).</li>
+        <li><b>Fee:</b> ${st.passThreshold} or above pays 100%. Below ${st.passThreshold} the fee reduces ${pc(st.abatementPerPoint)} per full point, capped at ${pc(st.abatementCap)}.</li></ol>
+        <p><b>Example:</b> an overall score of 87.0 is 3 full points below ${st.passThreshold}, so ${pc(1 - 3 * st.abatementPerPoint)} of the ${money(st.monthlyFee)} fee is paid and ${money(3 * st.abatementPerPoint * st.monthlyFee)} is withheld.</p>` },
+      { id: 'status', title: 'What the status labels mean', body: `
+        <dl><dt>Pass</dt><dd>The KPI result is at or above that KPI's pass mark.</dd>
+        <dt>Below (number)</dt><dd>The result is below the KPI's pass mark shown.</dd>
+        <dt>Not scored this month</dt><dd>The KPI has 0% weight this month, so it is not scored.</dd>
+        <dt>Not assessed</dt><dd>Part F relief was ticked for this KPI this month.</dd>
+        <dt>Not reported</dt><dd>The month is after the last month reported (Setup).</dd>
+        <dt>CRITICAL</dt><dd>A critical standard: any confirmed failure needs a rectification plan whatever the score.</dd></dl>` },
+      { id: 'escalation', title: 'Rectification, escalation and incentive', body: `
+        <ul><li><b>Rectification plan</b> within 5 working days: any event failure, any critical failure, or ${st.rectificationMonths} consecutive months below ${st.passThreshold}.</li>
+        <li><b>Formal performance review:</b> three months below ${st.passThreshold} in any six.</li>
+        <li><b>Notice of default:</b> six months below ${st.passThreshold} in any twelve, or a failed rectification plan.</li>
+        <li><b>Incentive:</b> ${st.incentiveMonths} or more months at ${st.incentiveScore} or above, with condition trends improving (tick this in Setup), releases the incentive pool.</li></ul>
+        <p>The full ladder is in the Model tab (Part F).</p>` },
+      { id: 'bands', title: 'Annual band reconciliation', body: `
+        <p>For each band line, enter the tendered lump sum, minimum and maximum quantities, the rate above the maximum and the credit below the minimum, then the quantity logged for the year and the units above the maximum that TAU caused.</p>
+        <ul><li>Units above the maximum are paid only where TAU caused them (the lesser of the two).</li>
+        <li>Units below the minimum earn the Principal a credit, reduced to ${pc(st.creditShare)} when <b>All met</b> is ticked.</li></ul>` },
+      { id: 'model', title: 'Model and Model overview tabs', body: `
+        <p><b>Model</b> lists the KPIs, scoring categories, score to fee table, escalation ladder and all ${M.standards.length} performance standards with their targets and how they are measured. Use the filter and search to find a standard.</p>
+        <p><b>Model overview</b> explains the model in pictures: how a month is scored, the weightings and the escalation steps. It is useful for briefing new staff.</p>` },
+      { id: 'setup', title: 'Setup', body: `
+        <ul><li><b>Contractor:</b> rename the sample contractor or add another.</li>
+        <li><b>Reporting:</b> year name, first month, last month reported and the condition trends tick for the incentive.</li>
+        <li><b>Fee, score and scoring settings:</b> monthly fee, pass threshold, abatement, incentive, points and caps.</li>
+        <li><b>KPI weightings by month</b> and each KPI's pass mark.</li>
+        <li><b>Data:</b> export to Excel, export and import backups, clear all data, load sample data.</li></ul>
+        <p>Settings changed here apply only in this browser. When the model is updated, saved weightings reset once to the new model and a notice explains this; events, deductions and bands are kept.</p>` },
+      { id: 'faq', title: 'Common questions', body: `
+        <dl><dt>Why does a KPI show 100 when nothing happened?</dt><dd>With no event in a month the event score starts at ${st.noEventScore}; only confirmed deductions reduce it.</dd>
+        <dt>Why is the month blank?</dt><dd>It is after the last month reported. Change it in Setup.</dd>
+        <dt>My deduction is not counting.</dt><dd>Tick Confirmed by PR, check the month in the top bar, and remember the ${st.capPerStandard}-point cap per standard.</dd>
+        <dt>A colleague cannot see my results.</dt><dd>Results stay in your browser. Send them a backup file (Setup &gt; Export backup).</dd>
+        <dt>Does the app match the Excel Calculation Sheet?</dt><dd>Yes, it uses the same rules and weights as Calculation Sheet V4. Export to Excel to compare.</dd>
+        <dt>How do I print the manual?</dt><dd>Use the Print manual button at the top of this page.</dd></dl>` }
+    ];
+  }
+  const helpText = h => (h.title + ' ' + h.body.replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ');
+  function helpMatches(q) {
+    const words = q.toLowerCase().split(/[^a-z0-9-]+/).filter(w => w.length > 2 && !['the', 'and', 'what', 'how', 'why', 'does', 'can', 'for', 'this', 'that', 'with', 'are', 'not', 'when', 'where', 'which', 'who', 'you', 'our', 'have', 'from', 'there', 'will', 'should', 'would'].includes(w));
+    if (!words.length) return [];
+    return helpSections().map(h => { const t = helpText(h).toLowerCase(); const sc = words.reduce((a, w) => a + (t.split(w).length - 1) + (h.title.toLowerCase().includes(w) ? 3 : 0), 0);
+      let snip = ''; const w = words.find(w => t.includes(w)); if (w) { const full = helpText(h), i = full.toLowerCase().indexOf(w); snip = (i > 60 ? '… ' : '') + full.slice(Math.max(0, i - 60), i + 120) + ' …'; }
+      return { h, sc, snip, words }; }).filter(x => x.sc > 0).sort((a, b) => b.sc - a.sc).slice(0, 4);
+  }
+  function renderHits(q) {
+    const box = $('#helpHits'); if (!box) return;
+    const hits = helpMatches(q);
+    const mark = (txt, words) => words.reduce((a, w) => a.replace(new RegExp('(' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig'), '<mark>$1</mark>'), esc(txt));
+    box.innerHTML = !q.trim() ? '' : hits.length ? `<div class="small muted">These parts of the manual may answer your question:</div>${hits.map(x => `<a href="#help" data-helpgo="${x.h.id}"><b>${esc(x.h.title)}</b><div class="small">${mark(x.snip, x.words)}</div></a>`).join('')}`
+      : '<div class="small muted">No matching section in the manual. Send the question below.</div>';
+  }
+  function vHelp() {
+    const secs = helpSections();
+    return `
+    <div class="head"><div><div class="label">User manual</div><h1>Help</h1></div><div class="row"><button class="btn" data-act="print">Print manual</button></div></div>
+    <div class="card help-ask" id="ask"><h2>Ask a question</h2>
+      <p class="muted small">Type your question. Matching parts of the manual appear as you type. If they do not answer it, send it to Greenspace Consulting and you will get a reply by email.</p>
+      <textarea id="helpQ" placeholder="For example: why is KPI-V not scored in October?" aria-label="Your question"></textarea>
+      <div id="helpHits" class="help-hits" aria-live="polite"></div>
+      <div class="kv"><label class="field">Your name<input type="text" id="helpName" autocomplete="name"></label><label class="field">Your email (for the reply)<input type="email" id="helpEmail" autocomplete="email"></label></div>
+      <div class="row"><button class="btn primary" data-act="sendQ">Send question</button><span class="muted small">Sent with the page you were on and the month selected, to help answer it.</span></div></div>
+    <div class="help-grid">
+      <nav class="card help-toc" aria-label="Manual contents"><div class="label">Contents</div>${secs.map(h => `<a href="#help" data-helpgo="${h.id}">${esc(h.title)}</a>`).join('')}<a href="#help" data-helpgo="ask">Ask a question</a></nav>
+      <div>${secs.map(h => `<section class="card help-sec" id="help-${h.id}"><h2>${esc(h.title)}</h2>${h.body}</section>`).join('')}</div>
+    </div>`;
+  }
+  let lastView = 'dashboard';
+  async function sendQuestion(btn) {
+    const q = ($('#helpQ').value || '').trim(), name = ($('#helpName').value || '').trim(), email = ($('#helpEmail').value || '').trim();
+    if (!q) { toast('Type your question first'); $('#helpQ').focus(); return; }
+    const ctx = `Page: ${lastView} · Contractor: ${S.ui.contractor} · Year: ${yearObj().name} · Month: ${S.ui.month} · App: ${M.version}`;
+    const body = new URLSearchParams({ 'form-name': 'app-question', 'bot-field': '', name, email, question: q, context: ctx });
+    btn.disabled = true;
+    try {
+      const r = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body.toString() });
+      if (!r.ok) throw new Error(r.status);
+      $('#helpQ').value = ''; renderHits(''); toast('Question sent. Thank you.');
+    } catch (e) {
+      location.href = `mailto:${HELP_EMAIL}?subject=${encodeURIComponent('Stadium Performance Model question')}&body=${encodeURIComponent(q + '\n\n' + (name ? 'From: ' + name + (email ? ' <' + email + '>' : '') + '\n' : '') + ctx)}`;
+      toast('Opening your email to send the question');
+    } finally { btn.disabled = false; }
+  }
+
   /* ---------- routing & events ---------- */
-  const views = { dashboard: vDashboard, events: vEvents, deductions: vDeductions, bands: vBands, model: vModel, overview: vOverview, setup: vSetup };
+  const views = { dashboard: vDashboard, events: vEvents, deductions: vDeductions, bands: vBands, model: vModel, overview: vOverview, setup: vSetup, help: vHelp };
   function route(keepScroll) {
     const v = (location.hash || '#dashboard').slice(1), name = views[v] ? v : 'dashboard';
     document.querySelectorAll('.tabs a').forEach(a => a.setAttribute('aria-current', a.dataset.view === name ? 'page' : 'false'));
@@ -547,6 +697,7 @@
     modelNotice = '';
     $('#app').innerHTML = `<section class="view">${note}${views[name]()}</section>`;
     if (name === 'dashboard') charts = drawCharts();
+    if (name !== 'help') lastView = name;
     if (keepScroll) window.scrollTo(0, y);
   }
   const curEvent = () => (yd().events || []).find(e => e.id === S.ui.event);
@@ -557,6 +708,7 @@
     if ('pf' in t.dataset) { const ev = curEvent(), ref = t.closest('[data-ref]').dataset.ref; ev.results = ev.results || {};
       if (!t.dataset.pf) delete ev.results[ref]; else ev.results[ref] = { ...(ev.results[ref] || {}), r: t.dataset.pf };
       dirty(); save(); route(true); return; }
+    if (t.dataset.helpgo) { e.preventDefault(); const el = document.getElementById(t.dataset.helpgo === 'ask' ? 'ask' : 'help-' + t.dataset.helpgo); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.add('help-flash'); setTimeout(() => el.classList.remove('help-flash'), 1500); } return; }
     const act = t.dataset.act; if (!act) return;
     const d = yd();
     if (act === 'print') window.print();
@@ -566,6 +718,7 @@
     if (act === 'allPass') { const ev = curEvent(); M.standards.filter(s => s.event && (s.kpi !== 'KPI-V' || ev.firstAfterRenovation)).forEach(s => { if (!ev.results[s.ref]) ev.results[s.ref] = { r: 'pass', note: '' }; }); dirty(); save(); route(true); }
     if (act === 'addDed') { (d.deductions = d.deductions || []).push({ id: uid('d'), month: S.ui.month, ref: M.standards.find(s => s.cat).ref, count: 1, confirmed: false, note: '' }); dirty(); save(); route(true); }
     if (act === 'delDed') { const id = t.closest('[data-did]').dataset.did; d.deductions = d.deductions.filter(x => x.id !== id); save(); route(true); }
+    if (act === 'sendQ') sendQuestion(t);
     if (act === 'exportXlsx') exportXlsx();
     if (act === 'exportJson') download(`stadium-performance-model-${new Date().toISOString().slice(0, 10)}.json`, JSON.stringify(S, null, 1));
     if (act === 'importJson') $('#importFile').click();
@@ -579,6 +732,7 @@
   });
   document.addEventListener('input', e => {
     const t = e.target, d = yd();
+    if (t.id === 'helpQ') { renderHits(t.value); return; }
     if (t.matches('[data-evnote]')) { const ev = curEvent(), ref = t.closest('[data-ref]').dataset.ref; ev.results[ref].note = t.value; save(); }
     else if (t.matches('[data-ev="name"], [data-ev="signedBy"]')) { curEvent()[t.dataset.ev] = t.value; dirty(); save(); }
     else if (t.matches('[data-d="note"]')) { const x = d.deductions.find(x => x.id === t.closest('[data-did]').dataset.did); x.note = t.value; save(); }

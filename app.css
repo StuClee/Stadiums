@@ -143,6 +143,8 @@ table.heat th.sel { color: var(--ink); font-weight: 800; font-size: .8rem; }
 .pf button { font: 700 12.5px var(--f-body); border: 1.5px solid var(--line); background: var(--surface); color: var(--muted); border-radius: 6px; padding: 6px 12px; min-height: 34px; cursor: pointer; }
 .pf button[aria-pressed="true"].p { border-color: var(--good); background: var(--good-soft); color: var(--good); }
 .pf button[aria-pressed="true"].f { border-color: var(--bad); background: var(--bad-soft); color: var(--bad); }
+.pf button[aria-pressed="true"].na { border-color: var(--muted); background: var(--surface-2); color: var(--ink); }
+.pf button.un:disabled { opacity: .4; cursor: default; }
 .std-row { display: grid; grid-template-columns: 64px 1fr auto; gap: 6px 14px; padding: 10px 0; border-top: 1px solid var(--line); align-items: start; }
 .std-row:first-of-type { border-top: 0; }
 .std-row .note { grid-column: 2 / -1; }

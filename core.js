@@ -21,12 +21,16 @@
   const eventKpi = k => M.standards.some(s => s.kpi === k && s.event);
 
   /* Event score for one KPI at one event: 100 less points per failed event-scored standard (floor 0).
-     Null when the KPI has no event-scored standards, or for KPI-V unless it is the first event after renovation. */
+     Null when the KPI has no event-scored standards, when all of them are N/A at this event, or for KPI-V unless it is the first event after renovation. */
   function eventScore(cfg, ev, k) {
     if (!eventKpi(k)) return null;
     if (k === 'KPI-V' && !ev.firstAfterRenovation) return null;
+    // Standards marked N/A for this event are left out. If every event standard of the KPI is N/A,
+    // the KPI is not scored at this event and the event is left out of that KPI's monthly mean.
+    const res = ev.results || {}, stds = M.standards.filter(s => s.kpi === k && s.event);
+    if (stds.length && stds.every(s => (res[s.ref] || {}).r === 'na')) return null;
     let fails = 0;
-    Object.entries(ev.results || {}).forEach(([ref, r]) => { const s = STD[ref]; if (s && s.kpi === k && s.event && r && r.r === 'fail') fails++; });
+    Object.entries(res).forEach(([ref, r]) => { const s = STD[ref]; if (s && s.kpi === k && s.event && r && r.r === 'fail') fails++; });
     return Math.max(0, 100 - cfg.settings.eventPoints * fails);
   }
 

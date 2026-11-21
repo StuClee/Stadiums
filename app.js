@@ -174,10 +174,10 @@
     const c = cfg(), d = yd(), evs = (d.events || []).slice().sort((a, b) => (a.date || '').localeCompare(b.date || ''));
     let ev = evs.find(e => e.id === S.ui.event);
     const evKpis = M.kpis.filter(k => C.eventKpi(k.id));
-    const list = evs.map(e => { const nf = Object.values(e.results || {}).filter(r => r.r === 'fail').length;
+    const list = evs.map(e => { const nf = Object.values(e.results || {}).filter(r => r.r === 'fail').length, nna = Object.values(e.results || {}).filter(r => r.r === 'na').length;
       const ok = months().includes(e.month);
       return `<tr class="${e.id === S.ui.event ? 'ev-sel' : ''}"><td style="white-space:nowrap">${esc(e.date)}</td><td><a href="#events" data-event="${e.id}" title="Open the scorecard to mark or change results"><b>${esc(e.name || 'Untitled event')}</b></a>${e.firstAfterRenovation ? ' <span class="chip">First after renovation</span>' : ''}${ok ? '' : ' <span class="warn-note">Date outside this contract year</span>'}</td>
-        <td>${esc(e.tier ? 'Tier ' + e.tier : '')}</td><td class="num">${nf ? `<span class="status s-fail">${nf} fail${nf > 1 ? 's' : ''}</span>` : '<span class="status s-pass">All pass</span>'}</td>
+        <td>${esc(e.tier ? 'Tier ' + e.tier : '')}</td><td class="num">${nf ? `<span class="status s-fail">${nf} fail${nf > 1 ? 's' : ''}</span>` : '<span class="status s-pass">All pass</span>'}${nna ? `<div class="small muted">${nna} N/A</div>` : ''}</td>
         ${evKpis.map(k => { const v = C.eventScore(c, e, k.id); return `<td class="num" style="${heatColour(v, c.pass[k.id])}">${v == null ? '' : v}</td>`; }).join('')}</tr>`; }).join('');
     let detail = '';
     if (ev) {
@@ -186,17 +186,17 @@
         const off = k.id === 'KPI-V' && !ev.firstAfterRenovation;
         const sc = C.eventScore(c, ev, k.id);
         return `<div class="card"><div class="flex-between"><h3><span class="pill-k">${k.id}</span> ${esc(k.name)}</h3>
-          <span>${off ? '<span class="status s-na">Scored only at the first event after renovation</span>' : `Event score <b>${sc}</b>`}</span></div>
+          <span>${off ? '<span class="status s-na">Scored only at the first event after renovation</span>' : (sc == null ? '<span class="status s-na">All N/A: not scored at this event</span>' : `Event score <b>${sc}</b>`)}</span></div>
           ${off ? '' : stds.map(s => { const r = (ev.results || {})[s.ref] || {};
             return `<div class="std-row" data-ref="${s.ref}"><span class="pill-k">${s.ref}</span>
               <div><b>${esc(s.name)}</b>${s.critical ? ' <span class="crit">CRITICAL</span>' : ''}<div class="small muted">${esc(s.target || '')}</div>
                 <details><summary>How it is measured</summary><dl class="info"><dt>Applies</dt><dd>${esc(s.applies || '')}</dd><dt>Measurement</dt><dd>${esc(s.measure || '')}</dd><dt>Measured by</dt><dd>${esc(s.by || '')}</dd><dt>KPI link</dt><dd>${esc(s.link)}</dd></dl></details></div>
-              <div class="pf"><button class="p" data-pf="pass" aria-pressed="${r.r === 'pass'}">Pass</button><button class="f" data-pf="fail" aria-pressed="${r.r === 'fail'}">Fail</button>${r.r ? '<button data-pf="" aria-pressed="false">Clear</button>' : ''}</div>
-              ${r.r === 'fail' ? `<input class="note" type="text" data-evnote placeholder="Reading or observation, photo reference" value="${esc(r.note || '')}">` : ''}</div>`; }).join('')}</div>`; }).join('');
+              <div class="pf"><button class="p" data-pf="pass" aria-pressed="${r.r === 'pass'}">Pass</button><button class="f" data-pf="fail" aria-pressed="${r.r === 'fail'}">Fail</button><button class="na" data-pf="na" aria-pressed="${r.r === 'na'}" title="Not applicable at this event: left out of the score">N/A</button><button class="un" data-pf="" ${r.r ? '' : 'disabled'} title="Remove the result: back to not checked">Unmark</button></div>
+              ${r.r === 'fail' ? `<input class="note" type="text" data-evnote placeholder="Reading or observation, photo reference" value="${esc(r.note || '')}">` : r.r === 'na' ? `<input class="note" type="text" data-evnote placeholder="Why it does not apply at this event (agreed with the Principal's Representative)" value="${esc(r.note || '')}">` : ''}</div>`; }).join('')}</div>`; }).join('');
       const checked = Object.keys(ev.results || {}).length, total = M.standards.filter(s => s.event && (s.kpi !== 'KPI-V' || ev.firstAfterRenovation)).length;
       detail = `
       <div class="card sticky-bar" id="scorecard"><div class="flex-between"><div><div class="label">Readiness sign-off scorecard</div><h2>${esc(ev.name || 'Untitled event')}</h2></div>
-        <div class="row"><a href="#events" class="btn" data-act="toList">Back to event list</a><span class="muted small">${checked} of ${total} standards checked</span><button class="btn" data-act="allPass">Mark unchecked as pass</button><button class="btn danger" data-act="delEvent">Delete event</button></div></div></div>
+        <div class="row"><a href="#events" class="btn" data-act="toList">Back to event list</a><span class="muted small">${checked} of ${total} standards checked${Object.values(ev.results || {}).filter(r => r.r === 'na').length ? ` (${Object.values(ev.results || {}).filter(r => r.r === 'na').length} N/A)` : ''}</span><button class="btn" data-act="allPass">Mark unchecked as pass</button><button class="btn danger" data-act="delEvent">Delete event</button></div></div></div>
       <div class="card kv">
         <label class="field">Event date<input type="date" data-ev="date" value="${esc(ev.date || '')}"></label>
         <label class="field">Event and code<input type="text" data-ev="name" value="${esc(ev.name || '')}" placeholder="e.g. NRL round 12"></label>
@@ -577,10 +577,12 @@
         <dt>KPI results by month</dt><dd>A heat map of every KPI for every month. Orange is below the pass mark, teal is towards 100. Blank means not reported or not assessed; a dash means the KPI has 0% weight that month.</dd>
         <dt>Escalation and incentive</dt><dd>The Part F tests for the year: months below the threshold, three in any six, six in any twelve, critical months and incentive progress.</dd></dl>` },
       { id: 'events', title: 'Events and readiness sign-off', body: `
-        <p><b>Add event</b>, enter the date, name and tier, then mark each standard Pass or Fail. To change an existing event, click its name in the events list: the page moves down to its scorecard, where you can change any Pass or Fail (or Clear it). <b>Back to event list</b> returns to the top.</p><p> A failed standard asks for a reading or observation (for example a photo reference).</p>
+        <p><b>Add event</b>, enter the date, name and tier, then mark each standard Pass or Fail. To change an existing event, click its name in the events list: the page moves down to its scorecard, where you can change any Pass or Fail, or Unmark it to go back to not checked. <b>Back to event list</b> returns to the top.</p><p> A failed standard asks for a reading or observation (for example a photo reference).</p>
         <ul><li>Each KPI with event-scored standards starts at 100 at every event and loses ${st.eventPoints} points per failed standard (not below 0).</li>
         <li>The KPI columns in the events list (M, L, I, G and so on) show each KPI's event score. Hover over a heading for the full KPI name.</li>
         <li><b>Mark unchecked as pass</b> fills in every standard you have not marked yet.</li>
+        <li><b>N/A</b> leaves a standard out of this event's score when it does not apply (for example no goal posts used, or no lighting at a day event). Record why, and agree it with the Principal's Representative at sign-off. If every standard of a KPI is N/A, that KPI is not scored at the event and the event is left out of its monthly average.</li>
+        <li><b>Unmark</b> removes a Pass, Fail or N/A so the standard is back to not checked. It is greyed out when there is nothing to remove.</li>
         <li>KPI-V Renovation is scored only at the <b>first event after renovation</b>; tick that box on the event.</li>
         <li>A standard fixed before kick-off still records the fail.</li></ul>` },
       { id: 'deductions', title: 'Monthly deductions and relief', body: `

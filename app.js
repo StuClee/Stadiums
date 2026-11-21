@@ -324,14 +324,13 @@
         <td class="num"><b>${f1(r.result)}</b></td><td>${statusOf(r, c.pass[k.id], k, Mx)}</td>
         <td><label class="row small"><input type="checkbox" data-na="${k.id}" ${na != null ? 'checked' : ''}> Not assessed</label>${na != null ? `<input type="text" data-nareason="${k.id}" value="${esc(na)}" placeholder="Relief reason (Part F)" style="width:100%;margin-top:4px">` : ''}</td></tr>`; }).join('');
     return `
-    <div class="head"><div><div class="label">${esc(S.ui.contractor)} · ${esc(mo)}</div><h1>Monthly deductions and relief</h1></div>
-      <div class="row"><button class="btn primary" data-act="addDed">Add deduction</button></div></div>
+    <div class="head"><div><div class="label">${esc(S.ui.contractor)} · ${esc(mo)}</div><h1>Monthly deductions and relief</h1></div></div>
     <div class="card sticky-bar"><div class="row" style="gap:22px">
       <div><div class="label">Overall score</div><div class="big" style="font-size:1.8rem">${f1(Mx.overall)}</div></div>
       <div><div class="label">Fee paid</div><div><b>${Mx.feePct == null ? '–' : pc(Mx.feePct)}</b> · abatement ${money(Mx.abatement)}</div></div>
       <div>${Mx.rectification ? '<span class="status s-below">Rectification plan required</span>' : ''}${!Mx.reported ? `<span class="status s-na">After the last month reported (${esc(d.lastReported)}); change it in Setup</span>` : ''}</div></div></div>
     ${howTo('monthly', `This page is where you <b>enter</b> everything for ${esc(mo)} that is not scored at an event. Event results are entered on the <a href="#events">Events</a> tab, and the full monthly report is on the <a href="#dashboard">Dashboard</a>.`, [
-      ['Log deductions', 'Click <b>Add deduction</b> in Step 1 (or at the top of the page). Choose the standard, enter the count and a note, then tick Confirmed once the Principal\'s Representative agrees; only confirmed rows count.'],
+      ['Log deductions', 'Click <b>Add deduction</b> in Step 1. Choose the standard, enter the count and a note, then tick Confirmed once the Principal\'s Representative agrees; only confirmed rows count.'],
       ['Record any relief', 'In KPI results, tick Not assessed for a KPI covered by Part F relief (for example a field closed by TAU or a declared extreme weather event) and give the reason. Its weight moves to the other KPIs.'],
       ['Check the results', 'The KPI results table and the bar above update as you go: each KPI\'s mean event score less deductions, the overall score, the fee paid and whether a rectification plan is needed.'],
       ['Report', 'Go to the Dashboard to review the month and save the PDF report.']])}

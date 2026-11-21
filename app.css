@@ -255,3 +255,7 @@ details.howto > p { margin-top: 10px; }
 .seg button { font: 600 14px var(--f-body); border: 0; background: transparent; color: var(--muted); padding: 9px 16px; min-height: 40px; cursor: pointer; }
 .seg button + button { border-left: 1.5px solid var(--line); }
 .seg button.on { background: var(--accent); color: var(--accent-ink); }
+
+/* Name and description columns read better left-aligned */
+table.t.kt td:nth-child(2), table.t.kt th:nth-child(2), table.t.tl td:not(.num), table.t.tl th:not(.num) { text-align: left; }
+table.t.kt th:nth-child(2) .th-sub, table.t.tl th .th-sub { margin-left: 0; }

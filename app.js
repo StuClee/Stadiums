@@ -772,16 +772,16 @@
     const secs = helpSections();
     return `
     <div class="head"><div><div class="label">User manual</div><h1>Help</h1></div><div class="row"><button class="btn" data-act="print">Print manual</button></div></div>
-    <div class="card help-ask" id="ask"><h2>Ask a question</h2>
+    <div class="help-topics" style="margin-top:0">
+      <div class="help-topics-head"><h2>Help topics</h2><div class="row"><button class="btn" data-act="helpOpenAll">Expand all</button><button class="btn" data-act="helpCloseAll">Collapse all</button></div></div>
+      ${secs.map(h => `<details class="help-sec" id="help-${h.id}"><summary><span>${esc(h.title)}</span></summary><div class="help-body">${h.body}</div></details>`).join('')}
+    </div>
+    <div class="card help-ask" style="margin-top:18px" id="ask"><h2>Ask a question</h2>
       <p class="muted small">Type your question. Matching parts of the manual appear as you type. If they do not answer it, send it to Greenspace Consulting and you will get a reply by email.</p>
       <textarea id="helpQ" placeholder="For example: why is KPI-V not scored in October?" aria-label="Your question"></textarea>
       <div id="helpHits" class="help-hits" aria-live="polite"></div>
       <div class="kv"><label class="field">Your name<input type="text" id="helpName" autocomplete="name"></label><label class="field">Your email (for the reply)<input type="email" id="helpEmail" autocomplete="email"></label></div>
-      <div class="row"><button class="btn primary" data-act="sendQ">Send question</button><span class="muted small">Sent with the page you were on and the month selected, to help answer it.</span></div></div>
-    <div class="help-grid">
-      <nav class="card help-toc" aria-label="Manual contents"><div class="label">Contents</div>${secs.map(h => `<a href="#help" data-helpgo="${h.id}">${esc(h.title)}</a>`).join('')}<a href="#help" data-helpgo="ask">Ask a question</a></nav>
-      <div>${secs.map(h => `<section class="card help-sec" id="help-${h.id}"><h2>${esc(h.title)}</h2>${h.body}</section>`).join('')}</div>
-    </div>`;
+      <div class="row"><button class="btn primary" data-act="sendQ">Send question</button><span class="muted small">Sent with the page you were on and the month selected, to help answer it.</span></div></div>`;
   }
   let lastView = 'dashboard';
   async function sendQuestion(btn) {
@@ -823,13 +823,14 @@
     if ('pf' in t.dataset) { const ev = curEvent(), ref = t.closest('[data-ref]').dataset.ref; ev.results = ev.results || {};
       if (!t.dataset.pf) delete ev.results[ref]; else ev.results[ref] = { ...(ev.results[ref] || {}), r: t.dataset.pf };
       dirty(); save(); route(true); return; }
-    if (t.dataset.helpgo) { e.preventDefault(); const el = document.getElementById(t.dataset.helpgo === 'ask' ? 'ask' : 'help-' + t.dataset.helpgo); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.add('help-flash'); setTimeout(() => el.classList.remove('help-flash'), 1500); } return; }
+    if (t.dataset.helpgo) { e.preventDefault(); const el = document.getElementById(t.dataset.helpgo === 'ask' ? 'ask' : 'help-' + t.dataset.helpgo); if (el) { if (el.tagName === 'DETAILS') el.open = true; el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.add('help-flash'); setTimeout(() => el.classList.remove('help-flash'), 1500); } return; }
     const act = t.dataset.act; if (!act) return;
     const d = yd();
     if (act === 'toList') { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
     if (act === 'dashMonth' || act === 'dashYtd') { S.ui.dashView = act === 'dashYtd' ? 'ytd' : 'month'; save(); route(true); return; }
     if (act === 'chartBar' || act === 'chartLine') { S.ui.scoreChart = act === 'chartLine' ? 'line' : 'bar'; save(); route(true); return; }
-    if (act === 'print') window.print();
+    if (act === 'helpOpenAll' || act === 'helpCloseAll') { document.querySelectorAll('details.help-sec').forEach(d => d.open = act === 'helpOpenAll'); return; }
+    if (act === 'print') { const ds = [...document.querySelectorAll('details.help-sec')], was = ds.map(d => d.open); ds.forEach(d => d.open = true); window.print(); ds.forEach((d, i) => d.open = was[i]); }
     if (act === 'pdf') savePdf(t);
     if (act === 'addEvent') { const ev = { id: uid('e'), date: '', month: '', name: '', tier: 'B', firstAfterRenovation: false, results: {} }; (d.events = d.events || []).push(ev); S.ui.event = ev.id; dirty(); save(); route(); toScorecard(); toast('Event added: enter its date and name'); }
     if (act === 'delEvent' && confirm('Delete this event and its scorecard?')) { d.events = d.events.filter(x => x.id !== S.ui.event); S.ui.event = null; save(); route(); }

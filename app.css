@@ -221,11 +221,18 @@ table.t td input[type=number] { margin: 0 auto; display: block; }
 table.t th:first-child .th-sub { margin-left: 0; }
 table.t th[title] { cursor: help; }
 /* Help and user manual */
-.help-grid { display: grid; grid-template-columns: minmax(200px, 260px) minmax(0, 1fr); gap: 18px; align-items: start; }
-.help-toc { position: sticky; top: 90px; }
-.help-toc a { display: block; padding: 5px 8px; border-radius: 6px; color: var(--ink); text-decoration: none; font-size: .92rem; }
-.help-toc a:hover { background: var(--surface-2); }
-.help-sec h2 { margin-top: 0; }
+.help-topics { margin-top: 18px; }
+.help-topics-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+.help-topics-head h2 { margin: 0; }
+details.help-sec { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); margin-bottom: 8px; }
+details.help-sec > summary { color: var(--ink); list-style: none; cursor: pointer; padding: 14px 18px; font-weight: 700; font-size: 1.05rem; display: flex; align-items: center; gap: 12px; border-radius: var(--r); }
+details.help-sec > summary::-webkit-details-marker { display: none; }
+details.help-sec > summary::before { content: ""; width: 8px; height: 8px; border-right: 2px solid var(--accent); border-bottom: 2px solid var(--accent); transform: rotate(-45deg); transition: transform .15s; flex: none; }
+details.help-sec[open] > summary::before { transform: rotate(45deg); }
+details.help-sec > summary:hover { background: var(--surface-2); }
+details.help-sec > summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+details.help-sec[open] > summary { border-bottom: 1px solid var(--line); border-radius: var(--r) var(--r) 0 0; }
+.help-body { padding: 4px 18px 16px 38px; }
 .help-sec p, .help-sec li { max-width: 78ch; line-height: 1.55; }
 .help-sec ol, .help-sec ul { padding-left: 22px; }
 .help-sec dt { font-weight: 700; margin-top: 8px; }
@@ -238,8 +245,8 @@ table.t th[title] { cursor: help; }
 .help-hits a:hover { border-color: var(--accent); }
 .help-hits mark { background: var(--accent-soft); color: inherit; padding: 0 2px; border-radius: 3px; }
 .help-flash { outline: 3px solid var(--accent); outline-offset: 4px; transition: outline-color 1.2s; }
-@media (max-width: 860px) { .help-grid { grid-template-columns: 1fr; } .help-toc { position: static; } }
-@media print { .help-toc, .help-ask { display: none; } .help-grid { display: block; } }
+@media (max-width: 860px) { .help-body { padding-left: 18px; } }
+@media print { .help-ask, .help-topics-head .row { display: none; } details.help-sec { box-shadow: none; break-inside: avoid-page; } details.help-sec > summary::before { display: none; } }
 
 table.t tr.ev-sel td { box-shadow: inset 0 3px 0 var(--accent), inset 0 -3px 0 var(--accent); font-weight: 700; }
 #scorecard { scroll-margin-top: 130px; }

@@ -374,6 +374,18 @@ details.howto > p { margin: 6px 0 0; }
 .tip .tip-n { margin-top: 4px; color: var(--muted); }
 .tip .status { font-size: .7rem; padding: 1px 7px; }
 [data-tip] { cursor: default; }
-table.heat td[data-tip]:hover { outline: 2px solid var(--ink); outline-offset: -2px; }
+table.heat td[data-tip]:hover, table.t td.h[data-tip]:hover { outline: 2px solid var(--ink); outline-offset: -2px; }
 .kbar-axis .kbar-track.axis span.axis-pass { font-weight: 700; color: var(--ink); }
 @media print { .tip { display: none !important; } }
+.tip .tip-ul { margin: 3px 0 0; padding-left: 16px; } .tip .tip-ul li { margin: 1px 0; }
+.tip .crit { font-size: .68rem; }
+/* Model overview: smaller text */
+.ov-lead p { font-size: .9rem; line-height: 1.5; }
+.ov-cards p, .ov-step p, .ov-src p, .ov-note, .ov-inc, .ov-wbar, .ov-cycle li, .ov-ex li { font-size: .83rem; }
+.ov-cards .card, .ov-step, .ov-src { padding: 10px 12px; }
+.ov-st { font-size: .95rem; }
+.ov-big { font-size: 2.1rem; }
+.ov-op { font-size: 1.6rem; }
+.ov-k { font-size: .76rem; }
+.ov-mini span { font-size: .8rem; }
+.ov-wbar { padding: 2px 0; }

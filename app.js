@@ -57,6 +57,11 @@
     if (r.notAssessed) return '<span class="status s-na">Not assessed</span>';
     return '<span class="status s-na">–</span>';
   };
+  // Hover card content (HTML escaped once more for use in a data-tip attribute)
+  function tipCard(head, sub, rows, note) {
+    return esc(`<div class="tip-h">${head}</div>${sub ? `<div class="tip-s">${sub}</div>` : ''}<dl>${(rows || []).filter(Boolean).map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join('')}</dl>${note ? `<div class="tip-n">${note}</div>` : ''}`);
+  }
+  const tipList = items => items.length ? `<ul class="tip-ul">${items.slice(0, 6).join('')}${items.length > 6 ? `<li>and ${items.length - 6} more</li>` : ''}</ul>` : '';
   function heatColour(v, pass) {
     if (v == null) return '';
     const dark = matchMedia('(prefers-color-scheme: dark)').matches;
@@ -99,7 +104,7 @@
         <td class="num">${r.events ? f1(r.mean) : '<span class="muted">no event</span>'}</td><td class="num">${r.ded ? '−' + r.ded : '0'}</td>
         <td class="num">${f1(a.avg)}</td><td class="num">${a.below}</td><td class="num">${a.fails}</td></tr>`; }).join('');
     // Hover cards: built from the same month results the page shows
-    const tipBox = (head, sub, rows, note) => esc(`<div class="tip-h">${head}</div>${sub ? `<div class="tip-s">${sub}</div>` : ''}<dl>${rows.filter(Boolean).map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join('')}</dl>${note ? `<div class="tip-n">${note}</div>` : ''}`);
+    const tipBox = tipCard;
     const refList = a => a.length ? ' <span class="tip-refs">' + [...new Set(a)].slice(0, 5).map(esc).join(', ') + (new Set(a).size > 5 ? ' …' : '') + '</span>' : '';
     const kTipMonth = (k, x) => {
       const r = x.kpi[k.id], pass = c.pass[k.id], w = x.weights[k.id] || 0, head = `${esc(k.id)} ${esc(k.name)}`;
@@ -296,11 +301,31 @@
     const c = cfg(), d = yd(), evs = (d.events || []).slice().sort((a, b) => (a.date || '').localeCompare(b.date || ''));
     let ev = evs.find(e => e.id === S.ui.event);
     const evKpis = M.kpis.filter(k => C.eventKpi(k.id));
+    const evTipKpi = (e, k) => {
+      const head = `${esc(k.id)} ${esc(k.name)}`, sub = `${esc(e.name || 'Untitled event')} · ${esc(e.date || '')}`;
+      if (k.id === 'KPI-V' && !e.firstAfterRenovation) return tipCard(head, sub, [], 'Scored only at the first event after renovation.');
+      const res = e.results || {}, stds = M.standards.filter(x => x.kpi === k.id && x.event);
+      const by = t => stds.filter(x => (res[x.ref] || {}).r === t), fails = by('fail'), nas = by('na'), passes = by('pass');
+      const open = stds.length - fails.length - nas.length - passes.length, v = C.eventScore(c, e, k.id), pass = c.pass[k.id];
+      if (v == null) return tipCard(head, sub, [['Standards', stds.length + ' all N/A']], 'Not scored at this event, so it is left out of the month\'s average.');
+      return tipCard(head, sub, [
+        ['Event score', `<b>${v}</b> <span class="status ${v < pass ? 's-below' : 's-pass'}">${v < pass ? 'Below ' + pass : 'Pass'}</span>`],
+        ['Standards', `${stds.length}: ${passes.length} pass, ${fails.length} fail${nas.length ? ', ' + nas.length + ' N/A' : ''}${open ? ', ' + open + ' not checked' : ''}`]],
+        (fails.length ? `Each failed standard takes ${c.settings.eventPoints} points:` + tipList(fails.map(x => `<li><span class="tip-refs">${esc(x.ref)}</span> ${esc(x.name)}${(res[x.ref] || {}).note ? ` <i>(${esc(res[x.ref].note)})</i>` : ''}${x.critical ? ' <b class="crit">CRITICAL</b>' : ''}</li>`)) : '')
+        + (open ? `<div>${open} not checked yet (not counted as fails).</div>` : ''));
+    };
+    const evTipResult = e => {
+      const res = e.results || {}, all = M.standards.filter(x => x.event && (x.kpi !== 'KPI-V' || e.firstAfterRenovation)), get = t => all.filter(x => (res[x.ref] || {}).r === t);
+      const fails = get('fail'), nas = get('na');
+      return tipCard(esc(e.name || 'Untitled event'), `${esc(e.date || '')}${e.tier ? ' · Tier ' + esc(e.tier) : ''}`, [
+        ['Failed', fails.length], ['N/A', nas.length], ['Not checked', all.length - fails.length - nas.length - get('pass').length]],
+        fails.length ? 'Failed standards:' + tipList(fails.map(x => `<li><span class="tip-refs">${esc(x.ref)}</span> ${esc(x.name)}${(res[x.ref] || {}).note ? ` <i>(${esc(res[x.ref].note)})</i>` : ''}${x.critical ? ' <b class="crit">CRITICAL</b>' : ''}</li>`)) : 'Every checked standard passed.');
+    };
     const list = evs.map(e => { const nf = Object.values(e.results || {}).filter(r => r.r === 'fail').length, nna = Object.values(e.results || {}).filter(r => r.r === 'na').length;
       const ok = months().includes(e.month);
       return `<tr class="${e.id === S.ui.event ? 'ev-sel' : ''}"><td style="white-space:nowrap">${esc(e.date)}</td><td><a href="#events" data-event="${e.id}" title="Open the scorecard to mark or change results"><b>${esc(e.name || 'Untitled event')}</b></a>${e.firstAfterRenovation ? ' <span class="chip">First after renovation</span>' : ''}${ok ? '' : ' <span class="warn-note">Date outside this contract year</span>'}</td>
-        <td>${esc(e.tier ? 'Tier ' + e.tier : '')}</td><td class="num">${nf ? `<span class="status s-fail">${nf} fail${nf > 1 ? 's' : ''}</span>` : '<span class="status s-pass">All pass</span>'}${nna ? `<div class="small muted">${nna} N/A</div>` : ''}</td>
-        ${evKpis.map(k => { const v = C.eventScore(c, e, k.id); return `<td class="num" style="${heatColour(v, c.pass[k.id])}">${v == null ? '' : v}</td>`; }).join('')}</tr>`; }).join('');
+        <td>${esc(e.tier ? 'Tier ' + e.tier : '')}</td><td class="num" data-tip="${evTipResult(e)}">${nf ? `<span class="status s-fail">${nf} fail${nf > 1 ? 's' : ''}</span>` : '<span class="status s-pass">All pass</span>'}${nna ? `<div class="small muted">${nna} N/A</div>` : ''}</td>
+        ${evKpis.map(k => { const v = C.eventScore(c, e, k.id); return `<td class="num h" style="${heatColour(v, c.pass[k.id])}" data-tip="${evTipKpi(e, k)}">${v == null ? '' : v}</td>`; }).join('')}</tr>`; }).join('');
     let detail = '';
     if (ev) {
       const groups = evKpis.map(k => {

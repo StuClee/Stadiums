@@ -320,3 +320,46 @@ details.more > summary { cursor: pointer; color: var(--accent); font-weight: 600
 @media print { details.more:not([open]) > *:not(summary) { display: block; } }
 .kbar-head { text-transform: uppercase; letter-spacing: .05em; font-size: .7rem; font-weight: 600; }
 .seg.seg-sm { margin: 0; } .seg.seg-sm button { font-size: 12.5px; padding: 4px 12px; min-height: 30px; }
+
+/* ---- Compact fit (23 Nov 2026): more on screen, text still comfortable ---- */
+body { font-size: 14.5px; line-height: 1.45; }
+h1 { font-size: 1.35rem; } h2 { font-size: 1.1rem; } h3 { font-size: .98rem; }
+.topbar-inner { padding: 6px 16px; gap: 6px 16px; flex-wrap: nowrap; }
+.brand { gap: 10px; flex: 0 1 auto; min-width: 0; }
+.brand-logo { padding-right: 10px; }
+.brand-logo img { height: 34px; }
+.brand-name { font-size: .95rem; }
+.brand-sub { font-size: .7rem; }
+.tabs { gap: 2px; flex-wrap: nowrap; }
+.tabs a { padding: 5px 9px; min-height: 32px; font-size: .88rem; white-space: nowrap; }
+.ctx { gap: 6px; flex-wrap: nowrap; }
+.ctx select { min-height: 32px; padding: 4px 8px; font-size: .88rem; width: auto; }
+@media (max-width: 1440px) { .brand-sub { display: none; } }
+#monthSel { max-width: 140px; }
+@media (max-width: 1060px) { .topbar-inner, .tabs, .ctx { flex-wrap: wrap; } }
+.wrap { padding: 12px 16px 48px; }
+.view { gap: 12px; }
+.card { padding: 12px 16px; }
+.btn { font-size: 13.5px; padding: 7px 12px; min-height: 34px; }
+.big { font-size: 2.1rem; }
+.tile .big { font-size: 1.75rem; }
+.tiles, .grid, .hero, .charts, .ov-cards { gap: 10px; }
+.tile { gap: 4px; }
+.chart-box { height: 220px; }
+table.t th { padding: 6px 8px; }
+table.t td { padding: 6px 8px; }
+.seg { margin-bottom: 10px; }
+.seg button { padding: 6px 14px; min-height: 34px; font-size: 13.5px; }
+.pf button { padding: 4px 10px; min-height: 30px; }
+.std-row { padding: 7px 0; }
+.summary, .sticky-bar { top: 50px; }
+#scorecard { scroll-margin-top: 110px; }
+details.howto > summary h2 { font-size: 1.05rem; }
+details.howto > p { margin: 6px 0 0; }
+.ov-cycle { gap: 10px 14px; margin-top: 8px; }
+.ov-cycle li { font-size: .86rem; padding-top: 6px; gap: 2px; line-height: 1.4; }
+.ov-cycle li::before { font-size: 1.1rem; }
+.ov-lead p { font-size: .98rem; }
+.kbars { gap: 4px; }
+.kbar { font-size: .86rem; }
+.mdot { width: 34px; height: 34px; }

@@ -46,6 +46,7 @@
   }
 
   function reported(months, month, last) {
+    if (last === 'none') return false;   // no month reported yet
     const i = months.indexOf(month), j = months.indexOf(last);
     return j < 0 ? true : i <= j;
   }

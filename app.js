@@ -186,7 +186,7 @@
     const tilesMonth = `
     <div class="tiles">
       <div class="card tile ${m.below ? 'bad' : ''}"><div class="label">Overall score · ${esc(m.month)}</div><div class="big">${m.overall == null ? '–' : f1(m.overall)}</div>
-        <div class="small">${m.overall == null ? (m.reported ? 'No KPIs assessed' : `After the last month reported (${esc(d.lastReported)})`) : m.below ? `Below the pass threshold of ${st.passThreshold}` : `Pass (threshold ${st.passThreshold})`}</div></div>
+        <div class="small">${m.overall == null ? (m.reported ? 'No KPIs assessed' : (d.lastReported === 'none' ? 'No months reported yet (Setup)' : `After the last month reported (${esc(d.lastReported)})`)) : m.below ? `Below the pass threshold of ${st.passThreshold}` : `Pass (threshold ${st.passThreshold})`}</div></div>
       <div class="card tile"><div class="label">Fee paid</div><div class="big">${m.feePct == null ? '–' : pc(m.feePct)}</div><div class="small">${m.fee == null ? '' : `${money(m.feePaid)} of ${money(m.fee)}`}</div></div>
       <div class="card tile ${m.abatement ? 'bad' : ''}"><div class="label">Abatement</div><div class="big">${money(m.abatement)}</div><div class="small">Year to date ${money(Y.abatement)}</div></div>
       <div class="card tile ${m.rectification ? 'bad' : 'good'}"><div class="label">Rectification plan</div><div class="big" style="font-size:1.5rem">${m.reported ? (m.rectification ? 'Required' : 'Not required') : '–'}</div>
@@ -210,7 +210,7 @@
     </div>
 `;
     return `
-    ${S.sample ? `<div class="card small no-print" style="background:var(--warn-soft);border-color:var(--warn-soft)"><b>Showing sample data for ${esc(SAMPLE.contractor)}.</b> These are illustrative results, not real assessments. Clear them in Setup before you start recording.</div>` : ''}
+    ${S.sample ? `<div class="card small no-print" style="background:var(--warn-soft);border-color:var(--warn-soft)"><b>Showing sample data for ${esc(SAMPLE.contractor)}.</b> These are illustrative results, not real assessments. Remove them with the button at the bottom of this page, or in Setup, before you start recording.</div>` : ''}
     ${!hasData() ? '<div class="card small no-print">Nothing recorded yet. <a href="#events">Record an event</a>, or <a href="#setup">load sample data</a> in Setup to see how the dashboard works.</div>' : ''}
     <div class="head"><div><div class="label">${esc(S.ui.contractor)} · ${esc(yearObj().name)} · ${esc(m.month)}</div><h1>Performance dashboard</h1></div>
       <div class="row no-print"><button class="btn primary" data-act="pdf">Save as PDF</button><button class="btn" data-act="print">Print</button></div></div>
@@ -252,7 +252,8 @@
         <tr><td>Band credits to Principal</td><td class="num">${money(bandsTot.credit)}</td></tr>
         <tr><td><b>Total paid to contractor</b></td><td class="num"><b>${money(Y.feePaid + bandsTot.extra - bandsTot.credit)}</b></td></tr></tbody></table></details>
         <p class="muted small">Bands are reconciled once a year (<a href="#bands">Bands</a>).</p></div>
-    </div>`;
+    </div>
+    ${S.sample ? `<div class="card no-print flex-between" style="background:var(--warn-soft);border-color:var(--warn-soft)"><div><b>Finished looking at the sample?</b><div class="small">Remove the ${esc(SAMPLE.contractor)} sample results to start recording real assessments. Settings and weightings are kept.</div></div><button class="btn danger" data-act="clearSample">Remove sample data</button></div>` : ''}`;
   }
 
   /* ---------- charts ---------- */
@@ -422,7 +423,7 @@
     <div class="card sticky-bar"><div class="row" style="gap:22px">
       <div><div class="label">Overall score</div><div class="big" style="font-size:1.8rem">${f1(Mx.overall)}</div></div>
       <div><div class="label">Fee paid</div><div><b>${Mx.feePct == null ? '–' : pc(Mx.feePct)}</b> · abatement ${money(Mx.abatement)}</div></div>
-      <div>${Mx.rectification ? '<span class="status s-below">Rectification plan required</span>' : ''}${!Mx.reported ? `<span class="status s-na">After the last month reported (${esc(d.lastReported)}); change it in Setup</span>` : ''}</div></div></div>
+      <div>${Mx.rectification ? '<span class="status s-below">Rectification plan required</span>' : ''}${!Mx.reported ? `<span class="status s-na">${d.lastReported === 'none' ? 'No months reported yet' : `After the last month reported (${esc(d.lastReported)})`}; change it in Setup</span>` : ''}</div></div></div>
     ${howTo('monthly', `This page is where you <b>enter</b> everything for ${esc(mo)} that is not scored at an event. Event results are entered on the <a href="#events">Events</a> tab, and the full monthly report is on the <a href="#dashboard">Dashboard</a>.`, [
       ['Log deductions', 'Click <b>Add deduction</b> in Step 1. Choose the standard, enter the count and a note, then tick Confirmed once the Principal\'s Representative agrees; only confirmed rows count.'],
       ['Record any relief', 'In KPI results, tick Not assessed for a KPI covered by Part F relief (for example a field closed by TAU or a declared extreme weather event) and give the reason. Its weight moves to the other KPIs.'],
@@ -625,7 +626,7 @@
     <div class="card"><h2>${esc(y.name)} reporting</h2><div class="kv" style="margin-top:10px">
       <label class="field">Year name<input type="text" data-yname value="${esc(y.name)}"></label>
       <label class="field">First month of the contract year<input type="month" data-ystart value="${(() => { const [mm, yy] = y.months[0].split('-'); return yy + '-' + String(MN.indexOf(mm) + 1).padStart(2, '0'); })()}"></label>
-      <label class="field">Last month reported<select data-last><option value="">All months</option>${y.months.map(m => `<option ${m === d.lastReported ? 'selected' : ''}>${m}</option>`).join('')}</select></label>
+      <label class="field">Last month reported<select data-last><option value="none" ${d.lastReported === 'none' ? 'selected' : ''}>None yet</option><option value="" ${!d.lastReported ? 'selected' : ''}>All months</option>${y.months.map(m => `<option ${m === d.lastReported ? 'selected' : ''}>${m}</option>`).join('')}</select></label>
       <label class="row small"><input type="checkbox" data-trends ${d.trendsImproving ? 'checked' : ''}> Condition trends improving (manual check for the incentive)</label></div>
       <p class="muted small">Months after the last month reported are left blank, so they do not score ${st.noEventScore} by default or count towards the incentive.</p>
       <div class="row"><button class="btn" data-act="addYear">Add next contract year</button></div></div>
@@ -756,7 +757,7 @@
         <li>Log incidents, audit breaches, late items and monthly measured standards in <b>Monthly</b>, and tick <b>Confirmed</b> once the Principal's Representative agrees.</li>
         <li>Check the result on the <b>Dashboard</b> and save the monthly report with <b>Save as PDF</b>.</li>
         <li>At year end, complete the <b>Bands</b> reconciliation.</li></ol>
-        <p>The first time you open the app it shows sample data for FieldTurf NZ (July to October 2026) so the screens are not empty. Clear it or rename the contractor in <b>Setup</b> before recording real results.</p>` },
+        <p>The first time you open the app it shows sample data for FieldTurf NZ (July to October 2026) so the screens are not empty. Click <b>Remove sample data</b> at the bottom of the Dashboard (or use Setup) before recording real results. Settings and weightings are kept, and no month counts as reported until you set <b>Last month reported</b> in Setup.</p>` },
       { id: 'data', title: 'Where your data is kept', body: `
         <p>Results are saved in <b>this browser on this computer only</b>. Nothing is uploaded to the website, and other people cannot see your entries.</p>
         <ul><li>To share results or move to another computer, use <b>Setup &gt; Export backup (JSON)</b>, send the file, then <b>Import backup</b> on the other computer. Importing replaces what is in that browser.</li>
@@ -932,6 +933,8 @@
     if (act === 'exportXlsx') exportXlsx();
     if (act === 'exportJson') download(`stadium-performance-model-${new Date().toISOString().slice(0, 10)}.json`, JSON.stringify(S, null, 1));
     if (act === 'importJson') $('#importFile').click();
+    if (act === 'clearSample' && confirm('Remove the sample results (events, deductions, relief and bands)? Settings and weightings are kept. You can load the sample again from Setup.')) {
+      const keep = S.settings; S = fresh(); S.settings = keep; S.contractors = ['Contractor']; S.ui.contractor = 'Contractor'; S.ui.month = M.contractYear.months[0]; S.sampleCleared = true; yd().lastReported = 'none'; save(); route(); window.scrollTo({ top: 0 }); toast('Sample data removed. Rename the contractor in Setup.'); }
     if (act === 'reset' && confirm('Clear all results and settings saved in this browser?')) { S = fresh(); S.sampleCleared = true; save(); route(); toast('Cleared'); }
     if (act === 'resetSettings' && confirm('Restore the model weightings and settings?')) { S.settings = { values: {}, weights: {}, mweights: {}, pass: {}, categories: {} }; save(); route(); }
     if (act === 'sample' && (!hasData() || confirm('Replace the results saved in this browser with sample data?'))) loadSample(true);

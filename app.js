@@ -98,9 +98,38 @@
         <td class="num">${pc(m.weights[k.id])}</td><td class="num"><b>${f1(r.result)}</b></td><td>${statusOf(r, pass, k, m)}</td>
         <td class="num">${r.events ? f1(r.mean) : '<span class="muted">no event</span>'}</td><td class="num">${r.ded ? '−' + r.ded : '0'}</td>
         <td class="num">${f1(a.avg)}</td><td class="num">${a.below}</td><td class="num">${a.fails}</td></tr>`; }).join('');
+    // Hover cards: built from the same month results the page shows
+    const tipBox = (head, sub, rows, note) => esc(`<div class="tip-h">${head}</div>${sub ? `<div class="tip-s">${sub}</div>` : ''}<dl>${rows.filter(Boolean).map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join('')}</dl>${note ? `<div class="tip-n">${note}</div>` : ''}`);
+    const refList = a => a.length ? ' <span class="tip-refs">' + [...new Set(a)].slice(0, 5).map(esc).join(', ') + (new Set(a).size > 5 ? ' …' : '') + '</span>' : '';
+    const kTipMonth = (k, x) => {
+      const r = x.kpi[k.id], pass = c.pass[k.id], w = x.weights[k.id] || 0, head = `${esc(k.id)} ${esc(k.name)}`;
+      if (!x.reported) return tipBox(head, x.month, [], 'Not reported yet: this month is after the last month reported (Setup).');
+      if (r.offMonth) return tipBox(head, x.month, [['Weight this month', '0%']], 'Not scored this month: this activity is not scheduled, so its weight goes to the other KPIs.');
+      const reason = ((d.notAssessed || {})[x.month] || {})[k.id];
+      if (r.notAssessed) return tipBox(head, x.month, [['Weight this month', pc(w) + ' (moved to other KPIs)']], 'Not assessed under Part F relief' + (typeof reason === 'string' && reason ? ': ' + esc(reason) : '.'));
+      const fails = x.failures.filter(f => f.s.kpi === k.id), deds = (d.deductions || []).filter(z => z.month === x.month && z.confirmed && (C.STD[z.ref] || {}).kpi === k.id);
+      const gap = r.result - pass;
+      return tipBox(head, x.month, [
+        ['Result', `<b>${f1(r.result)}</b> <span class="status ${gap < 0 ? 's-below' : 's-pass'}">${gap < 0 ? f1(-gap) + ' below pass' : 'Pass'}</span>`],
+        ['Pass mark', pass],
+        ['Weight this month', pc(w)],
+        ['Events', r.events ? `${r.events} scored, mean ${f1(r.mean)}` : 'No event (starts at 100)'],
+        ['Event failures', fails.length + refList(fails.map(f => f.ref))],
+        ['Deductions', (r.ded ? '−' + r.ded + ' pts' : 'None') + refList(deds.map(z => z.ref))],
+        x.weightAssessed ? ['Adds to overall', `${f1(w * r.result / x.weightAssessed)} of ${f1(x.overall)} pts`] : null]);
+    };
+    const kTipYtd = (k, a) => tipBox(`${esc(k.id)} ${esc(k.name)}`, 'Year to date · ' + esc(T.span), a.avg == null ? [] : [
+      ['Average result', `<b>${f1(a.avg)}</b> (pass mark ${c.pass[k.id]})`], ['Months scored', `${a.scored} of ${yms.length}`], ['Months below pass', a.below],
+      ['Average weight', pc(a.w)], ['Events scored', a.events], ['Event failures', a.fails], ['Deductions', a.ded ? '−' + a.ded + ' pts' : 'None']],
+      a.avg == null ? 'Not scored in the months reported so far.' : '');
+    const oTip = x => !x.reported || x.overall == null ? tipBox('Overall score', x.month, [], 'Not reported yet.') : tipBox('Overall score', x.month, [
+      ['Score', `<b>${f1(x.overall)}</b> <span class="status ${x.below ? 's-below' : 's-pass'}">${x.below ? 'Below ' + st.passThreshold : 'Pass'}</span>`],
+      ['Fee paid', `${money(x.feePaid)} of ${money(x.fee)}`], ['Abatement', money(x.abatement)], ['Events', x.events.length],
+      ['Event failures', x.failures.length], ['Critical failures', x.critical.length + refList(x.critical.map(z => z.ref))],
+      ['Rectification plan', x.rectification ? 'Required' : 'No'], x.consecutive ? ['Months below in a row', x.consecutive] : null]);
     const heat = `<table class="t heat"><thead><tr>${th('KPI', 'Key performance indicator')}${th('Avg weight', 'Across the year')}${Y.months.map(x => `<th class="${x.month === m.month ? 'sel' : ''}" style="text-align:center">${x.month.replace('-20', ' ')}</th>`).join('')}</tr></thead><tbody>
-      ${M.kpis.map(k => `<tr><td><span class="pill-k">${k.id}</span> <span class="small">${esc(shortName(k.id))}</span></td><td class="num muted">${pc(C.avgWeight(c, k.id))}</td>${Y.months.map(x => { const v = x.kpi[k.id].result; return `<td class="h ${x.month === m.month ? 'sel' : ''}" style="${heatColour(v, c.pass[k.id])}" title="${k.id} ${x.month}: ${v == null ? (x.reported ? (x.kpi[k.id].offMonth ? 'not scored this month (0% weight)' : 'not assessed') : 'not reported') : f1(v)}">${v == null ? (x.reported && x.kpi[k.id].offMonth ? '<span class="muted">–</span>' : '') : f0(v)}</td>`; }).join('')}</tr>`).join('')}
-      <tr><td><b>Overall</b></td><td></td>${Y.months.map(x => `<td class="h ${x.month === m.month ? 'sel' : ''}" style="${heatColour(x.overall, st.passThreshold)}"><b>${x.overall == null ? '' : f1(x.overall)}</b></td>`).join('')}</tr></tbody></table>`;
+      ${M.kpis.map(k => `<tr><td><span class="pill-k">${k.id}</span> <span class="small">${esc(shortName(k.id))}</span></td><td class="num muted">${pc(C.avgWeight(c, k.id))}</td>${Y.months.map(x => { const v = x.kpi[k.id].result; return `<td class="h ${x.month === m.month ? 'sel' : ''}" style="${heatColour(v, c.pass[k.id])}" data-tip="${kTipMonth(k, x)}">${v == null ? (x.reported && x.kpi[k.id].offMonth ? '<span class="muted">–</span>' : '') : f0(v)}</td>`; }).join('')}</tr>`).join('')}
+      <tr><td><b>Overall</b></td><td></td>${Y.months.map(x => `<td class="h ${x.month === m.month ? 'sel' : ''}" style="${heatColour(x.overall, st.passThreshold)}" data-tip="${oTip(x)}"><b>${x.overall == null ? '' : f1(x.overall)}</b></td>`).join('')}</tr></tbody></table>`;
     const failSrc = ytd ? yms.flatMap(x => x.failures) : m.failures;
     const fails = failSrc.map(f => `<tr><td style="white-space:nowrap">${esc(f.event.date)}</td><td>${esc(f.event.name)}</td><td><span class="pill-k">${f.ref}</span> ${esc(f.s.name)}${f.s.critical ? ' <span class="crit">CRITICAL</span>' : ''}</td><td>${esc(f.note || '')}</td></tr>`).join('');
     const ymSet = new Set(yms.map(x => x.month));
@@ -110,16 +139,16 @@
     // KPI result bars: one bar per KPI on a 0 to 100 scale, a tick at its pass mark
     const kBars = (rows, title) => `<div class="kbars" role="img" aria-label="${esc(title)}"><div class="kbar kbar-head muted small" aria-hidden="true"><span>KPI</span><span class="kbar-w">Weight</span><span>Result, 0 to 100 (tick = pass mark)</span><span>Score</span></div>${rows.map(r => {
       const off = r.v == null, below = !off && r.v < r.pass;
-      return `<div class="kbar" title="${esc(r.k.id + ' ' + r.k.name)}: ${off ? r.offText : f1(r.v)} (pass mark ${r.pass}, weight ${pc(r.w)})">
+      return `<div class="kbar" data-tip="${r.tip}">
         <span class="kbar-lab"><span class="pill-k">${r.k.id}</span> ${esc(shortName(r.k.id))}</span>
         <span class="kbar-w">${pc(r.w)}</span>
         <span class="kbar-track">${off ? `<span class="kbar-off">${r.offText}</span>` : `<span class="kbar-fill ${below ? 'below' : ''}" style="width:${Math.max(1, r.v)}%"></span>`}<span class="kbar-pass" style="left:${r.pass}%"></span></span>
         <span class="kbar-val">${off ? '–' : `<b>${f1(r.v)}</b>${below ? ' <span class="status s-below">Below</span>' : ''}`}</span></div>`; }).join('')}
-      <div class="kbar kbar-axis" aria-hidden="true"><span></span><span></span><span class="kbar-track axis"><span style="left:0">0</span><span style="left:50%">50</span><span style="left:100%">100</span></span><span></span></div></div>
+      <div class="kbar kbar-axis" aria-hidden="true"><span></span><span></span><span class="kbar-track axis"><span style="left:0">0</span><span style="left:50%">50</span>${[...new Set(rows.map(r => +r.pass))].filter(v => v > 0 && v < 100).map(v => `<span class="axis-pass" style="left:${v}%">${v}</span>`).join('')}<span style="left:100%">100</span></span><span></span></div></div>
       <p class="muted small">Teal = at or above the KPI's pass mark; orange = below. The dark tick on each bar is that KPI's pass mark. Hover over a bar for details.</p>`;
     const barsMonth = kBars(M.kpis.map(k => { const r = m.kpi[k.id]; return { k, v: r.result, pass: c.pass[k.id], w: m.weights[k.id] || 0,
-      offText: !m.reported ? 'Not reported' : r.offMonth ? 'Not scored this month' : r.notAssessed ? 'Not assessed' : 'No result' }; }), 'KPI results for ' + m.month);
-    const barsYtd = kBars(M.kpis.map(k => { const a = yk(k.id); return { k, v: a.avg, pass: c.pass[k.id], w: a.w || 0, offText: 'Not scored' }; }), 'KPI results year to date');
+      offText: !m.reported ? 'Not reported' : r.offMonth ? 'Not scored this month' : r.notAssessed ? 'Not assessed' : 'No result', tip: kTipMonth(k, m) }; }), 'KPI results for ' + m.month);
+    const barsYtd = kBars(M.kpis.map(k => { const a = yk(k.id); return { k, v: a.avg, pass: c.pass[k.id], w: a.w || 0, offText: 'Not scored', tip: kTipYtd(k, a) }; }), 'KPI results year to date');
     // Part F: a dot per month plus warning lights
     const dot = x => { const cls = !x.reported || x.overall == null ? 'na' : x.overall >= st.incentiveScore ? 'inc' : x.below ? 'bad' : 'ok';
       return `<span class="mdot ${cls}" title="${esc(x.month)}: ${x.overall == null ? 'not reported' : f1(x.overall)}"><span>${esc(x.month.split('-')[0])}</span></span>`; };
@@ -196,7 +225,7 @@
       <tbody>${kRowsYtd}</tbody></table></div></details></div>` : `<div class="card"><div class="flex-between"><h2>KPI results · ${esc(m.month)}</h2><span class="muted small">Result = mean event score less capped monthly deductions</span></div>${barsMonth}<details class="more"><summary>Show the full table</summary><div class="tablebox"><table class="t kt">
       <thead><tr>${th('KPI', 'Code')}${th('Name', 'Key performance indicator')}${th('Weight this month', 'Share of the overall score')}${th('Result', 'Out of 100')}${th('Status', 'Against the KPI pass mark')}${th('Event score', 'Average of the month\'s events')}${th('Deductions', 'Confirmed points taken off')}${th('Year avg', 'Months reported so far')}${th('Months below', 'Below the pass mark this year')}${th('Event fails', 'Failed standards this year')}</tr></thead>
       <tbody>${kRows}</tbody></table></div></details></div>`}
-    <div class="card"><h2>KPI results by month</h2><p class="muted small">Orange below the pass threshold, teal towards 100. Blank = not reported or not assessed; – = not scored that month (0% weight). The month shown is in bold.</p><div class="tablebox">${heat}</div></div>
+    <div class="card"><h2>KPI results by month</h2><p class="muted small">Orange below the pass threshold, teal towards 100. Blank = not reported or not assessed; – = not scored that month (0% weight). The month shown is in bold. Hover over a cell for details.</p><div class="tablebox">${heat}</div></div>
     <div class="grid">
       <div class="card"><h2>Event failures · ${ytd ? 'year to date' : esc(m.month)}</h2>${fails ? `<div class="tablebox"><table class="t tl"><thead><tr><th>Date</th><th>Event</th><th>Standard</th><th>Note</th></tr></thead><tbody>${fails}</tbody></table></div>` : `<p class="muted small">No failed event standards ${ytd ? 'this year' : 'this month'}.</p>`}</div>
       <div class="card"><h2>Monthly deductions · ${ytd ? 'year to date' : esc(m.month)}</h2>${deds ? `<div class="tablebox"><table class="t tl"><thead><tr><th>Standard</th><th class="num">Count</th><th class="num">Points</th><th>Note</th></tr></thead><tbody>${deds}</tbody></table></div>` : `<p class="muted small">No deductions logged ${ytd ? 'this year' : 'this month'}.</p>`}</div>
@@ -686,7 +715,7 @@
         <dt>Fee paid and abatement</dt><dd>The share of the monthly performance fee paid, and the amount withheld.</dd>
         <dt>Rectification plan</dt><dd>Shows when a plan is required: any event failure, any critical standard failure, or ${st.rectificationMonths} consecutive months below ${st.passThreshold}.</dd>
         <dt>KPI results table</dt><dd>One row per KPI: its weight this month, result, status, event score, deductions, year average, months below and failed event standards this year.</dd>
-        <dt>KPI results by month</dt><dd>A heat map of every KPI for every month. Orange is below the pass mark, teal is towards 100. Blank means not reported or not assessed; a dash means the KPI has 0% weight that month.</dd>
+        <dt>KPI results by month</dt><dd>A heat map of every KPI for every month. Orange is below the pass mark, teal is towards 100. Blank means not reported or not assessed; a dash means the KPI has 0% weight that month. Hover over any cell, or any bar in KPI results, to see the result, pass mark, weight, events, failures and deductions behind it.</dd>
         <dt>Escalation and incentive</dt><dd>The Part F tests for the year: months below the threshold, three in any six, six in any twelve, critical months and incentive progress.</dd></dl>` },
       { id: 'events', title: 'Events and readiness sign-off', body: `
         <p><b>Add event</b>, enter the date, name and tier, then mark each standard Pass or Fail. To change an existing event, click its name in the events list: the page moves down to its scorecard, where you can change any Pass or Fail, or Unmark it to go back to not checked. <b>Back to event list</b> returns to the top.</p><p> A failed standard asks for a reading or observation (for example a photo reference).</p>
@@ -891,6 +920,18 @@
   document.addEventListener('toggle', e => { const t = e.target; if (!t.matches || !t.matches('details[data-how]')) return;
     S.ui.howOpen = S.ui.howOpen || {}; S.ui.howOpen[t.dataset.how] = t.open; save();
     const h = t.querySelector('summary .small'); if (h) h.textContent = 'click to ' + (t.open ? 'hide' : 'show'); }, true);
+  // Hover cards for [data-tip] (dashboard bars and heat map)
+  const tipEl = document.createElement('div'); tipEl.className = 'tip'; tipEl.hidden = true; tipEl.setAttribute('role', 'tooltip'); document.body.appendChild(tipEl);
+  let tipFor = null;
+  const placeTip = (x, y) => { const r = tipEl.getBoundingClientRect(), pad = 14;
+    let l = x + pad, t = y + pad; if (l + r.width > innerWidth - 8) l = x - r.width - pad; if (t + r.height > innerHeight - 8) t = y - r.height - pad;
+    tipEl.style.left = Math.max(8, l) + 'px'; tipEl.style.top = Math.max(8, t) + 'px'; };
+  document.addEventListener('mouseover', e => { const t = e.target.closest && e.target.closest('[data-tip]');
+    if (!t) { if (tipFor) { tipEl.hidden = true; tipFor = null; } return; }
+    if (t !== tipFor) { tipFor = t; tipEl.innerHTML = t.dataset.tip; tipEl.hidden = false; } placeTip(e.clientX, e.clientY); });
+  document.addEventListener('mousemove', e => { if (tipFor) placeTip(e.clientX, e.clientY); });
+  document.addEventListener('scroll', () => { tipEl.hidden = true; tipFor = null; }, true);
+  window.addEventListener('hashchange', () => { tipEl.hidden = true; tipFor = null; });
   window.addEventListener('hashchange', () => route());
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => route(true));
   function loadSample(go) {

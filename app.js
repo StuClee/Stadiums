@@ -763,6 +763,7 @@
   }
   function renderHits(q) {
     const box = $('#helpHits'); if (!box) return;
+    const ask = $('#ask'); if (ask) ask.classList.toggle('has-q', !!q.trim());
     const hits = helpMatches(q);
     const mark = (txt, words) => words.reduce((a, w) => a.replace(new RegExp('(' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig'), '<mark>$1</mark>'), esc(txt));
     box.innerHTML = !q.trim() ? '' : hits.length ? `<div class="small muted">These parts of the manual may answer your question:</div>${hits.map(x => `<a href="#help" data-helpgo="${x.h.id}"><b>${esc(x.h.title)}</b><div class="small">${mark(x.snip, x.words)}</div></a>`).join('')}`
@@ -771,17 +772,14 @@
   function vHelp() {
     const secs = helpSections();
     return `
-    <div class="head"><div><div class="label">User manual</div><h1>Help</h1></div><div class="row"><button class="btn" data-act="print">Print manual</button></div></div>
-    <div class="help-topics" style="margin-top:0">
-      <div class="help-topics-head"><h2>Help topics</h2><div class="row"><button class="btn" data-act="helpOpenAll">Expand all</button><button class="btn" data-act="helpCloseAll">Collapse all</button></div></div>
-      ${secs.map(h => `<details class="help-sec" id="help-${h.id}"><summary><span>${esc(h.title)}</span></summary><div class="help-body">${h.body}</div></details>`).join('')}
-    </div>
-    <div class="card help-ask" style="margin-top:18px" id="ask"><h2>Ask a question</h2>
-      <p class="muted small">Type your question. Matching parts of the manual appear as you type. If they do not answer it, send it to Greenspace Consulting and you will get a reply by email.</p>
-      <textarea id="helpQ" placeholder="For example: why is KPI-V not scored in October?" aria-label="Your question"></textarea>
+    <div class="card help-ask" id="ask"><div class="help-topics-head"><h2>Help: ask a question</h2><button class="btn" data-act="print">Print manual</button></div>
+      <textarea id="helpQ" placeholder="Type your question, e.g. why is KPI-V not scored in October? Matching help topics appear below as you type." aria-label="Your question"></textarea>
       <div id="helpHits" class="help-hits" aria-live="polite"></div>
-      <div class="kv"><label class="field">Your name<input type="text" id="helpName" autocomplete="name"></label><label class="field">Your email (for the reply)<input type="email" id="helpEmail" autocomplete="email"></label></div>
-      <div class="row"><button class="btn primary" data-act="sendQ">Send question</button><span class="muted small">Sent with the page you were on and the month selected, to help answer it.</span></div></div>`;
+      <div class="help-send"><label class="field">Your name<input type="text" id="helpName" autocomplete="name"></label><label class="field">Your email (for the reply)<input type="email" id="helpEmail" autocomplete="email"></label><button class="btn primary" data-act="sendQ" title="Sent to Greenspace Consulting with the page and month you were on">Send question</button></div></div>
+    <div class="help-topics">
+      <div class="help-topics-head"><h2>Help topics</h2><div class="row"><button class="btn" data-act="helpOpenAll">Expand all</button><button class="btn" data-act="helpCloseAll">Collapse all</button></div></div>
+      <div class="help-list">${secs.map(h => `<details class="help-sec" id="help-${h.id}"><summary><span>${esc(h.title)}</span></summary><div class="help-body">${h.body}</div></details>`).join('')}</div>
+    </div>`;
   }
   let lastView = 'dashboard';
   async function sendQuestion(btn) {

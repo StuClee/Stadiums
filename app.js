@@ -18,7 +18,7 @@
   // Column heading with a short explanation underneath and a hover tip
   const th = (label, sub, tip) => `<th${tip ? ` title="${esc(tip)}"` : ''}>${label}${sub ? `<span class="th-sub">${sub}</span>` : ''}</th>`;
   // "How this page works" box: collapsible, remembers if closed per page
-  const howTo = (page, intro, steps) => `<details class="card howto no-print" data-how="${page}" ${(S.ui.howClosed || {})[page] ? '' : 'open'}><summary><h2>How this page works</h2><span class="muted small">click to ${(S.ui.howClosed || {})[page] ? 'show' : 'hide'}</span></summary>
+  const howTo = (page, intro, steps) => `<details class="card howto no-print" data-how="${page}" ${(S.ui.howOpen || {})[page] ? 'open' : ''}><summary><h2>How this page works</h2><span class="muted small">click to ${(S.ui.howOpen || {})[page] ? 'hide' : 'show'}</span></summary>
       <p class="small">${intro}</p><ol class="ov-cycle">${steps.map(([t, d]) => `<li><b>${t}</b><span class="muted">${d}</span></li>`).join('')}</ol></details>`;
   const kth = k => th(k.id.replace('KPI-', ''), shortName(k.id), `${k.id} ${k.name}: event score out of 100`);
 
@@ -889,7 +889,7 @@
     }
   });
   document.addEventListener('toggle', e => { const t = e.target; if (!t.matches || !t.matches('details[data-how]')) return;
-    S.ui.howClosed = S.ui.howClosed || {}; S.ui.howClosed[t.dataset.how] = !t.open; save();
+    S.ui.howOpen = S.ui.howOpen || {}; S.ui.howOpen[t.dataset.how] = t.open; save();
     const h = t.querySelector('summary .small'); if (h) h.textContent = 'click to ' + (t.open ? 'hide' : 'show'); }, true);
   window.addEventListener('hashchange', () => route());
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => route(true));

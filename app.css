@@ -389,3 +389,8 @@ table.heat td[data-tip]:hover, table.t td.h[data-tip]:hover { outline: 2px solid
 .ov-k { font-size: .76rem; }
 .ov-mini span { font-size: .8rem; }
 .ov-wbar { padding: 2px 0; }
+/* Monthly: year to date table */
+.linkbtn { font: inherit; font-weight: 600; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+.sortbtn { font: inherit; text-transform: inherit; letter-spacing: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; font-weight: 600; }
+.sortbtn:hover { color: var(--ink); }
+#dedYtd { scroll-margin-top: 150px; }

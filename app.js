@@ -383,8 +383,42 @@
       return `<tr><td><span class="pill-k">${k.id}</span> ${esc(k.name)}</td><td class="num">${r.events}</td><td class="num">${f1(r.mean)}</td><td class="num">${r.ded ? '−' + r.ded : 0}</td>
         <td class="num"><b>${f1(r.result)}</b></td><td>${statusOf(r, c.pass[k.id], k, Mx)}</td>
         <td><label class="row small"><input type="checkbox" data-na="${k.id}" ${na != null ? 'checked' : ''}> Not assessed</label>${na != null ? `<input type="text" data-nareason="${k.id}" value="${esc(na)}" placeholder="Relief reason (Part F)" style="width:100%;margin-top:4px">` : ''}</td></tr>`; }).join('');
+    // Year to date: every month from the start of the contract year to the month chosen
+    const ms = months(), upto = ms.slice(0, ms.indexOf(mo) + 1), Ys = upto.map(m2 => C.month(c, d, ms, m2));
+    const all = (d.deductions || []).filter(x => upto.includes(x.month));
+    const ptsOf = x => x.confirmed ? (Number(x.count) || 0) * C.points(c, x.ref) : 0;
+    const sumRows = Ys.map(X => { const xs = all.filter(x => x.month === X.month), conf = xs.filter(x => x.confirmed);
+      const capped = M.kpis.reduce((a, k) => a + (X.kpi[k.id].ded || 0), 0), raw = conf.reduce((a, x) => a + ptsOf(x), 0);
+      const cat = t => conf.filter(x => (C.STD[x.ref] || {}).cat === t).reduce((a, x) => a + (Number(x.count) || 0), 0);
+      const kp = [...new Set(conf.filter(x => ptsOf(x) > 0).map(x => (C.STD[x.ref] || {}).kpi).filter(Boolean))];
+      return { X, n: xs.length, conf: conf.length, open: xs.length - conf.length, capped, raw, b: cat('B'), dd: cat('D'), g: cat('G'), kp }; });
+    const tot = sumRows.reduce((a, r) => { ['n', 'conf', 'open', 'capped', 'raw', 'b', 'dd', 'g'].forEach(f => a[f] += r[f]); return a; }, { n: 0, conf: 0, open: 0, capped: 0, raw: 0, b: 0, dd: 0, g: 0 });
+    const repd = sumRows.filter(r => r.X.reported && r.X.overall != null);
+    const sumHtml = sumRows.map(r => `<tr class="${r.X.month === mo ? 'ev-sel' : ''}"><td><button class="linkbtn" data-gomonth="${r.X.month}" title="Show this month">${esc(r.X.month)}</button>${r.X.reported ? '' : ' <span class="small muted">not reported</span>'}</td>
+      <td class="num">${r.n || '<span class="muted">0</span>'}</td><td class="num">${r.conf}</td><td class="num">${r.open ? `<span class="warn-note">${r.open}</span>` : 0}</td>
+      <td class="num">${r.b}</td><td class="num">${r.dd}</td><td class="num">${r.g}</td>
+      <td class="num"><b>${r.capped ? '−' + r.capped : 0}</b>${r.raw > r.capped ? `<div class="small muted">${r.raw} before cap</div>` : ''}</td>
+      <td class="txt small">${r.kp.length ? r.kp.map(k => `<span class="pill-k">${esc(k)}</span>`).join(' ') : '<span class="muted">–</span>'}</td>
+      <td class="num">${f1(r.X.overall)}</td><td class="num">${r.X.abatement ? money(r.X.abatement) : r.X.reported ? '$0' : '–'}</td></tr>`).join('')
+      + `<tr class="sub"><td>Year to date</td><td class="num">${tot.n}</td><td class="num">${tot.conf}</td><td class="num">${tot.open}</td><td class="num">${tot.b}</td><td class="num">${tot.dd}</td><td class="num">${tot.g}</td>
+      <td class="num">${tot.capped ? '−' + tot.capped : 0}</td><td></td><td class="num">${repd.length ? f1(repd.reduce((a, r) => a + r.X.overall, 0) / repd.length) : '–'}</td><td class="num">${money(repd.reduce((a, r) => a + (r.X.abatement || 0), 0))}</td></tr>`;
+    // All deductions to date, sortable
+    const so = S.ui.dedSort || { by: 'month', dir: -1 };
+    const key = { month: x => ms.indexOf(x.month), standard: x => x.ref, kpi: x => (C.STD[x.ref] || {}).kpi || '', points: x => ptsOf(x), status: x => x.confirmed ? 1 : 0 }[so.by] || (x => ms.indexOf(x.month));
+    const sorted = all.slice().sort((a, b) => { const ka = key(a), kb = key(b); return (ka < kb ? -1 : ka > kb ? 1 : ms.indexOf(a.month) - ms.indexOf(b.month)) * so.dir; });
+    const sth = (by, label) => `<th${by === 'points' ? ' class="num"' : ''}><button class="sortbtn" data-dsort="${by}" aria-label="Sort by ${label}">${label} <span aria-hidden="true">${so.by === by ? (so.dir > 0 ? '▲' : '▼') : '↕'}</span></button></th>`;
+    const allHtml = sorted.map(x => { const s2 = C.STD[x.ref] || {}; return `<tr><td style="white-space:nowrap"><button class="linkbtn" data-gomonth="${x.month}" title="Show this month">${esc(x.month)}</button></td>
+      <td class="txt"><span class="pill-k">${esc(x.ref)}</span> ${esc(s2.name || '')}${s2.critical ? ' <span class="crit">CRITICAL</span>' : ''}</td><td><span class="pill-k">${esc(s2.kpi || '')}</span></td>
+      <td>${esc(s2.cat || '')}</td><td class="num">${esc(x.count)}</td><td>${x.confirmed ? '<span class="status s-pass">Confirmed</span>' : '<span class="status s-warn">Not confirmed</span>'}</td>
+      <td class="num">${x.confirmed ? ptsOf(x) : '–'}</td><td class="txt small">${esc(x.note || '')}</td></tr>`; }).join('');
+    const ytdCard = `<div class="card" id="dedYtd"><div class="flex-between"><h2>Year to date by month · ${esc(upto[0])} to ${esc(mo)}</h2><span class="muted small">Click a month to open it</span></div>
+      <p class="muted small">Deductions logged each month and their effect. Points are after the ${c.settings.capPerStandard}-point cap per standard. B = breaches (incidents, audits, monthly measured), D = late or incomplete, G = report only.</p>
+      <div class="tablebox"><table class="t"><thead><tr>${th('Month')}${th('Logged', 'Rows')}${th('Confirmed', 'By PR')}${th('Not confirmed', 'Do not count')}${th('B', 'Breaches')}${th('D', 'Late or incomplete')}${th('G', 'Report only')}${th('Points', 'Taken off')}${th('KPIs affected')}${th('Overall', 'Score')}${th('Abatement')}</tr></thead><tbody>${sumHtml}</tbody></table></div>
+      <details class="more"${S.ui.dedAllOpen ? ' open' : ''} data-dedall><summary>All deductions year to date (${all.length}), sortable</summary>
+      <div class="tablebox"><table class="t tl"><thead><tr>${sth('month', 'Month')}${sth('standard', 'Standard')}${sth('kpi', 'KPI')}<th>Cat</th><th class="num">Count</th>${sth('status', 'Status')}${sth('points', 'Points')}<th>Note</th></tr></thead>
+      <tbody>${allHtml || '<tr><td colspan="8" class="muted">No deductions logged this year so far.</td></tr>'}</tbody></table></div></details></div>`;
     return `
-    <div class="head"><div><div class="label">${esc(S.ui.contractor)} · ${esc(mo)}</div><h1>Monthly deductions and relief</h1></div></div>
+    <div class="head"><div><div class="label">${esc(S.ui.contractor)} · ${esc(mo)}</div><h1>Monthly deductions and relief</h1></div><div class="row"><a class="btn" href="#deductions" data-goytd="1">Year to date by month</a></div></div>
     <div class="card sticky-bar"><div class="row" style="gap:22px">
       <div><div class="label">Overall score</div><div class="big" style="font-size:1.8rem">${f1(Mx.overall)}</div></div>
       <div><div class="label">Fee paid</div><div><b>${Mx.feePct == null ? '–' : pc(Mx.feePct)}</b> · abatement ${money(Mx.abatement)}</div></div>
@@ -397,6 +431,7 @@
     <div class="card"><div class="flex-between"><h2>Step 1 · Deductions logged · ${esc(mo)}</h2><button class="btn primary" data-act="addDed">Add deduction</button></div><p class="muted small">One row per confirmed incident, audit breach, late or incomplete item, or monthly measured standard outside tolerance. Only rows confirmed by the Principal's Representative count. Each standard is capped at ${c.settings.capPerStandard} points a month.</p>
       <div class="tablebox"><table class="t"><thead><tr><th>Standard</th><th>Count</th><th>Confirmed by PR</th><th class="num">Points</th><th>Note</th><th></th></tr></thead>
       <tbody>${dRows || '<tr><td colspan="6" class="muted">No deductions this month. Click Add deduction to log one.</td></tr>'}</tbody></table></div></div>
+    ${ytdCard}
     <div class="card"><h2>Steps 2 and 3 · KPI results and relief · ${esc(mo)}</h2><p class="muted small">Tick Not assessed for Part F relief (for example a field closed by TAU, a declared extreme weather event, or a failed TAU asset). That KPI's weight is reallocated to the KPIs assessed. A month with no event starts at ${c.settings.noEventScore}. A KPI with 0% weight this month (Setup, monthly weightings) shows Not scored this month.</p>
       <div class="tablebox"><table class="t"><thead><tr>${th('KPI', 'Key performance indicator')}${th('Events', 'Scored this month')}${th('Mean event score', 'Average of the event scores, out of 100')}${th('Deductions', 'Confirmed points taken off (capped)')}${th('Result', 'Mean event score less deductions')}${th('Status', 'Result against the KPI pass mark')}${th('Relief', 'Part F: tick if not assessed')}</tr></thead><tbody>${kRows}</tbody></table></div></div>`;
   }
@@ -753,6 +788,7 @@
         <li>A standard fixed before kick-off still records the fail.</li></ul>` },
       { id: 'deductions', title: 'Monthly deductions and relief', body: `
         <p>Use <b>Add deduction</b> for each confirmed item: choose the standard, the count and tick Confirmed by the Principal's Representative.</p>
+        <p><b>Year to date by month</b> (lower on the page, or the button at the top) totals each month from the start of the year to the month chosen: rows logged, confirmed and not confirmed, B, D and G counts, points taken off after the cap, the KPIs affected, the overall score and abatement. Click a month to open it. Open <b>All deductions year to date</b> to see every row; click a column heading to sort by month, standard, KPI, status or points, and click again to reverse.</p>
         <dl><dt>Category B Breach (${cat('B')} points each)</dt><dd>Incidents, audit breaches, items missed or not corrected, and monthly measured standards outside target and tolerance.</dd>
         <dt>Category D Timeliness and records (${cat('D')} points each)</dt><dd>Late responses, repairs or quotes, missed test rounds, late or incomplete records.</dd>
         <dt>Category G Report only (${cat('G')} points)</dt><dd>KPI-U Usage Cameras: logged and reported, not scored. U1.7 and U1.9 are still critical, so a confirmed breach still triggers a rectification plan.</dd></dl>
@@ -875,6 +911,9 @@
     if ('pf' in t.dataset) { const ev = curEvent(), ref = t.closest('[data-ref]').dataset.ref; ev.results = ev.results || {};
       if (!t.dataset.pf) delete ev.results[ref]; else ev.results[ref] = { ...(ev.results[ref] || {}), r: t.dataset.pf };
       dirty(); save(); route(true); return; }
+    if (t.dataset.dsort) { e.preventDefault(); const so = S.ui.dedSort || { by: 'month', dir: -1 }; S.ui.dedSort = so.by === t.dataset.dsort ? { by: so.by, dir: -so.dir } : { by: t.dataset.dsort, dir: t.dataset.dsort === 'standard' || t.dataset.dsort === 'kpi' ? 1 : -1 }; S.ui.dedAllOpen = true; save(); route(true); return; }
+    if (t.dataset.gomonth) { e.preventDefault(); S.ui.month = t.dataset.gomonth; save(); route(); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+    if (t.dataset.goytd) { e.preventDefault(); const el = document.getElementById('dedYtd'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
     if (t.dataset.helpgo) { e.preventDefault(); const el = document.getElementById(t.dataset.helpgo === 'ask' ? 'ask' : 'help-' + t.dataset.helpgo); if (el) { if (el.tagName === 'DETAILS') el.open = true; el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.add('help-flash'); setTimeout(() => el.classList.remove('help-flash'), 1500); } return; }
     const act = t.dataset.act; if (!act) return;
     const d = yd();
@@ -942,7 +981,7 @@
       t.files[0].text().then(txt => { const x = JSON.parse(txt); if (!x.settings || !x.data) throw new Error(); S = x; save(); route(); toast('Backup imported'); }).catch(() => toast('That file is not a valid backup'));
     }
   });
-  document.addEventListener('toggle', e => { const t = e.target; if (!t.matches || !t.matches('details[data-how]')) return;
+  document.addEventListener('toggle', e => { const t = e.target; if (t.matches && t.matches('details[data-dedall]')) { S.ui.dedAllOpen = t.open; save(); return; } if (!t.matches || !t.matches('details[data-how]')) return;
     S.ui.howOpen = S.ui.howOpen || {}; S.ui.howOpen[t.dataset.how] = t.open; save();
     const h = t.querySelector('summary .small'); if (h) h.textContent = 'click to ' + (t.open ? 'hide' : 'show'); }, true);
   // Hover cards for [data-tip] (dashboard bars and heat map)
